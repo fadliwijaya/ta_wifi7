@@ -41,8 +41,33 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <streambuf>
 
 using namespace ns3;
+
+// Kelas pembantu untuk menduplikasi output std::cout ke file dan terminal
+class TeeStream : public std::streambuf {
+public:
+  TeeStream(std::streambuf* sb1, std::streambuf* sb2) : sb1(sb1), sb2(sb2) {}
+protected:
+  virtual int overflow(int c) override {
+    if (c == EOF) {
+      return !EOF;
+    } else {
+      int const r1 = sb1 ? sb1->sputc(c) : EOF;
+      if (sb2) sb2->sputc(c);
+      return r1 == EOF ? EOF : c;
+    }
+  }
+  virtual int sync() override {
+    int const r1 = sb1 ? sb1->pubsync() : 0;
+    if (sb2) sb2->pubsync();
+    return r1 == 0 ? 0 : -1;
+  }
+private:
+  std::streambuf* sb1;
+  std::streambuf* sb2;
+};
 
 // Global variables untuk Channel Utilization
 uint64_t g_busySamplesAp0 = 0;
@@ -120,6 +145,24 @@ struct UserProfile {
 };
 
 int main(int argc, char *argv[]) {
+  // Setup direktori output
+  std::string outDir = "scratch/ta_wifi7/output_simulasi";
+  std::system(("mkdir -p " + outDir).c_str());
+
+  // Setup timestamp untuk nama file log dan CSV
+  std::time_t t_now = std::time(nullptr);
+  char time_str_now[100];
+  std::strftime(time_str_now, sizeof(time_str_now), "%Y%m%d_%H%M%S", std::localtime(&t_now));
+  std::string globalTimestamp(time_str_now);
+
+  // Setup file log terminal
+  std::string logFilename = outDir + "/terminal_output_" + globalTimestamp + ".log";
+  std::ofstream logFile(logFilename);
+  
+  // Duplikasi std::cout ke terminal dan logFile
+  TeeStream tee(std::cout.rdbuf(), logFile.rdbuf());
+  std::streambuf* oldCoutBuf = std::cout.rdbuf(&tee);
+
   // Mulai pencatatan waktu eksekusi nyata
   auto startRealTime = std::chrono::high_resolution_clock::now();
 
@@ -530,17 +573,9 @@ int main(int argc, char *argv[]) {
   uint32_t ap0_flows = 0, ap1_flows = 0, koridor_flows = 0;
   uint64_t ap0_drops = 0, ap1_drops = 0, koridor_drops = 0;
 
-  // Persiapan CSV Export dengan Timestamp & Folder Khusus
-  std::time_t t = std::time(nullptr);
-  char time_str[100];
-  std::strftime(time_str, sizeof(time_str), "%Y%m%d_%H%M%S",
-                std::localtime(&t));
-  std::string timestamp(time_str);
-
-  std::string outDir = "scratch/ta_wifi7/output_simulasi";
-  std::system(("mkdir -p " + outDir).c_str());
+  // Persiapan CSV Export dengan Timestamp & Folder Khusus (Menggunakan globalTimestamp)
   std::string csvFilename =
-      outDir + "/hasil_simulasi_wifi7_" + timestamp + ".csv";
+      outDir + "/hasil_simulasi_wifi7_" + globalTimestamp + ".csv";
 
   std::ofstream csvFile(csvFilename);
   csvFile << "STA_ID,Area,Profil,Throughput_Mbps,Delay_ms,Jitter_ms,MacDrop,"
@@ -725,6 +760,11 @@ int main(int argc, char *argv[]) {
             << diffRealTime.count() << " detik" << std::endl;
 
   Simulator::Destroy();
+
+  // Kembalikan buffer asli cout dan tutup file log
+  std::cout.rdbuf(oldCoutBuf);
+  logFile.close();
+
   return 0;
 }
 

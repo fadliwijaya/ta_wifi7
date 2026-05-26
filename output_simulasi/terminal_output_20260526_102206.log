@@ -1,0 +1,49 @@
+
+>>> Memulai simulasi Wi-Fi 7 Indoor MLO (Skenario Kampus Lanjutan), menunggu 10 detik... <<<
+
+
+--- Memulai Log Panjang Antrean MAC (Queue Occupancy) per Detik ---
+[HANDOVER] Waktu: 0.0509831s | STA Node 40 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:7c
+[HANDOVER] Waktu: 0.0510041s | STA Node 25 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:7c
+[HANDOVER] Waktu: 0.0520852s | STA Node 13 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0520852s | STA Node 34 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:7c
+[HANDOVER] Waktu: 0.0531662s | STA Node 28 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:7c
+[HANDOVER] Waktu: 0.0542383s | STA Node 29 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:7c
+[HANDOVER] Waktu: 0.0548373s | STA Node 14 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0588278s | STA Node 9 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0593358s | STA Node 15 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0598438s | STA Node 18 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0603518s | STA Node 5 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0608958s | STA Node 21 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0614039s | STA Node 19 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0619119s | STA Node 6 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0624199s | STA Node 16 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0629729s | STA Node 20 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0634809s | STA Node 4 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.063989s | STA Node 22 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.064497s | STA Node 3 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.065023s | STA Node 10 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0655311s | STA Node 11 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0729129s | STA Node 23 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:7c
+[HANDOVER] Waktu: 0.0734209s | STA Node 31 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:7c
+[HANDOVER] Waktu: 0.0739289s | STA Node 36 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:7c
+[HANDOVER] Waktu: 0.0780304s | STA Node 27 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0785385s | STA Node 41 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0790466s | STA Node 35 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0795546s | STA Node 33 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0800807s | STA Node 8 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0805887s | STA Node 32 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0810967s | STA Node 38 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0816048s | STA Node 12 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0821578s | STA Node 30 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0826659s | STA Node 7 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0831739s | STA Node 2 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0836819s | STA Node 26 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.084235s | STA Node 39 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0847431s | STA Node 24 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.0852511s | STA Node 37 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[HANDOVER] Waktu: 0.120917s | STA Node 43 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:82
+[HANDOVER] Waktu: 0.551012s | STA Node 17 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:79
+[Antrean MAC] Waktu: 1s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 2s | AP0 (Ruang 1): 25792 paket | AP1 (Ruang 2): 38084 paket
+[Antrean MAC] Waktu: 3s | AP0 (Ruang 1): 31938 paket | AP1 (Ruang 2): 36034 paket
