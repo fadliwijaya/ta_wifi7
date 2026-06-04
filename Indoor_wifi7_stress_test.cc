@@ -7,6 +7,7 @@
 #include "ns3/internet-stack-helper.h"
 #include "ns3/ipv4-address-helper.h"
 #include "ns3/mobility-helper.h"
+#include "ns3/waypoint-mobility-model.h"
 #include "ns3/multi-model-spectrum-channel.h"
 #include "ns3/on-off-helper.h"
 #include "ns3/packet-sink-helper.h"
@@ -16,7 +17,6 @@
 #include "ns3/ssid.h"
 #include "ns3/string.h"
 #include "ns3/uinteger.h"
-#include "ns3/waypoint-mobility-model.h"
 #include "ns3/wifi-mac-queue.h"
 #include "ns3/wifi-mac.h"
 #include "ns3/wifi-net-device.h"
@@ -176,13 +176,11 @@ int main(int argc, char *argv[]) {
   // Mulai pencatatan waktu eksekusi nyata
   auto startRealTime = std::chrono::high_resolution_clock::now();
 
-  std::cout << "\n>>> Memulai simulasi Wi-Fi 7 Indoor MLO (Skenario Kampus "
-               "Lanjutan), menunggu 10 "
-               "detik... <<<\n"
+  std::cout << "\n>>> Memulai simulasi STRESS TEST WI-FI 7 (BEBAN MAKSIMAL GIGABIT), "
+               "menunggu 10 detik... <<<\n"
             << std::endl;
 
-  double simulationTimeSec = 2.0; // Kembali ke 2 detik agar tidak terlalu lama
-                                  // (STA akan disuruh lari cepat)
+  double simulationTimeSec = 2.0; // Kembali ke 2 detik agar tidak terlalu lama (STA akan disuruh lari cepat)
 
   CommandLine cmd(__FILE__);
   cmd.AddValue("simulationTime", "Simulation active time (seconds)",
@@ -192,7 +190,8 @@ int main(int argc, char *argv[]) {
   // --- OPTIMASI BUFFER & A-MPDU ---
   // Mencegah Buffer Overflow untuk trafik masif (seperti Gaming)
   Config::SetDefault("ns3::WifiMacQueue::MaxSize", StringValue("5000p"));
-  Config::SetDefault("ns3::WifiMacQueue::MaxDelay", TimeValue(Seconds(1.0)));
+  Config::SetDefault("ns3::WifiMacQueue::MaxDelay",
+                     TimeValue(Seconds(1.0)));
   Config::SetDefault("ns3::FqCoDelQueueDisc::MaxSize", StringValue("5000p"));
 
   // Mencegah macet dengan mengirim frame A-MPDU ukuran raksasa
@@ -274,8 +273,7 @@ int main(int argc, char *argv[]) {
   staMobilityKelasB.Install(staKelasB);
 
   // --- Mobilitas Koridor (Atas) ---
-  // Mengembalikan ke RandomWalk agar STA tetap di dalam coverage AP
-  // (menghindari 0 Mbps karena out-of-range)
+  // Mengembalikan ke RandomWalk agar STA tetap di dalam coverage AP (menghindari 0 Mbps karena out-of-range)
   MobilityHelper staMobilityKoridor;
   staMobilityKoridor.SetPositionAllocator(
       "ns3::RandomRectanglePositionAllocator", "X",
@@ -331,7 +329,7 @@ int main(int argc, char *argv[]) {
   wifi.SetStandard(WIFI_STANDARD_80211be);
 
   // 1. DYNAMIC RATE ADAPTATION
-  // Menggunakan IdealWifiManager agar STA secara dinamis menyesuaikan MCS
+  // Menggunakan IdealWifiManager agar STA secara dinamis menyesuaikan MCS 
   // (turun dari 4096-QAM jika jarak menjauh/interferensi tinggi)
   wifi.SetRemoteStationManager("ns3::IdealWifiManager");
 
@@ -349,8 +347,7 @@ int main(int argc, char *argv[]) {
 
   macA.SetType("ns3::ApWifiMac", "Ssid", SsidValue(ssidA), "QosSupported",
                BooleanValue(true));
-  NetDeviceContainer apDeviceA =
-      wifi.Install(spectrumPhy, macA, wifiApNode.Get(0));
+  NetDeviceContainer apDeviceA = wifi.Install(spectrumPhy, macA, wifiApNode.Get(0));
 
   WifiMacHelper macB;
   Ssid ssidB = Ssid("kampus-wifi7-B");
@@ -360,21 +357,16 @@ int main(int argc, char *argv[]) {
 
   macB.SetType("ns3::ApWifiMac", "Ssid", SsidValue(ssidB), "QosSupported",
                BooleanValue(true));
-  NetDeviceContainer apDeviceB =
-      wifi
-
-          .Install(spectrumPhy, macB, wifiApNode.Get(1));
+  NetDeviceContainer apDeviceB = wifi.Install(spectrumPhy, macB, wifiApNode.Get(1));
 
   // Koridor: STA 18 ikut AP0, STA 19 ikut AP1
   macA.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssidA), "QosSupported",
                BooleanValue(true), "ActiveProbing", BooleanValue(false));
-  NetDeviceContainer staDeviceKoridorA =
-      wifi.Install(spectrumPhy, macA, staKoridor.Get(0));
+  NetDeviceContainer staDeviceKoridorA = wifi.Install(spectrumPhy, macA, staKoridor.Get(0));
 
   macB.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssidB), "QosSupported",
                BooleanValue(true), "ActiveProbing", BooleanValue(false));
-  NetDeviceContainer staDeviceKoridorB =
-      wifi.Install(spectrumPhy, macB, staKoridor.Get(1));
+  NetDeviceContainer staDeviceKoridorB = wifi.Install(spectrumPhy, macB, staKoridor.Get(1));
 
   // Gabungkan semua device untuk keperluan referensi (apDevice dan staDevice)
   NetDeviceContainer apDevice;
@@ -426,16 +418,13 @@ int main(int argc, char *argv[]) {
 
   Ssid rogueSsid = Ssid("tetangga-wifi6");
   WifiMacHelper rogueMac;
-  rogueMac.SetType("ns3::StaWifiMac", "Ssid", SsidValue(rogueSsid),
-                   "QosSupported", BooleanValue(true), "ActiveProbing",
-                   BooleanValue(false));
-  NetDeviceContainer rogueStaDev =
-      wifi6Rogue.Install(roguePhy, rogueMac, rogueStaNode);
+  rogueMac.SetType("ns3::StaWifiMac", "Ssid", SsidValue(rogueSsid), "QosSupported",
+                   BooleanValue(true), "ActiveProbing", BooleanValue(false));
+  NetDeviceContainer rogueStaDev = wifi6Rogue.Install(roguePhy, rogueMac, rogueStaNode);
 
-  rogueMac.SetType("ns3::ApWifiMac", "Ssid", SsidValue(rogueSsid),
-                   "QosSupported", BooleanValue(true));
-  NetDeviceContainer rogueApDev =
-      wifi6Rogue.Install(roguePhy, rogueMac, rogueApNode);
+  rogueMac.SetType("ns3::ApWifiMac", "Ssid", SsidValue(rogueSsid), "QosSupported",
+                   BooleanValue(true));
+  NetDeviceContainer rogueApDev = wifi6Rogue.Install(roguePhy, rogueMac, rogueApNode);
 
   BuildingsHelper::Install(rogueApNode);
   BuildingsHelper::Install(rogueStaNode);
@@ -447,7 +436,7 @@ int main(int argc, char *argv[]) {
   serverNode.Create(1);
 
   CsmaHelper csma;
-  csma.SetChannelAttribute("DataRate", StringValue("1Gbps"));
+  csma.SetChannelAttribute("DataRate", StringValue("10Gbps"));
   csma.SetChannelAttribute("Delay", TimeValue(MicroSeconds(2)));
 
   NodeContainer backboneNodes;
@@ -471,10 +460,8 @@ int main(int argc, char *argv[]) {
 
   // Pisahkan STA Device Container untuk Assignment Subnet yang berbeda
   NetDeviceContainer staDevAp0, staDevAp1;
-  for (uint32_t i = 0; i < 10; ++i)
-    staDevAp0.Add(staDevice.Get(i));
-  for (uint32_t i = 10; i < 20; ++i)
-    staDevAp1.Add(staDevice.Get(i));
+  for (uint32_t i = 0; i < 10; ++i) staDevAp0.Add(staDevice.Get(i));
+  for (uint32_t i = 10; i < 20; ++i) staDevAp1.Add(staDevice.Get(i));
 
   // 2. Subnet Wi-Fi Ruang 1 (AP0)
   address.SetBase("192.168.1.0", "255.255.255.0");
@@ -486,13 +473,10 @@ int main(int argc, char *argv[]) {
   Ipv4InterfaceContainer ap1Interface = address.Assign(apDevice.Get(1));
   Ipv4InterfaceContainer sta1Interface = address.Assign(staDevAp1);
 
-  // Satukan kembali interface STA ke dalam satu container (staInterface) agar
-  // kompatibel dengan logika di bawah
+  // Satukan kembali interface STA ke dalam satu container (staInterface) agar kompatibel dengan logika di bawah
   Ipv4InterfaceContainer staInterface;
-  for (uint32_t i = 0; i < 10; ++i)
-    staInterface.Add(sta0Interface.Get(i));
-  for (uint32_t i = 0; i < 10; ++i)
-    staInterface.Add(sta1Interface.Get(i));
+  for(uint32_t i=0; i<10; ++i) staInterface.Add(sta0Interface.Get(i));
+  for(uint32_t i=0; i<10; ++i) staInterface.Add(sta1Interface.Get(i));
 
   Ipv4AddressHelper rogueAddr;
   rogueAddr.SetBase("10.0.0.0", "255.255.255.0");
@@ -502,37 +486,25 @@ int main(int argc, char *argv[]) {
   // Aktifkan Routing Statis (Bypass bug ns-3 GlobalRouting pada MLO)
   Ipv4StaticRoutingHelper ipv4RoutingHelper;
 
-  // Server Routing: Arahkan trafik subnet 192.168.1.x ke IP CSMA AP0, dan
-  // 192.168.2.x ke IP CSMA AP1
+  // Server Routing: Arahkan trafik subnet 192.168.1.x ke IP CSMA AP0, dan 192.168.2.x ke IP CSMA AP1
   Ptr<Ipv4> ipv4Server = serverNode.Get(0)->GetObject<Ipv4>();
-  Ptr<Ipv4StaticRouting> staticRoutingServer =
-      ipv4RoutingHelper.GetStaticRouting(ipv4Server);
-  staticRoutingServer->AddNetworkRouteTo(Ipv4Address("192.168.1.0"),
-                                         Ipv4Mask("255.255.255.0"),
-                                         backboneInterfaces.GetAddress(1), 1);
-  staticRoutingServer->AddNetworkRouteTo(Ipv4Address("192.168.2.0"),
-                                         Ipv4Mask("255.255.255.0"),
-                                         backboneInterfaces.GetAddress(2), 1);
+  Ptr<Ipv4StaticRouting> staticRoutingServer = ipv4RoutingHelper.GetStaticRouting(ipv4Server);
+  staticRoutingServer->AddNetworkRouteTo(Ipv4Address("192.168.1.0"), Ipv4Mask("255.255.255.0"), backboneInterfaces.GetAddress(1), 1);
+  staticRoutingServer->AddNetworkRouteTo(Ipv4Address("192.168.2.0"), Ipv4Mask("255.255.255.0"), backboneInterfaces.GetAddress(2), 1);
 
-  // AP0 Routing: Arahkan default route (ke server dan AP1) lewat antarmuka
-  // CSMA-nya
+  // AP0 Routing: Arahkan default route (ke server dan AP1) lewat antarmuka CSMA-nya
   Ptr<Ipv4> ipv4Ap0 = wifiApNode.Get(0)->GetObject<Ipv4>();
-  Ptr<Ipv4StaticRouting> staticRoutingAp0 =
-      ipv4RoutingHelper.GetStaticRouting(ipv4Ap0);
+  Ptr<Ipv4StaticRouting> staticRoutingAp0 = ipv4RoutingHelper.GetStaticRouting(ipv4Ap0);
   staticRoutingAp0->SetDefaultRoute(backboneInterfaces.GetAddress(0), 1);
 
-  // AP1 Routing: Arahkan default route (ke server dan AP0) lewat antarmuka
-  // CSMA-nya
+  // AP1 Routing: Arahkan default route (ke server dan AP0) lewat antarmuka CSMA-nya
   Ptr<Ipv4> ipv4Ap1 = wifiApNode.Get(1)->GetObject<Ipv4>();
-  Ptr<Ipv4StaticRouting> staticRoutingAp1 =
-      ipv4RoutingHelper.GetStaticRouting(ipv4Ap1);
+  Ptr<Ipv4StaticRouting> staticRoutingAp1 = ipv4RoutingHelper.GetStaticRouting(ipv4Ap1);
   staticRoutingAp1->SetDefaultRoute(backboneInterfaces.GetAddress(0), 1);
 
   OnOffHelper rogueTraffic("ns3::UdpSocketFactory",
                            InetSocketAddress(rogueStaIf.GetAddress(0), 9999));
-  rogueTraffic.SetAttribute(
-      "DataRate",
-      StringValue("20Mbps")); // Diturunkan dari 100Mbps agar interferensi wajar
+  rogueTraffic.SetAttribute("DataRate", StringValue("20Mbps")); // Diturunkan dari 100Mbps agar interferensi wajar
   rogueTraffic.SetAttribute("PacketSize", UintegerValue(1500));
   rogueTraffic.SetAttribute(
       "OnTime", StringValue("ns3::ConstantRandomVariable[Constant=1]"));
@@ -573,9 +545,9 @@ int main(int argc, char *argv[]) {
         std::to_string(baseRate.GetBitRate() * 2) + "bps";
 
     onoff.SetAttribute(
-        "OnTime", StringValue("ns3::ConstantRandomVariable[Constant=0.01]"));
+        "OnTime", StringValue("ns3::ConstantRandomVariable[Constant=1.0]"));
     onoff.SetAttribute(
-        "OffTime", StringValue("ns3::ConstantRandomVariable[Constant=0.09]"));
+        "OffTime", StringValue("ns3::ConstantRandomVariable[Constant=0.0]"));
     onoff.SetAttribute("PacketSize",
                        UintegerValue(profiles[profileIdx].packetSize));
     onoff.SetAttribute("DataRate", StringValue(burstRateStr));
@@ -614,7 +586,7 @@ int main(int argc, char *argv[]) {
       DynamicCast<Ipv4FlowClassifier>(flowmon.GetClassifier());
   FlowMonitor::FlowStatsContainer stats = monitor->GetFlowStats();
 
-  std::cout << "\n================= HASIL SIMULASI INDOOR WI-FI 7 (MLO) "
+  std::cout << "\n================= HASIL SIMULASI STRESS TEST WI-FI 7 "
                "LENGKAP ================="
             << std::endl;
   std::cout
@@ -622,10 +594,8 @@ int main(int argc, char *argv[]) {
       << std::endl;
   std::cout << "Jumlah User (STA)  : 20 User (10 Kelas A, 8 Kelas B, 2 Koridor)"
             << std::endl;
-  std::cout
-      << "Fitur Wi-Fi 7      : Dynamic Rate Adaptation (IdealWifiManager), MLO "
-         "Link Steering Resilience, OBSS PD Spatial Reuse"
-      << std::endl;
+  std::cout << "Fitur Wi-Fi 7      : Dynamic Rate Adaptation (IdealWifiManager), MLO Link Steering Resilience, OBSS PD Spatial Reuse"
+            << std::endl;
   std::cout << "---------------------------------------------------------------"
                "------------------"
             << std::endl;
@@ -724,7 +694,7 @@ int main(int argc, char *argv[]) {
   // Persiapan CSV Export dengan Timestamp & Folder Khusus (Menggunakan
   // globalTimestamp)
   std::string csvFilename =
-      outDir + "/hasil_simulasi_wifi7_" + globalTimestamp + ".csv";
+      outDir + "/hasil_stresstest_wifi7_" + globalTimestamp + ".csv";
 
   std::ofstream csvFile(csvFilename);
   csvFile << "STA_ID,Area,Profil,Throughput_Mbps,Delay_ms,Jitter_ms,MacDrop,"

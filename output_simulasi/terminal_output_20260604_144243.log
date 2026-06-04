@@ -1,0 +1,170 @@
+
+>>> Memulai simulasi STRESS TEST WI-FI 7 (BEBAN MAKSIMAL GIGABIT), menunggu 10 detik... <<<
+
+
+--- Memulai Log Panjang Antrean MAC (Queue Occupancy) per 100 ms ---
+[Antrean MAC] Waktu: 0.1s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[HANDOVER] Waktu: 0.121409s | STA Node 21 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:3a
+[HANDOVER] Waktu: 0.121409s | STA Node 9 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:1f
+[HANDOVER] Waktu: 0.12142s | STA Node 18 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:3a
+[HANDOVER] Waktu: 0.121928s | STA Node 19 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:3a
+[HANDOVER] Waktu: 0.122833s | STA Node 23 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:44
+[HANDOVER] Waktu: 0.122963s | STA Node 10 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:1f
+[HANDOVER] Waktu: 0.124868s | STA Node 17 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:3a
+[HANDOVER] Waktu: 0.124868s | STA Node 3 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:1f
+[HANDOVER] Waktu: 0.124912s | STA Node 20 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:1f
+[HANDOVER] Waktu: 0.125376s | STA Node 8 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:1f
+[HANDOVER] Waktu: 0.125416s | STA Node 11 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:1f
+[HANDOVER] Waktu: 0.125884s | STA Node 5 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:1f
+[HANDOVER] Waktu: 0.126392s | STA Node 4 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:1f
+[HANDOVER] Waktu: 0.127142s | STA Node 15 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:3a
+[HANDOVER] Waktu: 0.127646s | STA Node 12 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:3a
+[HANDOVER] Waktu: 0.12815s | STA Node 13 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:3a
+[HANDOVER] Waktu: 0.128558s | STA Node 7 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:1f
+[HANDOVER] Waktu: 0.129066s | STA Node 2 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:1f
+[HANDOVER] Waktu: 0.129731s | STA Node 16 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:3a
+[HANDOVER] Waktu: 0.130146s | STA Node 14 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:3a
+[HANDOVER] Waktu: 0.130749s | STA Node 6 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:1f
+[Antrean MAC] Waktu: 0.2s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.3s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.4s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.5s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.6s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.7s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.8s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.9s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 1s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 1.1s | AP0 (Ruang 1): 8704 paket | AP1 (Ruang 2): 34 paket
+[Antrean MAC] Waktu: 1.2s | AP0 (Ruang 1): 16486 paket | AP1 (Ruang 2): 1702 paket
+[Antrean MAC] Waktu: 1.3s | AP0 (Ruang 1): 19514 paket | AP1 (Ruang 2): 8142 paket
+[Antrean MAC] Waktu: 1.4s | AP0 (Ruang 1): 20000 paket | AP1 (Ruang 2): 13222 paket
+[Antrean MAC] Waktu: 1.5s | AP0 (Ruang 1): 20000 paket | AP1 (Ruang 2): 16244 paket
+[Antrean MAC] Waktu: 1.6s | AP0 (Ruang 1): 20000 paket | AP1 (Ruang 2): 19272 paket
+[Antrean MAC] Waktu: 1.7s | AP0 (Ruang 1): 20000 paket | AP1 (Ruang 2): 20000 paket
+[Antrean MAC] Waktu: 1.8s | AP0 (Ruang 1): 20000 paket | AP1 (Ruang 2): 20000 paket
+[Antrean MAC] Waktu: 1.9s | AP0 (Ruang 1): 20000 paket | AP1 (Ruang 2): 20000 paket
+[Antrean MAC] Waktu: 2s | AP0 (Ruang 1): 20000 paket | AP1 (Ruang 2): 20000 paket
+[Antrean MAC] Waktu: 2.1s | AP0 (Ruang 1): 20002 paket | AP1 (Ruang 2): 20000 paket
+[Antrean MAC] Waktu: 2.2s | AP0 (Ruang 1): 20000 paket | AP1 (Ruang 2): 20000 paket
+[Antrean MAC] Waktu: 2.3s | AP0 (Ruang 1): 20000 paket | AP1 (Ruang 2): 20000 paket
+[Antrean MAC] Waktu: 2.4s | AP0 (Ruang 1): 20000 paket | AP1 (Ruang 2): 20000 paket
+[Antrean MAC] Waktu: 2.5s | AP0 (Ruang 1): 20000 paket | AP1 (Ruang 2): 20000 paket
+[Antrean MAC] Waktu: 2.6s | AP0 (Ruang 1): 20000 paket | AP1 (Ruang 2): 20000 paket
+[Antrean MAC] Waktu: 2.7s | AP0 (Ruang 1): 20000 paket | AP1 (Ruang 2): 20000 paket
+[Antrean MAC] Waktu: 2.8s | AP0 (Ruang 1): 20000 paket | AP1 (Ruang 2): 20000 paket
+[Antrean MAC] Waktu: 2.9s | AP0 (Ruang 1): 20000 paket | AP1 (Ruang 2): 20000 paket
+[Antrean MAC] Waktu: 3s | AP0 (Ruang 1): 20000 paket | AP1 (Ruang 2): 20000 paket
+[Antrean MAC] Waktu: 3.1s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 3.2s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 3.3s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 3.4s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 3.5s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 3.6s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 3.7s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 3.8s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 3.9s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+
+================= HASIL SIMULASI STRESS TEST WI-FI 7 LENGKAP =================
+Skenario           : Ruang 1 (Diam/Duduk) & Ruang 2 (Bergerak/Mobile)
+Jumlah User (STA)  : 20 User (10 Kelas A, 8 Kelas B, 2 Koridor)
+Fitur Wi-Fi 7      : Dynamic Rate Adaptation (IdealWifiManager), MLO Link Steering Resilience, OBSS PD Spatial Reuse
+---------------------------------------------------------------------------------
+
+>>> Profil: Social Media (Target: 25Mbps) <<<
+  Throughput Rata-2    : 2.70612 Mbit/s per User
+  Average Delay        : 658.208 ms
+  Average Jitter       : 12.0321 ms
+  Jain's Fairness Idx  : 0.654721 (Skala 0.0 - 1.0)
+  MAC Queue Drop       : 58346 packets per User
+  SINR Distribution    : ~56.5 dB (Teoritis Pathloss)
+
+>>> Profil: Video 4K Streaming (Target: 100Mbps) <<<
+  Throughput Rata-2    : 119.667 Mbit/s per User
+  Average Delay        : 55.7672 ms
+  Average Jitter       : 0.332331 ms
+  Jain's Fairness Idx  : 0.746589 (Skala 0.0 - 1.0)
+  MAC Queue Drop       : 13507 packets per User
+  SINR Distribution    : ~56.5 dB (Teoritis Pathloss)
+
+>>> Profil: Gaming (Target: 50Mbps) <<<
+  Throughput Rata-2    : 66.7662 Mbit/s per User
+  Average Delay        : 8.06831 ms
+  Average Jitter       : 0.431146 ms
+  Jain's Fairness Idx  : 0.778741 (Skala 0.0 - 1.0)
+  MAC Queue Drop       : 5697 packets per User
+  SINR Distribution    : ~56.5 dB (Teoritis Pathloss)
+
+>>> Profil: File Download (Target: 150Mbps) <<<
+  Throughput Rata-2    : 0.481563 Mbit/s per User
+  Average Delay        : 1283.96 ms
+  Average Jitter       : 1.61896 ms
+  Jain's Fairness Idx  : 0.377885 (Skala 0.0 - 1.0)
+  MAC Queue Drop       : 49533 packets per User
+  SINR Distribution    : ~56.5 dB (Teoritis Pathloss)
+
+>>> Profil: Web Browsing (Target: 25Mbps) <<<
+  Throughput Rata-2    : 0.996328 Mbit/s per User
+  Average Delay        : 1241.03 ms
+  Average Jitter       : 1.48587 ms
+  Jain's Fairness Idx  : 0.458657 (Skala 0.0 - 1.0)
+  MAC Queue Drop       : 11900 packets per User
+  SINR Distribution    : ~56.5 dB (Teoritis Pathloss)
+
+================= DETAIL PER STA & BREAKDOWN AREA =================
+STA 0 (Kelas A, Social Media)	-> TH: 5.58753 Mbps 	| D: 1178.18 ms 	| J: 0.575159 ms 	| Drop: 56297
+STA 1 (Kelas A, Video 4K Streaming)	-> TH: 184.655 Mbps 	| D: 39.5229 ms 	| J: 0.109316 ms 	| Drop: 2888
+STA 2 (Kelas A, Gaming)	-> TH: 100.95 Mbps 	| D: 5.42769 ms 	| J: 0.173392 ms 	| Drop: 152
+STA 3 (Kelas A, File Download)	-> TH: 1.51708 Mbps 	| D: 1724.57 ms 	| J: 6.39151 ms 	| Drop: 50315
+STA 4 (Kelas A, Web Browsing)	-> TH: 0.0122859 Mbps 	| D: 2007.99 ms 	| J: 0.101684 ms 	| Drop: 12371
+STA 5 (Kelas A, Social Media)	-> TH: 0.0373799 Mbps 	| D: 163.655 ms 	| J: 46.2588 ms 	| Drop: 61677
+STA 6 (Kelas A, Video 4K Streaming)	-> TH: 13.4571 Mbps 	| D: 75.2829 ms 	| J: 0.924317 ms 	| Drop: 31225
+STA 7 (Kelas A, Gaming)	-> TH: 12.2594 Mbps 	| D: 10.4105 ms 	| J: 1.05508 ms 	| Drop: 14675
+STA 8 (Kelas A, File Download)	-> TH: 0.018163 Mbps 	| D: 1981.98 ms 	| J: 0.00791967 ms 	| Drop: 49929
+STA 9 (Kelas A, Web Browsing)	-> TH: 0.0124452 Mbps 	| D: 1982.28 ms 	| J: 0.101684 ms 	| Drop: 12215
+STA 10 (Kelas B, Social Media)	-> TH: 2.58232 Mbps 	| D: 547.967 ms 	| J: 0.739994 ms 	| Drop: 58098
+STA 11 (Kelas B, Video 4K Streaming)	-> TH: 179.577 Mbps 	| D: 58.9771 ms 	| J: 0.122778 ms 	| Drop: 3630
+STA 12 (Kelas B, Gaming)	-> TH: 95.903 Mbps 	| D: 8.39606 ms 	| J: 0.206727 ms 	| Drop: 957
+STA 13 (Kelas B, File Download)	-> TH: 0.391012 Mbps 	| D: 1429.28 ms 	| J: 0.0764124 ms 	| Drop: 49231
+STA 14 (Kelas B, Web Browsing)	-> TH: 2.61817 Mbps 	| D: 320.118 ms 	| J: 3.63015 ms 	| Drop: 11430
+STA 15 (Kelas B, Social Media)	-> TH: 2.61726 Mbps 	| D: 743.026 ms 	| J: 0.554668 ms 	| Drop: 57314
+STA 16 (Kelas B, Video 4K Streaming)	-> TH: 100.978 Mbps 	| D: 49.2858 ms 	| J: 0.172914 ms 	| Drop: 16287
+STA 17 (Kelas B, Gaming)	-> TH: 57.9521 Mbps 	| D: 8.03895 ms 	| J: 0.289384 ms 	| Drop: 7007
+STA 18 (Koridor, File Download)	-> TH: 0 Mbps 	| D: 0 ms 	| J: 0 ms 	| Drop: 48658
+STA 19 (Koridor, Web Browsing)	-> TH: 1.34241 Mbps 	| D: 653.716 ms 	| J: 2.10995 ms 	| Drop: 11586
+
+[!] Data statistik berhasil di-export ke 'scratch/ta_wifi7/output_simulasi/hasil_stresstest_wifi7_20260604_144243.csv'
+
+[BREAKDOWN KELAS A (STA 0-9)]
+  Agregat Throughput   : 318.507 Mbps
+  Rata-rata Delay      : 916.93 ms
+  Rata-rata Jitter     : 5.56988 ms
+  Total Paket Drop     : 291744 paket
+
+[BREAKDOWN KELAS B (STA 10-17)]
+  Agregat Throughput   : 442.619 Mbps
+  Rata-rata Delay      : 395.636 ms
+  Rata-rata Jitter     : 0.724128 ms
+  Total Paket Drop     : 203954 paket
+
+[BREAKDOWN KORIDOR (STA 38-39 / Bergerak)]
+  Agregat Throughput   : 1.34241 Mbps
+  Rata-rata Delay      : 326.858 ms
+  Rata-rata Jitter     : 1.05498 ms
+  Total Paket Drop     : 60244 paket
+
+================= METRIK MOBILITAS & HANDOVER =================
+  Tidak ada STA yang melakukan Handover (semua tetap pada AP awal / sinyal masih terjangkau).
+
+================= METRIK SISTEM GLOBAL =================
+  Total Agregat Throughput  : 762.468 Mbit/s
+  Spectral Efficiency       : 1.58848 bit/s/Hz
+  Channel Utilization (AP0) : 64.3333 % (Ruang 1)
+  Channel Utilization (AP1) : 64 % (Ruang 2)
+
+================= VALIDASI MCS 13 (4096-QAM) =================
+  Minimum SNR untuk MCS 13  : ~41 dB
+  Estimasi SNR Saat Ini     : 51 dB
+  Status Validasi           : [VALID] SNR memadai untuk mempertahankan 4096-QAM.
+========================================================
+
+[INFO] Waktu Eksekusi Nyata (Real Runtime) Simulasi: 1239.94 detik
