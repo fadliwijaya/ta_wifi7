@@ -30,7 +30,7 @@ for f in files:
   std::cout << "Lebar Pita (BW)    : 160 MHz (Single-Link 5 GHz)" << std::endl;
   std::cout << "Max Modulasi       : MCS 11 (1024-QAM)" << std::endl;
   std::cout << "Antena / MIMO      : 2x2 Spatial Streams" << std::endl;
-  std::cout << "Tx Power           : 20 dBm" << std::endl;
+  std::cout << "Tx. Power           : 20 dBm" << std::endl;
   std::cout << "Routing / QoS      : IPv4 Static Routing / WMM (EDCA)" << std::endl;
   std::cout << "Propagation Model  : HybridBuildingsPropagationLossModel" << std::endl;"""
     
