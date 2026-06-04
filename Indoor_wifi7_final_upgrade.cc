@@ -108,7 +108,7 @@ void StaAssocCallback(std::string context, Mac48Address bssid) {
 
   g_staAssocCount[nodeId]++;
   g_totalAssoc++;
-  std::cout << "[HANDOVER] Waktu: " << Simulator::Now().GetSeconds()
+  std::cout << "[STA ASSOC] Waktu: " << Simulator::Now().GetSeconds()
             << "s | STA Node " << nodeId
             << " sukses Asosiasi ke AP BSSID: " << bssid << std::endl;
 }
@@ -274,19 +274,28 @@ int main(int argc, char *argv[]) {
   staMobilityKelasB.Install(staKelasB);
 
   // --- Mobilitas Koridor (Atas) ---
-  // Mengembalikan ke RandomWalk agar STA tetap di dalam coverage AP
-  // (menghindari 0 Mbps karena out-of-range)
-  MobilityHelper staMobilityKoridor;
-  staMobilityKoridor.SetPositionAllocator(
+  // Memisahkan area mobilitas agar STA 18 (Ssid A) tetap di zona AP0 (X: 0.5-8.0), dan STA 19 (Ssid B) di zona AP1 (X: 8.0-15.5)
+  MobilityHelper staMobilityKoridorA;
+  staMobilityKoridorA.SetPositionAllocator(
       "ns3::RandomRectanglePositionAllocator", "X",
-      StringValue("ns3::UniformRandomVariable[Min=0.5|Max=15.5]"), "Y",
+      StringValue("ns3::UniformRandomVariable[Min=0.5|Max=8.0]"), "Y",
       StringValue("ns3::UniformRandomVariable[Min=8.5|Max=10.5]"));
-  staMobilityKoridor.SetMobilityModel(
+  staMobilityKoridorA.SetMobilityModel(
       "ns3::RandomWalk2dMobilityModel", "Bounds",
-      RectangleValue(Rectangle(
-          0.5, 15.5, 8.5, 10.5)), // Koridor melintang di atas Kelas A dan B
+      RectangleValue(Rectangle(0.5, 8.0, 8.5, 10.5)),
       "Speed", StringValue("ns3::UniformRandomVariable[Min=0.5|Max=1.5]"));
-  staMobilityKoridor.Install(staKoridor);
+  staMobilityKoridorA.Install(staKoridor.Get(0));
+
+  MobilityHelper staMobilityKoridorB;
+  staMobilityKoridorB.SetPositionAllocator(
+      "ns3::RandomRectanglePositionAllocator", "X",
+      StringValue("ns3::UniformRandomVariable[Min=8.0|Max=15.5]"), "Y",
+      StringValue("ns3::UniformRandomVariable[Min=8.5|Max=10.5]"));
+  staMobilityKoridorB.SetMobilityModel(
+      "ns3::RandomWalk2dMobilityModel", "Bounds",
+      RectangleValue(Rectangle(8.0, 15.5, 8.5, 10.5)),
+      "Speed", StringValue("ns3::UniformRandomVariable[Min=0.5|Max=1.5]"));
+  staMobilityKoridorB.Install(staKoridor.Get(1));
 
   BuildingsHelper::Install(wifiApNode);
   BuildingsHelper::Install(wifiStaNode);
@@ -821,7 +830,7 @@ int main(int argc, char *argv[]) {
               << std::endl;
   }
 
-  std::cout << "\n[BREAKDOWN KORIDOR (STA 38-39 / Bergerak)]" << std::endl;
+  std::cout << "\n[BREAKDOWN KORIDOR (STA 18-19 / Bergerak)]" << std::endl;
   if (koridor_flows > 0) {
     std::cout << "  Agregat Throughput   : " << koridor_th << " Mbps"
               << std::endl;

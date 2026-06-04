@@ -176,7 +176,7 @@ int main(int argc, char *argv[]) {
   // Mulai pencatatan waktu eksekusi nyata
   auto startRealTime = std::chrono::high_resolution_clock::now();
 
-  std::cout << "\n>>> Memulai simulasi Wi-Fi 6 Indoor Baseline (Single-Link), "
+  std::cout << "\n>>> Memulai simulasi STRESS TEST WI-FI 6 (BEBAN MAKSIMAL GIGABIT), "
                "menunggu 10 detik... <<<\n"
             << std::endl;
 
@@ -273,18 +273,28 @@ int main(int argc, char *argv[]) {
   staMobilityKelasB.Install(staKelasB);
 
   // --- Mobilitas Koridor (Atas) ---
-  // Mengembalikan ke RandomWalk agar STA tetap di dalam coverage AP (menghindari 0 Mbps karena out-of-range)
-  MobilityHelper staMobilityKoridor;
-  staMobilityKoridor.SetPositionAllocator(
+  // Memisahkan area mobilitas agar STA 18 (Ssid A) tetap di zona AP0 (X: 0.5-8.0), dan STA 19 (Ssid B) di zona AP1 (X: 8.0-15.5)
+  MobilityHelper staMobilityKoridorA;
+  staMobilityKoridorA.SetPositionAllocator(
       "ns3::RandomRectanglePositionAllocator", "X",
-      StringValue("ns3::UniformRandomVariable[Min=0.5|Max=15.5]"), "Y",
+      StringValue("ns3::UniformRandomVariable[Min=0.5|Max=8.0]"), "Y",
       StringValue("ns3::UniformRandomVariable[Min=8.5|Max=10.5]"));
-  staMobilityKoridor.SetMobilityModel(
+  staMobilityKoridorA.SetMobilityModel(
       "ns3::RandomWalk2dMobilityModel", "Bounds",
-      RectangleValue(Rectangle(
-          0.5, 15.5, 8.5, 10.5)), // Koridor melintang di atas Kelas A dan B
+      RectangleValue(Rectangle(0.5, 8.0, 8.5, 10.5)),
       "Speed", StringValue("ns3::UniformRandomVariable[Min=0.5|Max=1.5]"));
-  staMobilityKoridor.Install(staKoridor);
+  staMobilityKoridorA.Install(staKoridor.Get(0));
+
+  MobilityHelper staMobilityKoridorB;
+  staMobilityKoridorB.SetPositionAllocator(
+      "ns3::RandomRectanglePositionAllocator", "X",
+      StringValue("ns3::UniformRandomVariable[Min=8.0|Max=15.5]"), "Y",
+      StringValue("ns3::UniformRandomVariable[Min=8.5|Max=10.5]"));
+  staMobilityKoridorB.SetMobilityModel(
+      "ns3::RandomWalk2dMobilityModel", "Bounds",
+      RectangleValue(Rectangle(8.0, 15.5, 8.5, 10.5)),
+      "Speed", StringValue("ns3::UniformRandomVariable[Min=0.5|Max=1.5]"));
+  staMobilityKoridorB.Install(staKoridor.Get(1));
 
   BuildingsHelper::Install(wifiApNode);
   BuildingsHelper::Install(wifiStaNode);
@@ -428,7 +438,7 @@ int main(int argc, char *argv[]) {
   serverNode.Create(1);
 
   CsmaHelper csma;
-  csma.SetChannelAttribute("DataRate", StringValue("1Gbps"));
+  csma.SetChannelAttribute("DataRate", StringValue("10Gbps"));
   csma.SetChannelAttribute("Delay", TimeValue(MicroSeconds(2)));
 
   NodeContainer backboneNodes;
@@ -537,9 +547,9 @@ int main(int argc, char *argv[]) {
         std::to_string(baseRate.GetBitRate() * 2) + "bps";
 
     onoff.SetAttribute(
-        "OnTime", StringValue("ns3::ConstantRandomVariable[Constant=0.01]"));
+        "OnTime", StringValue("ns3::ConstantRandomVariable[Constant=1.0]"));
     onoff.SetAttribute(
-        "OffTime", StringValue("ns3::ConstantRandomVariable[Constant=0.09]"));
+        "OffTime", StringValue("ns3::ConstantRandomVariable[Constant=0.0]"));
     onoff.SetAttribute("PacketSize",
                        UintegerValue(profiles[profileIdx].packetSize));
     onoff.SetAttribute("DataRate", StringValue(burstRateStr));
@@ -578,7 +588,7 @@ int main(int argc, char *argv[]) {
       DynamicCast<Ipv4FlowClassifier>(flowmon.GetClassifier());
   FlowMonitor::FlowStatsContainer stats = monitor->GetFlowStats();
 
-  std::cout << "\n================= HASIL SIMULASI INDOOR WI-FI 6 (BASELINE) "
+  std::cout << "\n================= HASIL SIMULASI STRESS TEST WI-FI 6 "
                "LENGKAP ================="
             << std::endl;
   std::cout
@@ -686,7 +696,7 @@ int main(int argc, char *argv[]) {
   // Persiapan CSV Export dengan Timestamp & Folder Khusus (Menggunakan
   // globalTimestamp)
   std::string csvFilename =
-      outDir + "/hasil_simulasi_wifi6_" + globalTimestamp + ".csv";
+      outDir + "/hasil_stresstest_wifi6_" + globalTimestamp + ".csv";
 
   std::ofstream csvFile(csvFilename);
   csvFile << "STA_ID,Area,Profil,Throughput_Mbps,Delay_ms,Jitter_ms,MacDrop,"
