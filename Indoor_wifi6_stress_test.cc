@@ -156,7 +156,7 @@ struct UserProfile {
 int main(int argc, char *argv[]) {
   // Setup direktori output
   std::string outDir = "scratch/ta_wifi7/output_simulasi";
-  std::system(("mkdir -p " + outDir).c_str());
+  if (std::system(("mkdir -p " + outDir).c_str()) != 0) { std::cerr << "Warning: Failed to create " << outDir << std::endl; }
 
   // Setup timestamp untuk nama file log dan CSV
   std::time_t t_now = std::time(nullptr);
