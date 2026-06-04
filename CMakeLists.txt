@@ -63,3 +63,12 @@ build_exec(
   LIBRARIES_TO_LINK "${ns3-libs}" "${ns3-contrib-libs}"
   EXECUTABLE_DIRECTORY_PATH ${CMAKE_OUTPUT_DIRECTORY}/scratch/ta_wifi7/
 )
+
+# 8. Target untuk Indoor_wifi7_pcap
+build_exec(
+  EXECNAME Indoor_wifi7_pcap
+  EXECNAME_PREFIX scratch_ta_wifi7_
+  SOURCE_FILES Indoor_wifi7_pcap.cc
+  LIBRARIES_TO_LINK "${ns3-libs}" "${ns3-contrib-libs}"
+  EXECUTABLE_DIRECTORY_PATH ${CMAKE_OUTPUT_DIRECTORY}/scratch/ta_wifi7/
+)

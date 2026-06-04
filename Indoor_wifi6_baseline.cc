@@ -176,6 +176,12 @@ int main(int argc, char *argv[]) {
   // Mulai pencatatan waktu eksekusi nyata
   auto startRealTime = std::chrono::high_resolution_clock::now();
 
+  char human_time_str[100];
+  std::strftime(human_time_str, sizeof(human_time_str), "%Y-%m-%d %H:%M:%S", std::localtime(&t_now));
+  std::cout << "\n=======================================================\n";
+  std::cout << "[INFO] TANGGAL & WAKTU EKSEKUSI SIMULASI : " << human_time_str << "\n";
+  std::cout << "=======================================================\n";
+
   std::cout << "\n>>> Memulai simulasi Wi-Fi 6 Indoor Baseline (Single-Link), "
                "menunggu 10 detik... <<<\n"
             << std::endl;
@@ -689,11 +695,21 @@ int main(int argc, char *argv[]) {
       outDir + "/hasil_simulasi_wifi6_" + globalTimestamp + ".csv";
 
   std::ofstream csvFile(csvFilename);
-  csvFile << "STA_ID,Area,Profil,Throughput_Mbps,Delay_ms,Jitter_ms,MacDrop,"
+  csvFile << "STA_ID,MAC_Address,Area,Profil,QoS_AC,Throughput_Mbps,Delay_ms,Jitter_ms,MacDrop,"
              "HandoverCount\n";
+
+  auto getMacAddress = [&](Ptr<Node> node) {
+    for (uint32_t d = 0; d < node->GetNDevices(); ++d) {
+      if (node->GetDevice(d)->GetInstanceTypeId() == WifiNetDevice::GetTypeId()) {
+        return Mac48Address::ConvertFrom(node->GetDevice(d)->GetAddress());
+      }
+    }
+    return Mac48Address("00:00:00:00:00:00");
+  };
 
   for (uint32_t i = 0; i < 20; ++i) {
     Ipv4Address staAddr = staInterface.GetAddress(i);
+    Mac48Address staMac = getMacAddress(wifiStaNode.Get(i));
     std::string area = (i < 10) ? "Kelas A" : (i < 18) ? "Kelas B" : "Koridor";
     bool found = false;
 
@@ -720,13 +736,14 @@ int main(int argc, char *argv[]) {
         uint32_t handoverCount =
             (g_staAssocCount[i] > 1) ? g_staAssocCount[i] - 1 : 0;
 
-        std::cout << "STA " << i << " (" << area << ", " << profiles[i % 5].name
-                  << ")\t-> "
+        std::cout << "STA " << i << " [" << staMac << "] (" << area << ", " << profiles[i % 5].name
+                  << " / " << profiles[i % 5].acName << ")\t-> "
                   << "TH: " << throughput << " Mbps \t| D: " << delay
                   << " ms \t| J: " << jitter << " ms \t| Drop: " << drop
                   << std::endl;
 
-        csvFile << i << "," << area << "," << profiles[i % 5].name << ","
+        csvFile << i << "," << staMac << "," << area << "," << profiles[i % 5].name << ","
+                << profiles[i % 5].acName << ","
                 << throughput << "," << delay << "," << jitter << "," << drop
                 << "," << handoverCount << "\n";
 
