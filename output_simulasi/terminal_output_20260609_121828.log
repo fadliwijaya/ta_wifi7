@@ -1,0 +1,49 @@
+
+=======================================================
+[INFO] TANGGAL & WAKTU EKSEKUSI SIMULASI : 2026-06-09 12:18:28
+=======================================================
+
+>>> Memulai simulasi Wi-Fi 6 Indoor (Skenario Kampus Lanjutan), menunggu 10 detik... <<<
+
+
+--- Memulai Log Panjang Antrean MAC (Queue Occupancy) per 100 ms ---
+[STA ASSOC] Waktu: 0.0531119s | STA Node 9 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:0d
+[STA ASSOC] Waktu: 0.0534559s | STA Node 5 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:0d
+[STA ASSOC] Waktu: 0.0537999s | STA Node 13 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:0d
+[STA ASSOC] Waktu: 0.054596s | STA Node 22 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:18
+[STA ASSOC] Waktu: 0.05494s | STA Node 23 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:18
+[STA ASSOC] Waktu: 0.0553701s | STA Node 4 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:0d
+[STA ASSOC] Waktu: 0.056205s | STA Node 19 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:18
+[STA ASSOC] Waktu: 0.0570101s | STA Node 16 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:18
+[Antrean MAC] Waktu: 0.1s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[STA ASSOC] Waktu: 0.102587s | STA Node 17 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:18
+[STA ASSOC] Waktu: 0.102931s | STA Node 24 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:18
+[STA ASSOC] Waktu: 0.103275s | STA Node 15 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:18
+[STA ASSOC] Waktu: 0.104071s | STA Node 21 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:18
+[STA ASSOC] Waktu: 0.105966s | STA Node 26 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:18
+[STA ASSOC] Waktu: 0.105966s | STA Node 14 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:0d
+[STA ASSOC] Waktu: 0.10631s | STA Node 11 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:0d
+[STA ASSOC] Waktu: 0.10631s | STA Node 20 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:18
+[STA ASSOC] Waktu: 0.106654s | STA Node 3 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:0d
+[STA ASSOC] Waktu: 0.106654s | STA Node 18 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:18
+[STA ASSOC] Waktu: 0.106998s | STA Node 8 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:0d
+[STA ASSOC] Waktu: 0.107342s | STA Node 6 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:0d
+[STA ASSOC] Waktu: 0.107686s | STA Node 10 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:0d
+[STA ASSOC] Waktu: 0.108057s | STA Node 12 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:0d
+[STA ASSOC] Waktu: 0.108889s | STA Node 7 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:0d
+[STA ASSOC] Waktu: 0.109703s | STA Node 25 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:0d
+[Antrean MAC] Waktu: 0.2s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.3s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.4s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.5s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.6s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.7s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.8s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.9s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 1s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 1.1s | AP0 (Ruang 1): 38 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 1.2s | AP0 (Ruang 1): 14 paket | AP1 (Ruang 2): 10 paket
+[Antrean MAC] Waktu: 1.3s | AP0 (Ruang 1): 1102 paket | AP1 (Ruang 2): 292 paket
+[Antrean MAC] Waktu: 1.4s | AP0 (Ruang 1): 108 paket | AP1 (Ruang 2): 822 paket
+[Antrean MAC] Waktu: 1.5s | AP0 (Ruang 1): 108 paket | AP1 (Ruang 2): 746 paket
+[Antrean MAC] Waktu: 1.6s | AP0 (Ruang 1): 604 paket | AP1 (Ruang 2): 430 paket

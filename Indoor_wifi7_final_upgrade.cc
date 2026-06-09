@@ -101,17 +101,39 @@ void SampleChannel(Ptr<WifiNetDevice> ap0, Ptr<WifiNetDevice> ap1) {
 uint32_t g_totalAssoc = 0;
 std::map<uint32_t, uint32_t> g_staAssocCount;
 
-void StaAssocCallback(std::string context, Mac48Address bssid) {
+
+// Global variables untuk Dynamic Handover Routing
+ns3::Ptr<ns3::Ipv4StaticRouting> g_serverRouting;
+ns3::Ipv4Address g_ap0CsmaIp;
+ns3::Ipv4Address g_ap1CsmaIp;
+ns3::Mac48Address g_ap0Bssid;
+ns3::Mac48Address g_ap1Bssid;
+std::map<uint32_t, ns3::Ipv4Address> g_staIps;
+
+void StaAssocCallback(std::string context, ns3::Mac48Address bssid) {
   size_t first = context.find("NodeList/") + 9;
   size_t second = context.find("/", first);
   uint32_t nodeId = std::stoi(context.substr(first, second - first));
 
   g_staAssocCount[nodeId]++;
   g_totalAssoc++;
-  std::cout << "[STA ASSOC] Waktu: " << Simulator::Now().GetSeconds()
+  std::cout << "[STA ASSOC] Waktu: " << ns3::Simulator::Now().GetSeconds()
             << "s | STA Node " << nodeId
             << " sukses Asosiasi ke AP BSSID: " << bssid << std::endl;
+
+  // DYNAMIC HANDOVER ROUTING
+  if (g_serverRouting && g_staIps.find(nodeId) != g_staIps.end()) {
+      ns3::Ipv4Address staIp = g_staIps[nodeId];
+      if (bssid == g_ap0Bssid) {
+          g_serverRouting->AddHostRouteTo(staIp, g_ap0CsmaIp, 1);
+          // std::cout << "  [ROUTING] Route untuk " << staIp << " di-update via AP0 (" << g_ap0CsmaIp << ")" << std::endl;
+      } else if (bssid == g_ap1Bssid) {
+          g_serverRouting->AddHostRouteTo(staIp, g_ap1CsmaIp, 1);
+          // std::cout << "  [ROUTING] Route untuk " << staIp << " di-update via AP1 (" << g_ap1CsmaIp << ")" << std::endl;
+      }
+  }
 }
+
 
 // Fungsi Sampling Queue Occupancy (Panjang Antrean)
 void SampleQueue(Ptr<WifiNetDevice> ap0, Ptr<WifiNetDevice> ap1) {
@@ -311,9 +333,9 @@ int main(int argc, char *argv[]) {
   SpectrumWifiPhyHelper spectrumPhy(2);
   spectrumPhy.SetErrorRateModel("ns3::NistErrorRateModel");
 
-  spectrumPhy.Set("Antennas", UintegerValue(4));
-  spectrumPhy.Set("MaxSupportedTxSpatialStreams", UintegerValue(4));
-  spectrumPhy.Set("MaxSupportedRxSpatialStreams", UintegerValue(4));
+  spectrumPhy.Set("Antennas", UintegerValue(8));
+  spectrumPhy.Set("MaxSupportedTxSpatialStreams", UintegerValue(8));
+  spectrumPhy.Set("MaxSupportedRxSpatialStreams", UintegerValue(8));
 
   spectrumPhy.Set("TxPowerStart", DoubleValue(20.0));
   spectrumPhy.Set("TxPowerEnd", DoubleValue(20.0));
@@ -359,9 +381,9 @@ int main(int argc, char *argv[]) {
                           DoubleValue(-82.0));
 
   WifiMacHelper macA;
-  Ssid ssidA = Ssid("kampus-wifi7-A");
+  Ssid ssidA = Ssid("kampus-wifi");
   macA.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssidA), "QosSupported",
-               BooleanValue(true), "ActiveProbing", BooleanValue(false));
+               BooleanValue(true), "ActiveProbing", BooleanValue(true));
   NetDeviceContainer staDeviceA = wifi.Install(spectrumPhy, macA, staKelasA);
 
   macA.SetType("ns3::ApWifiMac", "Ssid", SsidValue(ssidA), "QosSupported",
@@ -370,9 +392,9 @@ int main(int argc, char *argv[]) {
       wifi.Install(spectrumPhy, macA, wifiApNode.Get(0));
 
   WifiMacHelper macB;
-  Ssid ssidB = Ssid("kampus-wifi7-B");
+  Ssid ssidB = Ssid("kampus-wifi");
   macB.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssidB), "QosSupported",
-               BooleanValue(true), "ActiveProbing", BooleanValue(false));
+               BooleanValue(true), "ActiveProbing", BooleanValue(true));
   NetDeviceContainer staDeviceB = wifi.Install(spectrumPhy, macB, staKelasB);
 
   macB.SetType("ns3::ApWifiMac", "Ssid", SsidValue(ssidB), "QosSupported",
@@ -384,12 +406,12 @@ int main(int argc, char *argv[]) {
 
   // Koridor: STA 18 ikut AP0, STA 19 ikut AP1
   macA.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssidA), "QosSupported",
-               BooleanValue(true), "ActiveProbing", BooleanValue(false));
+               BooleanValue(true), "ActiveProbing", BooleanValue(true));
   NetDeviceContainer staDeviceKoridorA =
       wifi.Install(spectrumPhy, macA, staKoridor.Get(0));
 
   macB.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssidB), "QosSupported",
-               BooleanValue(true), "ActiveProbing", BooleanValue(false));
+               BooleanValue(true), "ActiveProbing", BooleanValue(true));
   NetDeviceContainer staDeviceKoridorB =
       wifi.Install(spectrumPhy, macB, staKoridor.Get(1));
 
@@ -464,7 +486,7 @@ int main(int argc, char *argv[]) {
   serverNode.Create(1);
 
   CsmaHelper csma;
-  csma.SetChannelAttribute("DataRate", StringValue("1Gbps"));
+  csma.SetChannelAttribute("DataRate", StringValue("23Gbps"));
   csma.SetChannelAttribute("Delay", TimeValue(MicroSeconds(2)));
 
   NodeContainer backboneNodes;
@@ -545,6 +567,18 @@ int main(int argc, char *argv[]) {
       ipv4RoutingHelper.GetStaticRouting(ipv4Ap1);
   staticRoutingAp1->SetDefaultRoute(backboneInterfaces.GetAddress(0), 1);
 
+  
+  // Inisialisasi Variabel Global untuk Dynamic Handover Routing
+  g_serverRouting = staticRoutingServer;
+  g_ap0CsmaIp = backboneInterfaces.GetAddress(1);
+  g_ap1CsmaIp = backboneInterfaces.GetAddress(2);
+  g_ap0Bssid = ns3::Mac48Address::ConvertFrom(apDevice.Get(0)->GetAddress());
+  g_ap1Bssid = ns3::Mac48Address::ConvertFrom(apDevice.Get(1)->GetAddress());
+  
+  for (uint32_t i = 0; i < 24; ++i) {
+      g_staIps[wifiStaNode.Get(i)->GetId()] = staInterface.GetAddress(i);
+  }
+  
   // STA Routing: Default route ke AP masing-masing agar bisa kirim Uplink ke Server
   for (uint32_t i = 0; i < 12; ++i) {
     Ptr<Ipv4> ipv4Sta = wifiStaNode.Get(i)->GetObject<Ipv4>();
@@ -1011,8 +1045,10 @@ int main(int argc, char *argv[]) {
 
   auto endRealTime = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> diffRealTime = endRealTime - startRealTime;
+  double totalSeconds = diffRealTime.count();
+  double totalMinutes = totalSeconds / 60.0;
   std::cout << "[INFO] Waktu Eksekusi Nyata (Real Runtime) Simulasi: "
-            << diffRealTime.count() << " detik" << std::endl;
+            << totalMinutes << " menit (" << totalSeconds << " detik)" << std::endl;
 
   Simulator::Destroy();
 

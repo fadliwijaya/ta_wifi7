@@ -426,58 +426,6 @@ int main(int argc, char *argv[]) {
   staDevice.Add(staDeviceKoridorA);
   staDevice.Add(staDeviceKoridorB);
 
-  // ==========================================
-  // [NEW] BSS TETANGGA (ROGUE AP) UNTUK INTERFERENSI (WI-FI 6 - 5GHz SAJA)
-  // ==========================================
-  NodeContainer rogueApNode, rogueStaNode;
-  rogueApNode.Create(1);
-  rogueStaNode.Create(1);
-
-  MobilityHelper rogueMob;
-  Ptr<ListPositionAllocator> rogueAlloc = CreateObject<ListPositionAllocator>();
-  rogueAlloc->Add(Vector(8.0, 13.0, 2.9));
-  rogueAlloc->Add(Vector(8.0, 14.0, 1.0));
-  rogueMob.SetPositionAllocator(rogueAlloc);
-  rogueMob.SetMobilityModel("ns3::ConstantPositionMobilityModel");
-  rogueMob.Install(rogueApNode);
-  rogueMob.Install(rogueStaNode);
-
-  // -------------------------------------------------------------
-  // ROGUE AP WI-FI 6 (802.11ax) DI 5GHz SAJA (SINGLE LINK)
-  // -------------------------------------------------------------
-  WifiHelper wifi6Rogue;
-  wifi6Rogue.SetStandard(WIFI_STANDARD_80211ax);
-  wifi6Rogue.SetRemoteStationManager("ns3::IdealWifiManager");
-
-  SpectrumWifiPhyHelper roguePhy(1); // Hanya 1 Link (Non-MLO)
-  roguePhy.SetErrorRateModel("ns3::NistErrorRateModel");
-  roguePhy.Set("Antennas", UintegerValue(2));
-  roguePhy.Set("MaxSupportedTxSpatialStreams", UintegerValue(2));
-  roguePhy.Set("MaxSupportedRxSpatialStreams", UintegerValue(2));
-  roguePhy.Set("TxPowerStart", DoubleValue(20.0));
-  roguePhy.Set("TxPowerEnd", DoubleValue(20.0));
-  roguePhy.Set("TxGain", DoubleValue(3.0));
-  roguePhy.Set("RxGain", DoubleValue(3.0));
-
-  // Menumpang di spectrum channel 5GHz yang SAMA persis dengan AP Utama
-  roguePhy.Set(0, "ChannelSettings", StringValue("{0, 160, BAND_5GHZ, 0}"));
-  roguePhy.AddChannel(channel5Ghz, WIFI_SPECTRUM_5_GHZ);
-
-  Ssid rogueSsid = Ssid("tetangga-wifi6");
-  WifiMacHelper rogueMac;
-  rogueMac.SetType("ns3::StaWifiMac", "Ssid", SsidValue(rogueSsid),
-                   "QosSupported", BooleanValue(true), "ActiveProbing",
-                   BooleanValue(false));
-  NetDeviceContainer rogueStaDev =
-      wifi6Rogue.Install(roguePhy, rogueMac, rogueStaNode);
-
-  rogueMac.SetType("ns3::ApWifiMac", "Ssid", SsidValue(rogueSsid),
-                   "QosSupported", BooleanValue(true));
-  NetDeviceContainer rogueApDev =
-      wifi6Rogue.Install(roguePhy, rogueMac, rogueApNode);
-
-  BuildingsHelper::Install(rogueApNode);
-  BuildingsHelper::Install(rogueStaNode);
 
   // ==========================================
   // [NEW] CENTRAL SERVER & CSMA BACKBONE (L3 DS)
@@ -499,8 +447,6 @@ int main(int argc, char *argv[]) {
   stack.Install(serverNode);
   stack.Install(wifiApNode);
   stack.Install(wifiStaNode);
-  stack.Install(rogueApNode);
-  stack.Install(rogueStaNode);
 
   Ipv4AddressHelper address;
 
@@ -533,10 +479,6 @@ int main(int argc, char *argv[]) {
   for (uint32_t i = 0; i < 12; ++i)
     staInterface.Add(sta1Interface.Get(i));
 
-  Ipv4AddressHelper rogueAddr;
-  rogueAddr.SetBase("10.0.0.0", "255.255.255.0");
-  Ipv4InterfaceContainer rogueApIf = rogueAddr.Assign(rogueApDev);
-  Ipv4InterfaceContainer rogueStaIf = rogueAddr.Assign(rogueStaDev);
 
   // Aktifkan Routing Statis (Bypass bug ns-3 GlobalRouting pada MLO)
   Ipv4StaticRoutingHelper ipv4RoutingHelper;
@@ -591,27 +533,6 @@ int main(int argc, char *argv[]) {
     staticRoutingSta->SetDefaultRoute(ap1Interface.GetAddress(0), 1);
   }
 
-  OnOffHelper rogueTraffic("ns3::UdpSocketFactory",
-                           InetSocketAddress(rogueStaIf.GetAddress(0), 9999));
-  rogueTraffic.SetAttribute(
-      "DataRate",
-      StringValue("20Mbps")); // Diturunkan dari 100Mbps agar interferensi wajar
-  rogueTraffic.SetAttribute("PacketSize", UintegerValue(1500));
-  rogueTraffic.SetAttribute(
-      "OnTime", StringValue("ns3::ConstantRandomVariable[Constant=1]"));
-  rogueTraffic.SetAttribute(
-      "OffTime", StringValue("ns3::ConstantRandomVariable[Constant=0]"));
-  ApplicationContainer rogueApp = rogueTraffic.Install(rogueApNode.Get(0));
-  rogueApp.Start(Seconds(0.5));
-  rogueApp.Stop(simulationTime);
-
-  // Pasang Packet Sink di Rogue STA agar trafik UDP diterima dengan baik (tidak
-  // dibuang/ICMP Unreachable)
-  PacketSinkHelper rogueSink("ns3::UdpSocketFactory",
-                             InetSocketAddress(Ipv4Address::GetAny(), 9999));
-  ApplicationContainer rogueSinkApp = rogueSink.Install(rogueStaNode.Get(0));
-  rogueSinkApp.Start(Seconds(0.0));
-  rogueSinkApp.Stop(simulationTime);
 
   ApplicationContainer sinkApps;
   ApplicationContainer clientApps;
@@ -687,14 +608,6 @@ int main(int argc, char *argv[]) {
                "100 ms ---"
             << std::endl;
   Simulator::Schedule(MilliSeconds(100), &SampleQueue, devAp0, devAp1);
-
-  // ==========================================
-  // [NEW] MENGAKTIFKAN PACKET CAPTURE (PCAP)
-  // ==========================================
-  std::string pcapDir = outDir + "/pcap_wifi7_" + globalTimestamp;
-  if (std::system(("mkdir -p " + pcapDir).c_str()) != 0) { std::cerr << "Warning: Failed to create " << pcapDir << std::endl; }
-  spectrumPhy.EnablePcap(pcapDir + "/ap0_mac_frame", apDevice.Get(0), true);
-  std::cout << "\n[INFO] Fitur PCAP aktif! File .pcap akan disimpan di: " << pcapDir << std::endl;
 
   FlowMonitorHelper flowmon;
   Ptr<FlowMonitor> monitor = flowmon.InstallAll();
@@ -912,7 +825,7 @@ int main(int argc, char *argv[]) {
         std::cout << "STA " << i << " [" << staMac << "] (" << area << ", " << profiles[i % 6].name << " / " << profiles[i % 6].acName << ") [UL]\t-> TH: " << ulTh << " Mbps \t| D: " << ulDly << " ms \t| J: " << ulJit << " ms \t| Drop: " << ulDrop << std::endl;
         csvFile << i << "," << staMac << ",UL," << area << "," << profiles[i % 6].name << "," << profiles[i % 6].acName << "," << ulTh << "," << ulDly << "," << ulJit << "," << ulDrop << "," << handoverCount << "\n";
     }
-
+    
     double throughput = dlTh + ulTh;
     double delay = (dlDly + ulDly) / 2.0;
     double jitter = (dlJit + ulJit) / 2.0;
