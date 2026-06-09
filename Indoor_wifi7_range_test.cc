@@ -172,6 +172,15 @@ int main(int argc, char *argv[]) {
   std::cout << "- Jarak Uji         : 0 hingga " << g_distanceLimit << " meter\n";
   std::cout << "=======================================================\n\n";
 
+  Config::SetDefault("ns3::WifiMacQueue::MaxSize", StringValue("5000p"));
+  Config::SetDefault("ns3::WifiMacQueue::MaxDelay", TimeValue(Seconds(1.0)));
+  Config::SetDefault("ns3::FqCoDelQueueDisc::MaxSize", StringValue("5000p"));
+  Config::SetDefault("ns3::WifiMac::MpduBufferSize", UintegerValue(1024));
+  Config::SetDefault("ns3::WifiMac::BE_MaxAmpduSize", UintegerValue(1048575));
+  Config::SetDefault("ns3::WifiMac::BK_MaxAmpduSize", UintegerValue(1048575));
+  Config::SetDefault("ns3::WifiMac::VI_MaxAmpduSize", UintegerValue(1048575));
+  Config::SetDefault("ns3::WifiMac::VO_MaxAmpduSize", UintegerValue(1048575));
+
   double simulationTimeSec = 32.0;
   
   Config::SetDefault("ns3::StaWifiMac::MaxMissedBeacons", UintegerValue(10)); // Hindari putus asosiasi prematur
@@ -288,6 +297,7 @@ int main(int argc, char *argv[]) {
   onoff.SetAttribute("PacketSize", UintegerValue(1472));
   onoff.SetAttribute("OnTime", StringValue("ns3::ConstantRandomVariable[Constant=1]"));
   onoff.SetAttribute("OffTime", StringValue("ns3::ConstantRandomVariable[Constant=0]"));
+  onoff.SetAttribute("Tos", UintegerValue(0x20)); // QoS AC_BK (File Download)
   
   ApplicationContainer clientApps = onoff.Install(serverNode.Get(0));
   clientApps.Start(Seconds(0.5));
