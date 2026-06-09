@@ -200,8 +200,6 @@ int main(int argc, char *argv[]) {
   SpectrumWifiPhyHelper spectrumPhy(2); // MLO 2 Links
   spectrumPhy.SetErrorRateModel("ns3::NistErrorRateModel");
   spectrumPhy.Set("Antennas", UintegerValue(8));
-  spectrumPhy.Set("MaxSupportedTxSpatialStreams", UintegerValue(8));
-  spectrumPhy.Set("MaxSupportedRxSpatialStreams", UintegerValue(8));
   spectrumPhy.Set("TxPowerStart", DoubleValue(20.0));
   spectrumPhy.Set("TxPowerEnd", DoubleValue(20.0));
   spectrumPhy.Set("TxGain", DoubleValue(6.0));
@@ -236,6 +234,15 @@ int main(int argc, char *argv[]) {
 
   macA.SetType("ns3::ApWifiMac", "Ssid", SsidValue(ssidA));
   NetDeviceContainer apDeviceA = wifi.Install(spectrumPhy, macA, wifiApNode);
+
+  for (uint32_t i = 0; i < apDeviceA.GetN(); ++i) {
+      DynamicCast<WifiNetDevice>(apDeviceA.Get(i))->GetPhy()->SetMaxSupportedTxSpatialStreams(8);
+      DynamicCast<WifiNetDevice>(apDeviceA.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
+  }
+  for (uint32_t i = 0; i < staDeviceA.GetN(); ++i) {
+      DynamicCast<WifiNetDevice>(staDeviceA.Get(i))->GetPhy()->SetMaxSupportedTxSpatialStreams(8);
+      DynamicCast<WifiNetDevice>(staDeviceA.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
+  }
 
   CsmaHelper csma;
   csma.SetChannelAttribute("DataRate", StringValue("23Gbps"));
