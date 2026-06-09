@@ -82,3 +82,40 @@ build_exec(
   LIBRARIES_TO_LINK "${ns3-libs}" "${ns3-contrib-libs}"
   EXECUTABLE_DIRECTORY_PATH ${CMAKE_OUTPUT_DIRECTORY}/scratch/ta_wifi7/
 )
+
+# Target untuk Indoor_wifi7_range_test
+build_exec(
+  EXECNAME Indoor_wifi7_range_test
+  EXECNAME_PREFIX scratch_ta_wifi7_
+  SOURCE_FILES Indoor_wifi7_range_test.cc
+  LIBRARIES_TO_LINK "${ns3-libs}" "${ns3-contrib-libs}"
+  EXECUTABLE_DIRECTORY_PATH ${CMAKE_OUTPUT_DIRECTORY}/scratch/ta_wifi7/
+)
+
+# Target untuk Indoor_wifi6_range_test
+build_exec(
+  EXECNAME Indoor_wifi6_range_test
+  EXECNAME_PREFIX scratch_ta_wifi7_
+  SOURCE_FILES Indoor_wifi6_range_test.cc
+  LIBRARIES_TO_LINK "${ns3-libs}" "${ns3-contrib-libs}"
+  EXECUTABLE_DIRECTORY_PATH ${CMAKE_OUTPUT_DIRECTORY}/scratch/ta_wifi7/
+)
+
+# Target untuk Indoor_wifi7_density_test
+build_exec(
+  EXECNAME Indoor_wifi7_density_test
+  EXECNAME_PREFIX scratch_ta_wifi7_
+  SOURCE_FILES Indoor_wifi7_density_test.cc
+  LIBRARIES_TO_LINK "${ns3-libs}" "${ns3-contrib-libs}"
+  EXECUTABLE_DIRECTORY_PATH ${CMAKE_OUTPUT_DIRECTORY}/scratch/ta_wifi7/
+)
+
+# Target untuk Indoor_wifi6_density_test
+build_exec(
+  EXECNAME Indoor_wifi6_density_test
+  EXECNAME_PREFIX scratch_ta_wifi7_
+  SOURCE_FILES Indoor_wifi6_density_test.cc
+  LIBRARIES_TO_LINK "${ns3-libs}" "${ns3-contrib-libs}"
+  EXECUTABLE_DIRECTORY_PATH ${CMAKE_OUTPUT_DIRECTORY}/scratch/ta_wifi7/
+)
+

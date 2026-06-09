@@ -1,0 +1,61 @@
+
+=======================================================
+[INFO] TANGGAL & WAKTU EKSEKUSI SIMULASI : 2026-06-09 13:53:01
+=======================================================
+
+=======================================================
+[INFO] Skenario Range / Pathloss Degradation (Wi-Fi 7)
+=======================================================
+[INFO] Waktu: 0.2s | Jarak: 1 m | Throughput: 0 Mbps | Drop: 0
+[INFO] Waktu: 0.4s | Jarak: 3 m | Throughput: 0 Mbps | Drop: 0
+[INFO] Waktu: 0.6s | Jarak: 5 m | Throughput: 1124.25 Mbps | Drop: 0
+[INFO] Waktu: 0.8s | Jarak: 7 m | Throughput: 2757.59 Mbps | Drop: 0
+[INFO] Waktu: 1s | Jarak: 9 m | Throughput: 2757.82 Mbps | Drop: 0
+[INFO] Waktu: 1.2s | Jarak: 11 m | Throughput: 2762.77 Mbps | Drop: 0
+[INFO] Waktu: 1.4s | Jarak: 13 m | Throughput: 2765.77 Mbps | Drop: 0
+[INFO] Waktu: 1.6s | Jarak: 15 m | Throughput: 2694.35 Mbps | Drop: 0
+[INFO] Waktu: 1.8s | Jarak: 17 m | Throughput: 2690.58 Mbps | Drop: 0
+[INFO] Waktu: 2s | Jarak: 19 m | Throughput: 2699.65 Mbps | Drop: 0
+[INFO] Waktu: 2.2s | Jarak: 21 m | Throughput: 2683.99 Mbps | Drop: 0
+[INFO] Waktu: 2.4s | Jarak: 23 m | Throughput: 2698 Mbps | Drop: 0
+[INFO] Waktu: 2.6s | Jarak: 25 m | Throughput: 2685.34 Mbps | Drop: 0
+[INFO] Waktu: 2.8s | Jarak: 27 m | Throughput: 2693.88 Mbps | Drop: 0
+[INFO] Waktu: 3s | Jarak: 29 m | Throughput: 2687.75 Mbps | Drop: 0
+[INFO] Waktu: 3.2s | Jarak: 31 m | Throughput: 2633.35 Mbps | Drop: 0
+[INFO] Waktu: 3.4s | Jarak: 33 m | Throughput: 2623.81 Mbps | Drop: 0
+[INFO] Waktu: 3.6s | Jarak: 35 m | Throughput: 2628.76 Mbps | Drop: 0
+[INFO] Waktu: 3.8s | Jarak: 37 m | Throughput: 2640.12 Mbps | Drop: 0
+[INFO] Waktu: 4s | Jarak: 39 m | Throughput: 2632.29 Mbps | Drop: 0
+[INFO] Waktu: 4.2s | Jarak: 41 m | Throughput: 2632.05 Mbps | Drop: 0
+[INFO] Waktu: 4.4s | Jarak: 43 m | Throughput: 2625.99 Mbps | Drop: 0
+[INFO] Waktu: 4.6s | Jarak: 45 m | Throughput: 2635.47 Mbps | Drop: 0
+[INFO] Waktu: 4.8s | Jarak: 47 m | Throughput: 2632.82 Mbps | Drop: 0
+[INFO] Waktu: 5s | Jarak: 49 m | Throughput: 2620.63 Mbps | Drop: 0
+[INFO] Waktu: 5.2s | Jarak: 51 m | Throughput: 2628.58 Mbps | Drop: 0
+[INFO] Waktu: 5.4s | Jarak: 53 m | Throughput: 2633.47 Mbps | Drop: 0
+[INFO] Waktu: 5.6s | Jarak: 55 m | Throughput: 2627.4 Mbps | Drop: 0
+[INFO] Waktu: 5.8s | Jarak: 57 m | Throughput: 2565.75 Mbps | Drop: 0
+[INFO] Waktu: 6s | Jarak: 59 m | Throughput: 2579.83 Mbps | Drop: 0
+[INFO] Waktu: 6.2s | Jarak: 61 m | Throughput: 2529.19 Mbps | Drop: 0
+[INFO] Waktu: 6.4s | Jarak: 63 m | Throughput: 2523.48 Mbps | Drop: 0
+[INFO] Waktu: 6.6s | Jarak: 65 m | Throughput: 2532.78 Mbps | Drop: 0
+[INFO] Waktu: 6.8s | Jarak: 67 m | Throughput: 2516.47 Mbps | Drop: 0
+[INFO] Waktu: 7s | Jarak: 69 m | Throughput: 2460.95 Mbps | Drop: 0
+[INFO] Waktu: 7.2s | Jarak: 71 m | Throughput: 2490.27 Mbps | Drop: 0
+[INFO] Waktu: 7.4s | Jarak: 73 m | Throughput: 2474.02 Mbps | Drop: 0
+[INFO] Waktu: 7.6s | Jarak: 75 m | Throughput: 2479.32 Mbps | Drop: 0
+[INFO] Waktu: 7.8s | Jarak: 77 m | Throughput: 2451.59 Mbps | Drop: 0
+[INFO] Waktu: 8s | Jarak: 79 m | Throughput: 2481.97 Mbps | Drop: 0
+[INFO] Waktu: 8.2s | Jarak: 81 m | Throughput: 2459.59 Mbps | Drop: 0
+[INFO] Waktu: 8.4s | Jarak: 83 m | Throughput: 2473.96 Mbps | Drop: 0
+[INFO] Waktu: 8.6s | Jarak: 85 m | Throughput: 2463.6 Mbps | Drop: 0
+[INFO] Waktu: 8.8s | Jarak: 87 m | Throughput: 2487.09 Mbps | Drop: 0
+[INFO] Waktu: 9s | Jarak: 89 m | Throughput: 2462.24 Mbps | Drop: 0
+[INFO] Waktu: 9.2s | Jarak: 91 m | Throughput: 2470.37 Mbps | Drop: 0
+[INFO] Waktu: 9.4s | Jarak: 93 m | Throughput: 2431.16 Mbps | Drop: 0
+[INFO] Waktu: 9.6s | Jarak: 95 m | Throughput: 2374.87 Mbps | Drop: 0
+[INFO] Waktu: 9.8s | Jarak: 97 m | Throughput: 2383.7 Mbps | Drop: 0
+[INFO] Waktu: 10s | Jarak: 99 m | Throughput: 2336.77 Mbps | Drop: 0
+[INFO] Waktu: 10.2s | Jarak: 101 m | Throughput: 2234.32 Mbps | Drop: 0
+[INFO] Waktu Eksekusi Nyata (Real Runtime) Simulasi: 2.99525 menit (179.715 detik)
+
