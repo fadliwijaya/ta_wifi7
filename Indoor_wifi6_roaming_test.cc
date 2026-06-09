@@ -327,8 +327,6 @@ int main(int argc, char *argv[]) {
   spectrumPhy.SetErrorRateModel("ns3::NistErrorRateModel");
 
   spectrumPhy.Set("Antennas", UintegerValue(8));
-  spectrumPhy.Set("MaxSupportedTxSpatialStreams", UintegerValue(8));
-  spectrumPhy.Set("MaxSupportedRxSpatialStreams", UintegerValue(8));
 
   spectrumPhy.Set("TxPowerStart", DoubleValue(20.0));
   spectrumPhy.Set("TxPowerEnd", DoubleValue(20.0));
@@ -430,6 +428,37 @@ int main(int argc, char *argv[]) {
   backboneNodes.Add(wifiApNode); // Menghubungkan Server dengan AP0, AP1, dan AP2
 
   NetDeviceContainer backboneDevices = csma.Install(backboneNodes);
+
+  
+  // [AUTO-PATCH] Bypassing HT_PHY crash by setting MIMO after interface installation
+  for (uint32_t i = 0; i < apDeviceB.GetN(); ++i) {
+      ns3::DynamicCast<ns3::WifiNetDevice>(apDeviceB.Get(i))->GetPhy()->SetMaxSupportedTxSpatialStreams(8);
+      ns3::DynamicCast<ns3::WifiNetDevice>(apDeviceB.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
+  }
+  for (uint32_t i = 0; i < apDeviceA.GetN(); ++i) {
+      ns3::DynamicCast<ns3::WifiNetDevice>(apDeviceA.Get(i))->GetPhy()->SetMaxSupportedTxSpatialStreams(8);
+      ns3::DynamicCast<ns3::WifiNetDevice>(apDeviceA.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
+  }
+  for (uint32_t i = 0; i < staDeviceA.GetN(); ++i) {
+      ns3::DynamicCast<ns3::WifiNetDevice>(staDeviceA.Get(i))->GetPhy()->SetMaxSupportedTxSpatialStreams(8);
+      ns3::DynamicCast<ns3::WifiNetDevice>(staDeviceA.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
+  }
+  for (uint32_t i = 0; i < apDeviceC.GetN(); ++i) {
+      ns3::DynamicCast<ns3::WifiNetDevice>(apDeviceC.Get(i))->GetPhy()->SetMaxSupportedTxSpatialStreams(8);
+      ns3::DynamicCast<ns3::WifiNetDevice>(apDeviceC.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
+  }
+  for (uint32_t i = 0; i < staDeviceKoridorA.GetN(); ++i) {
+      ns3::DynamicCast<ns3::WifiNetDevice>(staDeviceKoridorA.Get(i))->GetPhy()->SetMaxSupportedTxSpatialStreams(8);
+      ns3::DynamicCast<ns3::WifiNetDevice>(staDeviceKoridorA.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
+  }
+  for (uint32_t i = 0; i < staDeviceKoridorB.GetN(); ++i) {
+      ns3::DynamicCast<ns3::WifiNetDevice>(staDeviceKoridorB.Get(i))->GetPhy()->SetMaxSupportedTxSpatialStreams(8);
+      ns3::DynamicCast<ns3::WifiNetDevice>(staDeviceKoridorB.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
+  }
+  for (uint32_t i = 0; i < staDeviceB.GetN(); ++i) {
+      ns3::DynamicCast<ns3::WifiNetDevice>(staDeviceB.Get(i))->GetPhy()->SetMaxSupportedTxSpatialStreams(8);
+      ns3::DynamicCast<ns3::WifiNetDevice>(staDeviceB.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
+  }
 
   InternetStackHelper stack;
   stack.Install(serverNode);
