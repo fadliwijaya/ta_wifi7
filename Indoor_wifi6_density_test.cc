@@ -121,21 +121,23 @@ int main(int argc, char *argv[]) {
     wifiStaNodes.Create(nStas);
 
     Ptr<Building> building = CreateObject<Building>();
-    building->SetBoundaries(Box(0.0, 30.0, 0.0, 30.0, 0.0, 5.0));
+    building->SetBoundaries(Box(0.0, 16.0, 0.0, 11.0, 0.0, 3.0));
     building->SetBuildingType(Building::Office);
     building->SetExtWallsType(Building::ConcreteWithoutWindows);
     building->SetNFloors(1);
+    building->SetNRoomsX(1);
+    building->SetNRoomsY(1);
 
     MobilityHelper mobility;
     Ptr<ListPositionAllocator> apPosAlloc = CreateObject<ListPositionAllocator>();
-    apPosAlloc->Add(Vector(10.0, 10.0, 3.0)); 
+    apPosAlloc->Add(Vector(8.0, 5.5, 2.9)); 
     mobility.SetPositionAllocator(apPosAlloc);
     mobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
     mobility.Install(wifiApNode);
 
     mobility.SetPositionAllocator("ns3::GridPositionAllocator",
-                                  "MinX", DoubleValue(5.0),
-                                  "MinY", DoubleValue(5.0),
+                                  "MinX", DoubleValue(1.0),
+                                  "MinY", DoubleValue(1.0),
                                   "DeltaX", DoubleValue(1.5),
                                   "DeltaY", DoubleValue(1.5),
                                   "GridWidth", UintegerValue(10), // 10x5 grid
