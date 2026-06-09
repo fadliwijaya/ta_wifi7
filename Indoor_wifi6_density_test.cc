@@ -157,9 +157,9 @@ int main(int argc, char *argv[]) {
     spectrumPhy.Set("RxGain", DoubleValue(6.0));
 
     Ptr<MultiModelSpectrumChannel> channel5Ghz = CreateObject<MultiModelSpectrumChannel>();
-    Ptr<LogDistancePropagationLossModel> loss5 = CreateObject<LogDistancePropagationLossModel>();
-    loss5->SetAttribute("Exponent", DoubleValue(3.0));
-    channel5Ghz->AddPropagationLossModel(loss5);
+    Ptr<HybridBuildingsPropagationLossModel> loss5Ghz = CreateObject<HybridBuildingsPropagationLossModel>();
+    loss5Ghz->SetAttribute("Frequency", DoubleValue(5500e6));
+    channel5Ghz->AddPropagationLossModel(loss5Ghz);
     channel5Ghz->SetPropagationDelayModel(CreateObject<ConstantSpeedPropagationDelayModel>());
     spectrumPhy.Set(0, "ChannelSettings", StringValue("{0, 160, BAND_5GHZ, 0}"));
     spectrumPhy.SetChannel(channel5Ghz);
@@ -230,6 +230,7 @@ int main(int argc, char *argv[]) {
         onoff.SetAttribute("PacketSize", UintegerValue(1472));
         onoff.SetAttribute("OnTime", StringValue("ns3::ConstantRandomVariable[Constant=1]"));
         onoff.SetAttribute("OffTime", StringValue("ns3::ConstantRandomVariable[Constant=0]"));
+        onoff.SetAttribute("Tos", UintegerValue(0xa0)); // QoS AC_VI (Video/VR Streaming)
         
         ApplicationContainer sourceApps = onoff.Install(serverNode.Get(0));
         
