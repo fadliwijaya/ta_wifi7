@@ -160,6 +160,10 @@ int main(int argc, char *argv[]) {
   std::cout << "\n=======================================================\n";
   std::cout << "[INFO] Skenario Range / Pathloss Degradation (Wi-Fi 6)\n";
   std::cout << "=======================================================\n";
+  std::cout << "Simulasi ini dirancang untuk menguji ketahanan dan jangkauan sinyal Wi-Fi 6 terhadap degradasi jarak (range/pathloss degradation test). Tujuannya adalah untuk mengamati bagaimana performa jaringan — mulai dari kekuatan sinyal, kecepatan unduh, keterlambatan, hingga tingkat kehilangan paket — berubah secara bertahap ketika sebuah perangkat klien bergerak semakin menjauh dari titik akses.\n\n";
+  std::cout << "Secara konseptual, simulasi ini dapat dibayangkan sebagai sebuah eksperimen di mana sebuah Access Point (AP) Wi-Fi 6 dipasang pada posisi tetap, sementara satu buah laptop atau perangkat klien dibawa berjalan menjauh secara perlahan. Pengukuran dilakukan secara terus-menerus di sepanjang lintasan untuk merekam proses pelemahan sinyal dan penurunan kualitas komunikasi seiring bertambahnya jarak antara klien dan AP.\n\n";
+  std::cout << "Jarak pengujian dimulai dari 1 meter hingga mencapai batas maksimum 300 meter. Dengan pendekatan ini, simulasi dapat memberikan gambaran menyeluruh tentang batas jangkauan efektif Wi-Fi 6 serta profil degradasi performanya dalam kondisi yang mendekati lingkungan nyata, lengkap dengan pengaruh redaman akibat obstacles.\n";
+  std::cout << "=======================================================\n";
   std::cout << "[SPESIFIKASI SIMULASI]\n";
   std::cout << "- Standar Wi-Fi     : Wi-Fi 6 (802.11ax)\n";
   std::cout << "- Konfigurasi MIMO  : 8x8 Spatial Streams\n";
