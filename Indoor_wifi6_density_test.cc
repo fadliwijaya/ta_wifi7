@@ -148,8 +148,6 @@ int main(int argc, char *argv[]) {
     SpectrumWifiPhyHelper spectrumPhy(1); // Non-MLO
     spectrumPhy.SetErrorRateModel("ns3::NistErrorRateModel");
     spectrumPhy.Set("Antennas", UintegerValue(8));
-    spectrumPhy.Set("MaxSupportedTxSpatialStreams", UintegerValue(8));
-    spectrumPhy.Set("MaxSupportedRxSpatialStreams", UintegerValue(8));
     spectrumPhy.Set("TxPowerStart", DoubleValue(20.0));
     spectrumPhy.Set("TxPowerEnd", DoubleValue(20.0));
     spectrumPhy.Set("TxGain", DoubleValue(6.0));
@@ -175,6 +173,15 @@ int main(int argc, char *argv[]) {
 
     mac.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssid), "QosSupported", BooleanValue(true), "ActiveProbing", BooleanValue(false));
     NetDeviceContainer staDevices = wifi.Install(spectrumPhy, mac, wifiStaNodes);
+
+    for (uint32_t i = 0; i < apDevice.GetN(); ++i) {
+        DynamicCast<WifiNetDevice>(apDevice.Get(i))->GetPhy()->SetMaxSupportedTxSpatialStreams(8);
+        DynamicCast<WifiNetDevice>(apDevice.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
+    }
+    for (uint32_t i = 0; i < staDevices.GetN(); ++i) {
+        DynamicCast<WifiNetDevice>(staDevices.Get(i))->GetPhy()->SetMaxSupportedTxSpatialStreams(8);
+        DynamicCast<WifiNetDevice>(staDevices.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
+    }
 
     InternetStackHelper stack;
     stack.Install(wifiApNode);
