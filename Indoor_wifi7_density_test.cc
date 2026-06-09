@@ -6,6 +6,7 @@
 #include "ns3/internet-module.h"
 #include "ns3/flow-monitor-module.h"
 #include "ns3/buildings-module.h"
+#include "ns3/csma-module.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -196,14 +197,32 @@ int main(int argc, char *argv[]) {
         DynamicCast<WifiNetDevice>(staDevices.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
     }
 
+    NodeContainer serverNode;
+    serverNode.Create(1);
+
+    CsmaHelper csma;
+    csma.SetChannelAttribute("DataRate", StringValue("23Gbps"));
+    csma.SetChannelAttribute("Delay", TimeValue(MicroSeconds(2)));
+
+    NodeContainer backboneNodes;
+    backboneNodes.Add(serverNode);
+    backboneNodes.Add(wifiApNode);
+    NetDeviceContainer backboneDevices = csma.Install(backboneNodes);
+
     InternetStackHelper stack;
+    stack.Install(serverNode);
     stack.Install(wifiApNode);
     stack.Install(wifiStaNodes);
 
     Ipv4AddressHelper address;
+    address.SetBase("10.1.1.0", "255.255.255.0");
+    Ipv4InterfaceContainer backboneInterfaces = address.Assign(backboneDevices);
+
     address.SetBase("192.168.1.0", "255.255.255.0");
     Ipv4InterfaceContainer apInterface = address.Assign(apDevice);
     Ipv4InterfaceContainer staInterfaces = address.Assign(staDevices);
+
+    Ipv4GlobalRoutingHelper::PopulateRoutingTables();
 
     uint16_t port = 50000;
     
@@ -223,7 +242,7 @@ int main(int argc, char *argv[]) {
         onoff.SetAttribute("OnTime", StringValue("ns3::ConstantRandomVariable[Constant=1]"));
         onoff.SetAttribute("OffTime", StringValue("ns3::ConstantRandomVariable[Constant=0]"));
         
-        ApplicationContainer sourceApps = onoff.Install(wifiApNode.Get(0));
+        ApplicationContainer sourceApps = onoff.Install(serverNode.Get(0));
         
         // Staggered Start times for dynamic load and ARP resolution
         double startTime = 10.0 + (i * 0.02);
