@@ -96,6 +96,10 @@ int main(int argc, char *argv[]) {
     std::cout << "=======================================================\n";
     std::cout << "[INFO] Skenario High-Density / Kepadatan User (Wi-Fi 7)\n";
     std::cout << "=======================================================\n";
+    std::cout << "Simulasi ini dirancang untuk menguji ketahanan jaringan Wi-Fi terhadap kepadatan pengguna yang ekstrim (high-density test). Tujuannya adalah untuk mengamati seberapa baik jaringan dapat bertahan — dari sisi throughput total, keterlambatan (delay), hingga tingkat kehilangan paket (packet loss) — ketika jumlah perangkat klien terus bertambah seiring berjalannya waktu.\n\n";
+    std::cout << "Secara konseptual, simulasi ini menggunakan sebuah Access Point (AP) utama yang memancarkan sinyal ke area ruangan. Pada detik-detik awal, hanya ada sedikit pengguna yang terkoneksi. Namun setiap beberapa detik, gelombang pengguna baru akan datang dan langsung terhubung, meminta alokasi bandwidth yang besar (150 Mbps, setara streaming Video 8K/VR) secara agresif.\n\n";
+    std::cout << "Dengan pendekatan penambahan perangkat secara bertahap ini, kita dapat melihat titik jenuh jaringan di mana Access Point mulai kewalahan memproses antrean paket data, sehingga memberikan gambaran nyata tentang kapasitas maksimum jumlah pengguna simultan (user concurrency) yang dapat ditangani oleh Access Point Wi-Fi 7.\n";
+    std::cout << "=======================================================\n";
     std::cout << "[SPESIFIKASI SIMULASI]\n";
     std::cout << "- Standar Wi-Fi     : Wi-Fi 7 (802.11be)\n";
     std::cout << "- Konfigurasi MIMO  : 8x8 Spatial Streams\n";

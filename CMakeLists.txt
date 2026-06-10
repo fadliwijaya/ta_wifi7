@@ -119,3 +119,20 @@ build_exec(
   EXECUTABLE_DIRECTORY_PATH ${CMAKE_OUTPUT_DIRECTORY}/scratch/ta_wifi7/
 )
 
+# Target untuk wifi7_pameran
+build_exec(
+  EXECNAME wifi7_pameran
+  EXECNAME_PREFIX scratch_ta_wifi7_
+  SOURCE_FILES wifi7_pameran.cc
+  LIBRARIES_TO_LINK "${ns3-libs}" "${ns3-contrib-libs}"
+  EXECUTABLE_DIRECTORY_PATH ${CMAKE_OUTPUT_DIRECTORY}/scratch/ta_wifi7/
+)
+
+# Target untuk wifi6_pameran
+build_exec(
+  EXECNAME wifi6_pameran
+  EXECNAME_PREFIX scratch_ta_wifi7_
+  SOURCE_FILES wifi6_pameran.cc
+  LIBRARIES_TO_LINK "${ns3-libs}" "${ns3-contrib-libs}"
+  EXECUTABLE_DIRECTORY_PATH ${CMAKE_OUTPUT_DIRECTORY}/scratch/ta_wifi7/
+)

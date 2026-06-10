@@ -208,10 +208,13 @@ int main(int argc, char *argv[]) {
   std::cout << "[INFO] TANGGAL & WAKTU EKSEKUSI SIMULASI : " << human_time_str << "\n";
   std::cout << "=======================================================\n";
 
-  std::cout << "\n>>> Memulai simulasi Wi-Fi 7 Indoor MLO (Skenario Kampus "
-               "Lanjutan), menunggu 10 "
-               "detik... <<<\n"
-            << std::endl;
+  std::cout << "\n=======================================================\n";
+  std::cout << "[INFO] Skenario Mobilitas / Roaming Test (Wi-Fi 7)\n";
+  std::cout << "=======================================================\n";
+  std::cout << "Simulasi ini difokuskan secara khusus untuk mengevaluasi kemampuan perpindahan koneksi (roaming test) antar Access Point (AP) Wi-Fi 7. Tujuannya adalah untuk menganalisis kehalusan proses handoff, yaitu seberapa cepat perangkat klien dapat melepaskan koneksi dari AP yang lama dan terhubung ke AP baru tanpa memutus aliran data yang sedang berjalan.\n\n";
+  std::cout << "Secara konseptual, simulasi ini menggunakan tiga buah Access Point yang dipasang memanjang melintasi area yang luas (Ruang 1, Ruang 2, dan area Lobi). Seorang pengguna (klien) akan berjalan kaki menyusuri lintasan panjang melewati area jangkauan ketiga AP tersebut secara berurutan, sambil melakukan streaming lalu lintas data secara terus-menerus.\n\n";
+  std::cout << "Simulasi ini secara aktif akan merekam titik-titik transisi ketika klien berpindah AP. Kita akan melihat apakah ada paket data yang terbuang (packet drop) atau lonjakan keterlambatan (delay spike) yang signifikan tepat pada momen perpindahan AP, membuktikan tingkat keandalan mobilitas dari teknologi Wi-Fi 7.\n";
+  std::cout << "=======================================================\n";
 
   double simulationTimeSec = 2.0; // Kembali ke 2 detik agar tidak terlalu lama
                                   // (STA akan disuruh lari cepat)

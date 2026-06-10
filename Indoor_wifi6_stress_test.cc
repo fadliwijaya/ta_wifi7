@@ -205,9 +205,13 @@ int main(int argc, char *argv[]) {
   std::cout << "[INFO] TANGGAL & WAKTU EKSEKUSI SIMULASI : " << human_time_str << "\n";
   std::cout << "=======================================================\n";
 
-  std::cout << "\n>>> Memulai simulasi STRESS TEST WI-FI 6 (BEBAN MAKSIMAL GIGABIT), "
-               "menunggu 10 detik... <<<\n"
-            << std::endl;
+  std::cout << "\n=======================================================\n";
+  std::cout << "[INFO] Skenario Beban Maksimal / Stress Test (Wi-Fi 6)\n";
+  std::cout << "=======================================================\n";
+  std::cout << "Simulasi ini merupakan pengujian beban maksimal (stress test) yang dirancang untuk membombardir jaringan Wi-Fi 6 dengan volume lalu lintas data yang ekstrem, melebihi kapasitas standar harian. Tujuannya adalah untuk memicu antrean MAC yang panjang, potensi kemacetan (congestion), dan melihat batas kelumpuhan perangkat saat menangani throughput absolut tertinggi.\n\n";
+  std::cout << "Secara konseptual, setiap perangkat klien yang tersebar di dua ruangan akan dipaksa untuk mengunduh dan mengunggah paket UDP dalam kecepatan sangat tinggi (Gigabit/s) secara bersamaan (brute-force bandwidth injection) tanpa mematuhi antrean QoS yang baik.\n\n";
+  std::cout << "Dengan siksaan beban masif ini, kita dapat membongkar batas kritis maksimum gabungan dari AP Wi-Fi 6, serta mengevaluasi seberapa efektif sistem penggabungan frame raksasa (A-MPDU Aggregation) miliknya dalam menyedot data secara paralel di bawah tekanan ekstrem.\n";
+  std::cout << "=======================================================\n";
 
   double simulationTimeSec = 2.0; // Kembali ke 2 detik agar tidak terlalu lama (STA akan disuruh lari cepat)
 

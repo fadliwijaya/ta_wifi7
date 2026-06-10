@@ -205,9 +205,13 @@ int main(int argc, char *argv[]) {
   std::cout << "[INFO] TANGGAL & WAKTU EKSEKUSI SIMULASI : " << human_time_str << "\n";
   std::cout << "=======================================================\n";
 
-  std::cout << "\n>>> Memulai simulasi Wi-Fi 6 Indoor Baseline (Single-Link), "
-               "menunggu 10 detik... <<<\n"
-            << std::endl;
+  std::cout << "\n=======================================================\n";
+  std::cout << "[INFO] Skenario Dasar / Baseline Clean Test (Wi-Fi 6)\n";
+  std::cout << "=======================================================\n";
+  std::cout << "Simulasi ini merupakan skenario pengujian dasar (baseline/clean test) yang merepresentasikan beban aktivitas jaringan Wi-Fi standar di sebuah lingkungan perkantoran atau ruang kelas. Tujuannya adalah untuk mendirikan nilai acuan (baseline metrics) mengenai throughput, delay, jitter, dan stabilitas koneksi dalam kondisi normal sebelum diberikan beban pengujian ekstrem.\n\n";
+  std::cout << "Secara konseptual, simulasi ini memodelkan dua ruangan terpisah yang masing-masing dilayani oleh satu buah Access Point (AP) Wi-Fi 6. Klien-klien didistribusikan ke dalam beberapa kelas dengan perilaku aktivitas internet campuran (heterogen), mulai dari penjelajahan web, streaming video 4K, hingga bermain game.\n\n";
+  std::cout << "Skenario ini juga menerapkan profil mobilitas ganda: di mana klien di ruangan pertama akan berada pada posisi diam (statis), sementara klien di ruangan kedua bergerak dengan pola berjalan acak. Simulasi ini memberikan potret menyeluruh tentang kinerja Wi-Fi 6 di skenario harian (day-to-day) operasional jaringan.\n";
+  std::cout << "=======================================================\n";
 
   double simulationTimeSec = 2.0; // Kembali ke 2 detik agar tidak terlalu lama (STA akan disuruh lari cepat)
 
