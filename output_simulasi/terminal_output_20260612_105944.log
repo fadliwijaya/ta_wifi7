@@ -1,0 +1,57 @@
+
+=======================================================
+[INFO] TANGGAL & WAKTU EKSEKUSI SIMULASI : 2026-06-12 10:59:44
+=======================================================
+
+=======================================================
+[INFO] Skenario Dasar / Baseline Clean Test (Wi-Fi 7)
+=======================================================
+Simulasi ini merupakan skenario pengujian dasar (baseline/clean test) yang merepresentasikan beban aktivitas jaringan Wi-Fi standar di sebuah lingkungan perkantoran atau ruang kelas. Tujuannya adalah untuk mendirikan nilai acuan (baseline metrics) mengenai throughput, delay, jitter, dan stabilitas koneksi dalam kondisi normal sebelum diberikan beban pengujian ekstrem.
+
+Secara konseptual, simulasi ini memodelkan dua ruangan terpisah yang masing-masing dilayani oleh satu buah Access Point (AP) Wi-Fi 7. Klien-klien didistribusikan ke dalam beberapa kelas dengan perilaku aktivitas internet campuran (heterogen), mulai dari penjelajahan web, streaming video 4K, hingga bermain game.
+
+Skenario ini juga menerapkan profil mobilitas ganda: di mana klien di ruangan pertama akan berada pada posisi diam (statis), sementara klien di ruangan kedua bergerak dengan pola berjalan acak. Simulasi ini memberikan potret menyeluruh tentang kinerja Wi-Fi 7 di skenario harian (day-to-day) operasional jaringan.
+=======================================================
+
+--- Memulai Log Panjang Antrean MAC (Queue Occupancy) per 100 ms ---
+[STA ASSOC] Waktu: 0.0525913s | STA Node 9 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:25
+[STA ASSOC] Waktu: 0.0530342s | STA Node 15 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:46
+[STA ASSOC] Waktu: 0.0531313s | STA Node 12 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:25
+[STA ASSOC] Waktu: 0.0535383s | STA Node 17 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:46
+[STA ASSOC] Waktu: 0.0537253s | STA Node 25 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:46
+[STA ASSOC] Waktu: 0.0540423s | STA Node 21 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:46
+[STA ASSOC] Waktu: 0.0542334s | STA Node 2 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:46
+[STA ASSOC] Waktu: 0.0545463s | STA Node 14 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:46
+[STA ASSOC] Waktu: 0.0566665s | STA Node 20 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:46
+[STA ASSOC] Waktu: 0.0571705s | STA Node 16 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:46
+[STA ASSOC] Waktu: 0.0574457s | STA Node 19 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:46
+[STA ASSOC] Waktu: 0.0579538s | STA Node 18 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:46
+[STA ASSOC] Waktu: 0.0584336s | STA Node 23 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:46
+[STA ASSOC] Waktu: 0.0584618s | STA Node 8 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:46
+[STA ASSOC] Waktu: 0.0584656s | STA Node 5 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:25
+[STA ASSOC] Waktu: 0.0589699s | STA Node 22 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:46
+[STA ASSOC] Waktu: 0.0590016s | STA Node 10 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:25
+[STA ASSOC] Waktu: 0.0595377s | STA Node 3 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:25
+[STA ASSOC] Waktu: 0.060074s | STA Node 11 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:46
+[STA ASSOC] Waktu: 0.0606378s | STA Node 13 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:46
+[STA ASSOC] Waktu: 0.06089s | STA Node 6 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:25
+[STA ASSOC] Waktu: 0.0612689s | STA Node 7 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:25
+[STA ASSOC] Waktu: 0.0625501s | STA Node 24 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:46
+[STA ASSOC] Waktu: 0.0636682s | STA Node 4 sukses Asosiasi ke AP BSSID: 00:00:00:00:00:46
+[Antrean MAC] Waktu: 0.1s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.2s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.3s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.4s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.5s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.6s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.7s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.8s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 0.9s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 1s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 1.1s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 1.2s | AP0 (Ruang 1): 4 paket | AP1 (Ruang 2): 14 paket
+[Antrean MAC] Waktu: 1.3s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 0 paket
+[Antrean MAC] Waktu: 1.4s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 328 paket
+[Antrean MAC] Waktu: 1.5s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 38 paket
+[Antrean MAC] Waktu: 1.6s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 200 paket
+[Antrean MAC] Waktu: 1.7s | AP0 (Ruang 1): 0 paket | AP1 (Ruang 2): 62 paket

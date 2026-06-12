@@ -476,10 +476,10 @@ int main(int argc, char *argv[]) {
 
   // Pisahkan STA Device Container untuk Assignment Subnet yang berbeda
   NetDeviceContainer staDevAp0, staDevAp1;
-  for (uint32_t i = 0; i < 12; ++i)
-    staDevAp0.Add(staDevice.Get(i));
-  for (uint32_t i = 10; i < 24; ++i)
-    staDevAp1.Add(staDevice.Get(i));
+  for (uint32_t i = 0; i < 12; ++i) staDevAp0.Add(staDevice.Get(i));
+  staDevAp0.Add(staDevice.Get(22));
+  for (uint32_t i = 12; i < 22; ++i) staDevAp1.Add(staDevice.Get(i));
+  staDevAp1.Add(staDevice.Get(23));
 
   // 2. Subnet Wi-Fi Ruang 1 (AP0)
   address.SetBase("192.168.1.0", "255.255.255.0");
@@ -498,10 +498,10 @@ int main(int argc, char *argv[]) {
   // Satukan kembali interface STA ke dalam satu container (staInterface) agar
   // kompatibel dengan logika di bawah
   Ipv4InterfaceContainer staInterface;
-  for (uint32_t i = 0; i < 12; ++i)
-    staInterface.Add(sta0Interface.Get(i));
-  for (uint32_t i = 0; i < 12; ++i)
-    staInterface.Add(sta1Interface.Get(i));
+  for(uint32_t i=0; i<12; ++i) staInterface.Add(sta0Interface.Get(i));
+  for(uint32_t i=0; i<10; ++i) staInterface.Add(sta1Interface.Get(i));
+  staInterface.Add(sta0Interface.Get(12));
+  staInterface.Add(sta1Interface.Get(10));
 
 
   // Aktifkan Routing Statis (Bypass bug ns-3 GlobalRouting pada MLO)
@@ -556,15 +556,14 @@ int main(int argc, char *argv[]) {
   }
   
   // STA Routing: Default route ke AP masing-masing agar bisa kirim Uplink ke Server
-  for (uint32_t i = 0; i < 12; ++i) {
+  for (uint32_t i = 0; i < 24; ++i) {
     Ptr<Ipv4> ipv4Sta = wifiStaNode.Get(i)->GetObject<Ipv4>();
     Ptr<Ipv4StaticRouting> staticRoutingSta = ipv4RoutingHelper.GetStaticRouting(ipv4Sta);
-    staticRoutingSta->SetDefaultRoute(ap0Interface.GetAddress(0), 1);
-  }
-  for (uint32_t i = 10; i < 24; ++i) {
-    Ptr<Ipv4> ipv4Sta = wifiStaNode.Get(i)->GetObject<Ipv4>();
-    Ptr<Ipv4StaticRouting> staticRoutingSta = ipv4RoutingHelper.GetStaticRouting(ipv4Sta);
-    staticRoutingSta->SetDefaultRoute(ap1Interface.GetAddress(0), 1);
+    if (i < 12 || i == 22) {
+      staticRoutingSta->SetDefaultRoute(ap0Interface.GetAddress(0), 1);
+    } else {
+      staticRoutingSta->SetDefaultRoute(ap1Interface.GetAddress(0), 1);
+    }
   }
 
 
