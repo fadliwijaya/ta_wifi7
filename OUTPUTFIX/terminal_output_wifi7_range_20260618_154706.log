@@ -1,0 +1,378 @@
+
+=======================================================
+[INFO] TANGGAL & WAKTU EKSEKUSI SIMULASI : 2026-06-18 15:47:06
+=======================================================
+
+=======================================================
+[INFO] Skenario Range / Pathloss Degradation (Wi-Fi 7)
+=======================================================
+Simulasi ini dirancang untuk menguji ketahanan dan jangkauan sinyal Wi-Fi 7 terhadap degradasi jarak (range/pathloss degradation test). Tujuannya adalah untuk mengamati bagaimana performa jaringan — mulai dari kekuatan sinyal, kecepatan unduh, keterlambatan, hingga tingkat kehilangan paket — berubah secara bertahap ketika sebuah perangkat klien bergerak semakin menjauh dari titik akses.
+
+Secara konseptual, simulasi ini dapat dibayangkan sebagai sebuah eksperimen di mana sebuah Access Point (AP) Wi-Fi 7 dipasang pada posisi tetap, sementara satu buah laptop atau perangkat klien dibawa berjalan menjauh secara perlahan. Pengukuran dilakukan secara terus-menerus di sepanjang lintasan untuk merekam proses pelemahan sinyal dan penurunan kualitas komunikasi seiring bertambahnya jarak antara klien dan AP.
+
+Jarak pengujian dimulai dari 1 meter hingga mencapai batas maksimum 600 meter. Dengan pendekatan ini, simulasi dapat memberikan gambaran menyeluruh tentang batas jangkauan efektif Wi-Fi 7 serta profil degradasi performanya dalam kondisi yang mendekati lingkungan nyata, lengkap dengan pengaruh redaman akibat obstacles.
+=======================================================
+[SPESIFIKASI SIMULASI]
+- Standar Wi-Fi     : Wi-Fi 7 (802.11be)
+- Konfigurasi MIMO  : 8x8 Spatial Streams
+- Fitur Spesial     : Multi-Link Operation (MLO) Aktif
+    * Link 0        : Frekuensi 5 GHz (Lebar Pita 160 MHz)
+    * Link 1        : Frekuensi 6 GHz (Lebar Pita 320 MHz)
+- Tx Power          : 20.0 dBm
+- Rate Adaptation   : IdealWifiManager (Otomatis menyesuaikan hingga 4096-QAM)
+- Propagation Model : HybridBuildingsPropagationLossModel (Redaman Tembok/Indoor)
+- Jarak Uji         : 0 hingga 640 meter
+- Target Throughput : 2.5 Gbps (Injeksi UDP)
+=======================================================
+
+[INFO] Waktu: 0,2s | Jarak: 1 m | RSSI: -5,71343 dBm | Tput: 0 Mbps | Delay: 0 ms | Jitter: 0 ms | Drop: 0
+[INFO] Waktu: 0,4s | Jarak: 3 m | RSSI: -16,4487 dBm | Tput: 0 Mbps | Delay: 0 ms | Jitter: 0 ms | Drop: 0
+[INFO] Waktu: 0,6s | Jarak: 5 m | RSSI: -21,4341 dBm | Tput: 1.050,77 Mbps | Delay: 0,534879 ms | Jitter: 0,00467005 ms | Drop: 0
+[INFO] Waktu: 0,8s | Jarak: 7 m | RSSI: -24,722 dBm | Tput: 2.499,93 Mbps | Delay: 0,360839 ms | Jitter: 0,00351781 ms | Drop: 0
+[INFO] Waktu: 1s | Jarak: 9 m | RSSI: -27,1777 dBm | Tput: 2.500,99 Mbps | Delay: 0,363792 ms | Jitter: 0,003407 ms | Drop: 0
+[INFO] Waktu: 1,2s | Jarak: 11 m | RSSI: -29,1386 dBm | Tput: 2.498,28 Mbps | Delay: 0,366559 ms | Jitter: 0,00341485 ms | Drop: 0
+[INFO] Waktu: 1,4s | Jarak: 13 m | RSSI: -30,771 dBm | Tput: 2.501,75 Mbps | Delay: 0,364126 ms | Jitter: 0,00344038 ms | Drop: 0
+[INFO] Waktu: 1,6s | Jarak: 15 m | RSSI: -32,1693 dBm | Tput: 2.498,98 Mbps | Delay: 0,364676 ms | Jitter: 0,00348452 ms | Drop: 0
+[INFO] Waktu: 1,8s | Jarak: 17 m | RSSI: -33,3924 dBm | Tput: 2.500,22 Mbps | Delay: 0,366331 ms | Jitter: 0,00345902 ms | Drop: 0
+[INFO] Waktu: 2s | Jarak: 19 m | RSSI: -34,4792 dBm | Tput: 2.500,99 Mbps | Delay: 0,378454 ms | Jitter: 0,00379719 ms | Drop: 0
+[INFO] Waktu: 2,2s | Jarak: 21 m | RSSI: -35,4572 dBm | Tput: 2.497,98 Mbps | Delay: 0,388286 ms | Jitter: 0,00368714 ms | Drop: 0
+[INFO] Waktu: 2,4s | Jarak: 23 m | RSSI: -36,3462 dBm | Tput: 2.502,69 Mbps | Delay: 0,466051 ms | Jitter: 0,00498469 ms | Drop: 0
+[INFO] Waktu: 2,6s | Jarak: 25 m | RSSI: -37,1609 dBm | Tput: 2.498,46 Mbps | Delay: 0,410573 ms | Jitter: 0,00375887 ms | Drop: 0
+[INFO] Waktu: 2,8s | Jarak: 27 m | RSSI: -37,913 dBm | Tput: 2.501,28 Mbps | Delay: 0,402561 ms | Jitter: 0,00373907 ms | Drop: 0
+[INFO] Waktu: 3s | Jarak: 29 m | RSSI: -38,6112 dBm | Tput: 2.500,81 Mbps | Delay: 0,417807 ms | Jitter: 0,00381859 ms | Drop: 0
+[INFO] Waktu: 3,2s | Jarak: 31 m | RSSI: -39,2629 dBm | Tput: 2.501,46 Mbps | Delay: 0,414648 ms | Jitter: 0,0038026 ms | Drop: 0
+[INFO] Waktu: 3,4s | Jarak: 33 m | RSSI: -39,8739 dBm | Tput: 2.497,63 Mbps | Delay: 0,413857 ms | Jitter: 0,00380651 ms | Drop: 0
+[INFO] Waktu: 3,6s | Jarak: 35 m | RSSI: -40,4488 dBm | Tput: 2.502,99 Mbps | Delay: 0,427473 ms | Jitter: 0,00406315 ms | Drop: 0
+[INFO] Waktu: 3,8s | Jarak: 37 m | RSSI: -40,9918 dBm | Tput: 2.499,75 Mbps | Delay: 0,476118 ms | Jitter: 0,0049369 ms | Drop: 0
+[INFO] Waktu: 4s | Jarak: 39 m | RSSI: -41,5062 dBm | Tput: 2.499,4 Mbps | Delay: 0,437234 ms | Jitter: 0,00406445 ms | Drop: 0
+[INFO] Waktu: 4,2s | Jarak: 41 m | RSSI: -41,9949 dBm | Tput: 2.499,51 Mbps | Delay: 0,469618 ms | Jitter: 0,0045863 ms | Drop: 0
+[INFO] Waktu: 4,4s | Jarak: 43 m | RSSI: -42,4603 dBm | Tput: 2.499,46 Mbps | Delay: 0,476678 ms | Jitter: 0,00422884 ms | Drop: 0
+[INFO] Waktu: 4,6s | Jarak: 45 m | RSSI: -42,9046 dBm | Tput: 2.498,81 Mbps | Delay: 0,463599 ms | Jitter: 0,00421703 ms | Drop: 0
+[INFO] Waktu: 4,8s | Jarak: 47 m | RSSI: -43,3295 dBm | Tput: 2.501,63 Mbps | Delay: 0,458472 ms | Jitter: 0,0042319 ms | Drop: 0
+[INFO] Waktu: 5s | Jarak: 49 m | RSSI: -43,7367 dBm | Tput: 2.502,34 Mbps | Delay: 0,459097 ms | Jitter: 0,0042372 ms | Drop: 0
+[INFO] Waktu: 5,2s | Jarak: 51 m | RSSI: -44,1276 dBm | Tput: 2.499,87 Mbps | Delay: 0,475462 ms | Jitter: 0,00424503 ms | Drop: 0
+[INFO] Waktu: 5,4s | Jarak: 53 m | RSSI: -44,5035 dBm | Tput: 2.500,28 Mbps | Delay: 0,457915 ms | Jitter: 0,00420399 ms | Drop: 0
+[INFO] Waktu: 5,6s | Jarak: 55 m | RSSI: -44,8655 dBm | Tput: 2.500,34 Mbps | Delay: 0,443124 ms | Jitter: 0,00420108 ms | Drop: 0
+[INFO] Waktu: 5,8s | Jarak: 57 m | RSSI: -45,2145 dBm | Tput: 2.499,04 Mbps | Delay: 0,467192 ms | Jitter: 0,00434523 ms | Drop: 0
+[INFO] Waktu: 6s | Jarak: 59 m | RSSI: -45,5515 dBm | Tput: 2.495,86 Mbps | Delay: 0,488829 ms | Jitter: 0,00458656 ms | Drop: 0
+[INFO] Waktu: 6,2s | Jarak: 61 m | RSSI: -45,8772 dBm | Tput: 2.501,28 Mbps | Delay: 0,493645 ms | Jitter: 0,00406063 ms | Drop: 0
+[INFO] Waktu: 6,4s | Jarak: 63 m | RSSI: -46,1925 dBm | Tput: 2.501,93 Mbps | Delay: 0,501487 ms | Jitter: 0,00409188 ms | Drop: 0
+[INFO] Waktu: 6,6s | Jarak: 65 m | RSSI: -46,4978 dBm | Tput: 2.500,69 Mbps | Delay: 0,522618 ms | Jitter: 0,00453105 ms | Drop: 0
+[INFO] Waktu: 6,8s | Jarak: 67 m | RSSI: -46,794 dBm | Tput: 2.501,05 Mbps | Delay: 0,574662 ms | Jitter: 0,00531399 ms | Drop: 0
+[INFO] Waktu: 7s | Jarak: 69 m | RSSI: -47,0814 dBm | Tput: 2.500,57 Mbps | Delay: 0,560865 ms | Jitter: 0,00424067 ms | Drop: 0
+[INFO] Waktu: 7,2s | Jarak: 71 m | RSSI: -47,3606 dBm | Tput: 2.497,4 Mbps | Delay: 0,550667 ms | Jitter: 0,0041574 ms | Drop: 0
+[INFO] Waktu: 7,4s | Jarak: 73 m | RSSI: -47,6321 dBm | Tput: 2.501,4 Mbps | Delay: 0,591409 ms | Jitter: 0,00447182 ms | Drop: 0
+[INFO] Waktu: 7,6s | Jarak: 75 m | RSSI: -48,0617 dBm | Tput: 2.498,98 Mbps | Delay: 0,615786 ms | Jitter: 0,00487651 ms | Drop: 0
+[INFO] Waktu: 7,8s | Jarak: 77 m | RSSI: -48,5189 dBm | Tput: 2.501,58 Mbps | Delay: 0,666661 ms | Jitter: 0,00538593 ms | Drop: 0
+[INFO] Waktu: 8s | Jarak: 79 m | RSSI: -48,9643 dBm | Tput: 2.501,99 Mbps | Delay: 0,642265 ms | Jitter: 0,00451717 ms | Drop: 0
+[INFO] Waktu: 8,2s | Jarak: 81 m | RSSI: -49,3987 dBm | Tput: 2.498,75 Mbps | Delay: 0,639382 ms | Jitter: 0,00448593 ms | Drop: 0
+[INFO] Waktu: 8,4s | Jarak: 83 m | RSSI: -49,8224 dBm | Tput: 2.500,81 Mbps | Delay: 0,649441 ms | Jitter: 0,00453824 ms | Drop: 0
+[INFO] Waktu: 8,6s | Jarak: 85 m | RSSI: -50,236 dBm | Tput: 2.497,1 Mbps | Delay: 0,663616 ms | Jitter: 0,0045913 ms | Drop: 0
+[INFO] Waktu: 8,8s | Jarak: 87 m | RSSI: -50,64 dBm | Tput: 2.503,81 Mbps | Delay: 0,635022 ms | Jitter: 0,0045308 ms | Drop: 0
+[INFO] Waktu: 9s | Jarak: 89 m | RSSI: -51,0349 dBm | Tput: 2.499,22 Mbps | Delay: 0,696656 ms | Jitter: 0,00469124 ms | Drop: 0
+[INFO] Waktu: 9,2s | Jarak: 91 m | RSSI: -51,4209 dBm | Tput: 2.498,46 Mbps | Delay: 0,68345 ms | Jitter: 0,0049374 ms | Drop: 0
+[INFO] Waktu: 9,4s | Jarak: 93 m | RSSI: -51,7986 dBm | Tput: 2.500,81 Mbps | Delay: 0,709556 ms | Jitter: 0,00437634 ms | Drop: 0
+[INFO] Waktu: 9,6s | Jarak: 95 m | RSSI: -52,1682 dBm | Tput: 2.493,39 Mbps | Delay: 0,688421 ms | Jitter: 0,00428899 ms | Drop: 0
+[INFO] Waktu: 9,8s | Jarak: 97 m | RSSI: -52,5301 dBm | Tput: 2.502,99 Mbps | Delay: 0,735277 ms | Jitter: 0,0047057 ms | Drop: 0
+[INFO] Waktu: 10s | Jarak: 99 m | RSSI: -52,8847 dBm | Tput: 2.501,34 Mbps | Delay: 0,828831 ms | Jitter: 0,00437587 ms | Drop: 0
+[INFO] Waktu: 10,2s | Jarak: 101 m | RSSI: -53,2321 dBm | Tput: 2.500,75 Mbps | Delay: 0,883601 ms | Jitter: 0,00487448 ms | Drop: 0
+[INFO] Waktu: 10,4s | Jarak: 103 m | RSSI: -53,5727 dBm | Tput: 2.481,62 Mbps | Delay: 0,929404 ms | Jitter: 0,00565747 ms | Drop: 0
+[INFO] Waktu: 10,6s | Jarak: 105 m | RSSI: -53,9068 dBm | Tput: 2.521,01 Mbps | Delay: 0,871141 ms | Jitter: 0,00444857 ms | Drop: 3.311
+[INFO] Waktu: 10,8s | Jarak: 107 m | RSSI: -54,2346 dBm | Tput: 2.491,39 Mbps | Delay: 0,94705 ms | Jitter: 0,00489762 ms | Drop: 0
+[INFO] Waktu: 11s | Jarak: 109 m | RSSI: -54,5563 dBm | Tput: 2.502,87 Mbps | Delay: 0,921401 ms | Jitter: 0,00498139 ms | Drop: 0
+[INFO] Waktu: 11,2s | Jarak: 111 m | RSSI: -54,8722 dBm | Tput: 2.498,63 Mbps | Delay: 1,02281 ms | Jitter: 0,00477392 ms | Drop: 0
+[INFO] Waktu: 11,4s | Jarak: 113 m | RSSI: -55,1824 dBm | Tput: 2.504,05 Mbps | Delay: 1,06865 ms | Jitter: 0,00501376 ms | Drop: 0
+[INFO] Waktu: 11,6s | Jarak: 115 m | RSSI: -55,4872 dBm | Tput: 2.502,69 Mbps | Delay: 1,05258 ms | Jitter: 0,00506927 ms | Drop: 0
+[INFO] Waktu: 11,8s | Jarak: 117 m | RSSI: -55,7867 dBm | Tput: 2.501,22 Mbps | Delay: 1,13386 ms | Jitter: 0,0056575 ms | Drop: 0
+[INFO] Waktu: 12s | Jarak: 119 m | RSSI: -56,0811 dBm | Tput: 2.490,86 Mbps | Delay: 1,30326 ms | Jitter: 0,00644469 ms | Drop: 0
+[INFO] Waktu: 12,2s | Jarak: 121 m | RSSI: -56,3707 dBm | Tput: 2.506,17 Mbps | Delay: 1,50015 ms | Jitter: 0,00571563 ms | Drop: 0
+[INFO] Waktu: 12,4s | Jarak: 123 m | RSSI: -56,6555 dBm | Tput: 2.500,93 Mbps | Delay: 1,50662 ms | Jitter: 0,00575155 ms | Drop: 0
+[SMART MLO] Jarak = 125 m. Kualitas 6GHz (Link 1) memburuk! Mematikan distribusi paket ke Link 1...
+[INFO] Waktu: 12,6s | Jarak: 125 m | RSSI: -56,9357 dBm | Tput: 2.486,33 Mbps | Delay: 1,58644 ms | Jitter: 0,00234656 ms | Drop: 0
+[INFO] Waktu: 12,8s | Jarak: 127 m | RSSI: -57,2114 dBm | Tput: 2.506,76 Mbps | Delay: 1,64457 ms | Jitter: 0,00289873 ms | Drop: 0
+[INFO] Waktu: 13s | Jarak: 129 m | RSSI: -57,4828 dBm | Tput: 2.496,81 Mbps | Delay: 1,90222 ms | Jitter: 0,00494108 ms | Drop: 0
+[INFO] Waktu: 13,2s | Jarak: 131 m | RSSI: -57,7501 dBm | Tput: 2.481,62 Mbps | Delay: 3,0859 ms | Jitter: 0,00174418 ms | Drop: 0
+[INFO] Waktu: 13,4s | Jarak: 133 m | RSSI: -58,0133 dBm | Tput: 2.495,81 Mbps | Delay: 3,22254 ms | Jitter: 0,00189577 ms | Drop: 0
+[INFO] Waktu: 13,6s | Jarak: 135 m | RSSI: -58,2726 dBm | Tput: 2.500,87 Mbps | Delay: 3,3357 ms | Jitter: 0,00222111 ms | Drop: 0
+[INFO] Waktu: 13,8s | Jarak: 137 m | RSSI: -58,5281 dBm | Tput: 2.481,14 Mbps | Delay: 4,3253 ms | Jitter: 0,00451021 ms | Drop: 0
+[INFO] Waktu: 14s | Jarak: 139 m | RSSI: -58,786 dBm | Tput: 2.095,3 Mbps | Delay: 21,4512 ms | Jitter: 0,006848 ms | Drop: 0
+[INFO] Waktu: 14,2s | Jarak: 141 m | RSSI: -59,028 dBm | Tput: 2.141,17 Mbps | Delay: 48,1336 ms | Jitter: 0,00143301 ms | Drop: 4.679
+[INFO] Waktu: 14,4s | Jarak: 143 m | RSSI: -59,2727 dBm | Tput: 2.139,58 Mbps | Delay: 51,6714 ms | Jitter: 0,00159096 ms | Drop: 6.082
+[INFO] Waktu: 14,6s | Jarak: 145 m | RSSI: -59,514 dBm | Tput: 2.136,34 Mbps | Delay: 51,7281 ms | Jitter: 0,00160562 ms | Drop: 6.227
+[INFO] Waktu: 14,8s | Jarak: 147 m | RSSI: -59,7519 dBm | Tput: 2.128,98 Mbps | Delay: 51,8615 ms | Jitter: 0,00163678 ms | Drop: 6.283
+[INFO] Waktu: 15s | Jarak: 149 m | RSSI: -59,9867 dBm | Tput: 2.129,87 Mbps | Delay: 51,9518 ms | Jitter: 0,00163833 ms | Drop: 6.272
+[INFO] Waktu: 15,2s | Jarak: 151 m | RSSI: -60,2183 dBm | Tput: 2.140,76 Mbps | Delay: 51,5624 ms | Jitter: 0,00158109 ms | Drop: 6.142
+[INFO] Waktu: 15,4s | Jarak: 153 m | RSSI: -60,4469 dBm | Tput: 2.136,7 Mbps | Delay: 51,7585 ms | Jitter: 0,00159878 ms | Drop: 6.151
+[INFO] Waktu: 15,6s | Jarak: 155 m | RSSI: -60,6725 dBm | Tput: 2.131,87 Mbps | Delay: 51,8168 ms | Jitter: 0,00163283 ms | Drop: 6.222
+[INFO] Waktu: 15,8s | Jarak: 157 m | RSSI: -60,8952 dBm | Tput: 2.136,7 Mbps | Delay: 51,6724 ms | Jitter: 0,00159249 ms | Drop: 6.194
+[INFO] Waktu: 16s | Jarak: 159 m | RSSI: -61,1151 dBm | Tput: 2.129,69 Mbps | Delay: 51,8973 ms | Jitter: 0,0016245 ms | Drop: 6.292
+[INFO] Waktu: 16,2s | Jarak: 161 m | RSSI: -61,3323 dBm | Tput: 2.129,81 Mbps | Delay: 51,8642 ms | Jitter: 0,00164503 ms | Drop: 6.282
+[INFO] Waktu: 16,4s | Jarak: 163 m | RSSI: -61,5468 dBm | Tput: 2.135,87 Mbps | Delay: 51,7398 ms | Jitter: 0,00160515 ms | Drop: 6.220
+[INFO] Waktu: 16,6s | Jarak: 165 m | RSSI: -61,7586 dBm | Tput: 2.138,34 Mbps | Delay: 51,7224 ms | Jitter: 0,00159166 ms | Drop: 6.126
+[INFO] Waktu: 16,8s | Jarak: 167 m | RSSI: -61,9679 dBm | Tput: 2.129,98 Mbps | Delay: 51,8519 ms | Jitter: 0,00172094 ms | Drop: 6.335
+[INFO] Waktu: 17s | Jarak: 169 m | RSSI: -62,1747 dBm | Tput: 2.135,22 Mbps | Delay: 51,757 ms | Jitter: 0,00198824 ms | Drop: 6.139
+[INFO] Waktu: 17,2s | Jarak: 171 m | RSSI: -62,3791 dBm | Tput: 2.136,11 Mbps | Delay: 51,7009 ms | Jitter: 0,00160731 ms | Drop: 6.213
+[INFO] Waktu: 17,4s | Jarak: 173 m | RSSI: -62,5811 dBm | Tput: 2.132,16 Mbps | Delay: 51,7816 ms | Jitter: 0,00173706 ms | Drop: 6.208
+[INFO] Waktu: 17,6s | Jarak: 175 m | RSSI: -62,7808 dBm | Tput: 2.126,98 Mbps | Delay: 51,9198 ms | Jitter: 0,00203536 ms | Drop: 6.265
+[INFO] Waktu: 17,8s | Jarak: 177 m | RSSI: -62,9782 dBm | Tput: 2.126,92 Mbps | Delay: 52,378 ms | Jitter: 0,00350364 ms | Drop: 6.425
+[INFO] Waktu: 18s | Jarak: 179 m | RSSI: -63,1734 dBm | Tput: 2.097,95 Mbps | Delay: 52,823 ms | Jitter: 0,00422947 ms | Drop: 6.695
+[INFO] Waktu: 18,2s | Jarak: 181 m | RSSI: -63,3725 dBm | Tput: 2.112,73 Mbps | Delay: 53,1338 ms | Jitter: 0,00557977 ms | Drop: 6.593
+[INFO] Waktu: 18,4s | Jarak: 183 m | RSSI: -63,5573 dBm | Tput: 1.944,34 Mbps | Delay: 56,6328 ms | Jitter: 0,00307897 ms | Drop: 9.436
+[INFO] Waktu: 18,6s | Jarak: 185 m | RSSI: -63,7461 dBm | Tput: 1.932,62 Mbps | Delay: 57,4424 ms | Jitter: 0,00308071 ms | Drop: 9.725
+[INFO] Waktu: 18,8s | Jarak: 187 m | RSSI: -63,9329 dBm | Tput: 1.937,33 Mbps | Delay: 57,2841 ms | Jitter: 0,00336819 ms | Drop: 9.541
+[INFO] Waktu: 19s | Jarak: 189 m | RSSI: -64,1177 dBm | Tput: 1.919,72 Mbps | Delay: 57,9103 ms | Jitter: 0,00423624 ms | Drop: 9.808
+[INFO] Waktu: 19,2s | Jarak: 191 m | RSSI: -64,3006 dBm | Tput: 1.910,42 Mbps | Delay: 58,4209 ms | Jitter: 0,00584582 ms | Drop: 9.943
+[INFO] Waktu: 19,4s | Jarak: 193 m | RSSI: -64,4815 dBm | Tput: 1.926,44 Mbps | Delay: 58,437 ms | Jitter: 0,00620271 ms | Drop: 10.016
+[INFO] Waktu: 19,6s | Jarak: 195 m | RSSI: -64,6606 dBm | Tput: 1.734,19 Mbps | Delay: 63,1045 ms | Jitter: 0,00408004 ms | Drop: 12.840
+[INFO] Waktu: 19,8s | Jarak: 197 m | RSSI: -64,8379 dBm | Tput: 1.731,54 Mbps | Delay: 64,1286 ms | Jitter: 0,00429088 ms | Drop: 13.107
+[INFO] Waktu: 20s | Jarak: 199 m | RSSI: -65,0134 dBm | Tput: 1.730,95 Mbps | Delay: 64,1532 ms | Jitter: 0,00434889 ms | Drop: 13.098
+[INFO] Waktu: 20,2s | Jarak: 201 m | RSSI: -52,408 dBm | Tput: 2.982,15 Mbps | Delay: 26,5314 ms | Jitter: 0,00380551 ms | Drop: 621
+[INFO] Waktu: 20,4s | Jarak: 203 m | RSSI: -52,494 dBm | Tput: 2.523,83 Mbps | Delay: 1,17357 ms | Jitter: 0,00336034 ms | Drop: 0
+[INFO] Waktu: 20,6s | Jarak: 205 m | RSSI: -52,5792 dBm | Tput: 2.501,34 Mbps | Delay: 1,12834 ms | Jitter: 0,00353102 ms | Drop: 0
+[INFO] Waktu: 20,8s | Jarak: 207 m | RSSI: -52,6635 dBm | Tput: 2.499,46 Mbps | Delay: 1,10622 ms | Jitter: 0,00338547 ms | Drop: 0
+[INFO] Waktu: 21s | Jarak: 209 m | RSSI: -52,747 dBm | Tput: 2.497,75 Mbps | Delay: 1,1859 ms | Jitter: 0,00421836 ms | Drop: 0
+[INFO] Waktu: 21,2s | Jarak: 211 m | RSSI: -52,8298 dBm | Tput: 2.503,05 Mbps | Delay: 1,21304 ms | Jitter: 0,00425493 ms | Drop: 0
+[INFO] Waktu: 21,4s | Jarak: 213 m | RSSI: -52,9117 dBm | Tput: 2.490,8 Mbps | Delay: 1,51697 ms | Jitter: 0,00188437 ms | Drop: 0
+[INFO] Waktu: 21,6s | Jarak: 215 m | RSSI: -52,9929 dBm | Tput: 2.500,22 Mbps | Delay: 1,55131 ms | Jitter: 0,00184769 ms | Drop: 0
+[INFO] Waktu: 21,8s | Jarak: 217 m | RSSI: -53,0733 dBm | Tput: 2.502,81 Mbps | Delay: 1,54208 ms | Jitter: 0,00184738 ms | Drop: 0
+[INFO] Waktu: 22s | Jarak: 219 m | RSSI: -53,153 dBm | Tput: 2.497,69 Mbps | Delay: 1,50918 ms | Jitter: 0,00184677 ms | Drop: 0
+[INFO] Waktu: 22,2s | Jarak: 221 m | RSSI: -53,232 dBm | Tput: 2.500,28 Mbps | Delay: 1,54848 ms | Jitter: 0,00185253 ms | Drop: 0
+[INFO] Waktu: 22,4s | Jarak: 223 m | RSSI: -53,3102 dBm | Tput: 2.498,16 Mbps | Delay: 1,53609 ms | Jitter: 0,00184938 ms | Drop: 0
+[INFO] Waktu: 22,6s | Jarak: 225 m | RSSI: -53,3878 dBm | Tput: 2.504,87 Mbps | Delay: 1,59924 ms | Jitter: 0,0018405 ms | Drop: 0
+[INFO] Waktu: 22,8s | Jarak: 227 m | RSSI: -53,4646 dBm | Tput: 2.498,1 Mbps | Delay: 1,56511 ms | Jitter: 0,00185171 ms | Drop: 0
+[INFO] Waktu: 23s | Jarak: 229 m | RSSI: -53,5408 dBm | Tput: 2.503,87 Mbps | Delay: 1,57242 ms | Jitter: 0,00184056 ms | Drop: 0
+[INFO] Waktu: 23,2s | Jarak: 231 m | RSSI: -53,6164 dBm | Tput: 2.496,16 Mbps | Delay: 1,54281 ms | Jitter: 0,00185495 ms | Drop: 0
+[INFO] Waktu: 23,4s | Jarak: 233 m | RSSI: -53,6912 dBm | Tput: 2.501,99 Mbps | Delay: 1,60361 ms | Jitter: 0,0018445 ms | Drop: 0
+[INFO] Waktu: 23,6s | Jarak: 235 m | RSSI: -53,7655 dBm | Tput: 2.500,81 Mbps | Delay: 1,53959 ms | Jitter: 0,00184619 ms | Drop: 0
+[INFO] Waktu: 23,8s | Jarak: 237 m | RSSI: -53,8391 dBm | Tput: 2.498,57 Mbps | Delay: 1,58954 ms | Jitter: 0,00185079 ms | Drop: 0
+[INFO] Waktu: 24s | Jarak: 239 m | RSSI: -53,9121 dBm | Tput: 2.502,05 Mbps | Delay: 1,54533 ms | Jitter: 0,00184396 ms | Drop: 0
+[INFO] Waktu: 24,2s | Jarak: 241 m | RSSI: -53,9845 dBm | Tput: 2.497,87 Mbps | Delay: 1,57707 ms | Jitter: 0,00185203 ms | Drop: 0
+[INFO] Waktu: 24,4s | Jarak: 243 m | RSSI: -54,0562 dBm | Tput: 2.501,4 Mbps | Delay: 1,57414 ms | Jitter: 0,00184523 ms | Drop: 0
+[INFO] Waktu: 24,6s | Jarak: 245 m | RSSI: -54,1274 dBm | Tput: 2.500,22 Mbps | Delay: 1,54209 ms | Jitter: 0,00184316 ms | Drop: 0
+[INFO] Waktu: 24,8s | Jarak: 247 m | RSSI: -54,1981 dBm | Tput: 2.496,81 Mbps | Delay: 1,58364 ms | Jitter: 0,00185803 ms | Drop: 0
+[INFO] Waktu: 25s | Jarak: 249 m | RSSI: -54,2681 dBm | Tput: 2.505,34 Mbps | Delay: 1,52908 ms | Jitter: 0,00183778 ms | Drop: 0
+[INFO] Waktu: 25,2s | Jarak: 251 m | RSSI: -54,3376 dBm | Tput: 2.495,98 Mbps | Delay: 1,5435 ms | Jitter: 0,00185527 ms | Drop: 0
+[INFO] Waktu: 25,4s | Jarak: 253 m | RSSI: -54,4065 dBm | Tput: 2.504,11 Mbps | Delay: 1,56836 ms | Jitter: 0,00184025 ms | Drop: 0
+[INFO] Waktu: 25,6s | Jarak: 255 m | RSSI: -54,4749 dBm | Tput: 2.498,75 Mbps | Delay: 1,55119 ms | Jitter: 0,00185014 ms | Drop: 0
+[INFO] Waktu: 25,8s | Jarak: 257 m | RSSI: -54,5428 dBm | Tput: 2.501,28 Mbps | Delay: 1,55879 ms | Jitter: 0,00184538 ms | Drop: 0
+[INFO] Waktu: 26s | Jarak: 259 m | RSSI: -54,6101 dBm | Tput: 2.498,69 Mbps | Delay: 1,54715 ms | Jitter: 0,00185029 ms | Drop: 0
+[INFO] Waktu: 26,2s | Jarak: 261 m | RSSI: -54,6769 dBm | Tput: 2.499,22 Mbps | Delay: 1,57025 ms | Jitter: 0,00184929 ms | Drop: 0
+[INFO] Waktu: 26,4s | Jarak: 263 m | RSSI: -54,7432 dBm | Tput: 2.501,4 Mbps | Delay: 1,52914 ms | Jitter: 0,00184522 ms | Drop: 0
+[INFO] Waktu: 26,6s | Jarak: 265 m | RSSI: -54,809 dBm | Tput: 2.496,57 Mbps | Delay: 1,55435 ms | Jitter: 0,00184751 ms | Drop: 0
+[INFO] Waktu: 26,8s | Jarak: 267 m | RSSI: -54,8805 dBm | Tput: 2.499,63 Mbps | Delay: 1,55564 ms | Jitter: 0,0018553 ms | Drop: 0
+[INFO] Waktu: 27s | Jarak: 269 m | RSSI: -54,9392 dBm | Tput: 2.504,99 Mbps | Delay: 1,59101 ms | Jitter: 0,00183756 ms | Drop: 0
+[INFO] Waktu: 27,2s | Jarak: 271 m | RSSI: -55,0035 dBm | Tput: 2.501,1 Mbps | Delay: 1,56186 ms | Jitter: 0,00184605 ms | Drop: 0
+[INFO] Waktu: 27,4s | Jarak: 273 m | RSSI: -55,0674 dBm | Tput: 2.497,16 Mbps | Delay: 1,56978 ms | Jitter: 0,00185399 ms | Drop: 0
+[INFO] Waktu: 27,6s | Jarak: 275 m | RSSI: -55,1308 dBm | Tput: 2.500,46 Mbps | Delay: 1,57463 ms | Jitter: 0,00184711 ms | Drop: 0
+[INFO] Waktu: 27,8s | Jarak: 277 m | RSSI: -55,1937 dBm | Tput: 2.500,69 Mbps | Delay: 1,53271 ms | Jitter: 0,00184641 ms | Drop: 0
+[INFO] Waktu: 28s | Jarak: 279 m | RSSI: -55,2562 dBm | Tput: 2.501,99 Mbps | Delay: 1,57179 ms | Jitter: 0,00184421 ms | Drop: 0
+[INFO] Waktu: 28,2s | Jarak: 281 m | RSSI: -55,3182 dBm | Tput: 2.500,22 Mbps | Delay: 1,54625 ms | Jitter: 0,00184744 ms | Drop: 0
+[INFO] Waktu: 28,4s | Jarak: 283 m | RSSI: -55,3798 dBm | Tput: 2.497,57 Mbps | Delay: 1,55635 ms | Jitter: 0,00185234 ms | Drop: 0
+[INFO] Waktu: 28,6s | Jarak: 285 m | RSSI: -55,441 dBm | Tput: 2.499,63 Mbps | Delay: 1,57285 ms | Jitter: 0,00184108 ms | Drop: 0
+[INFO] Waktu: 28,8s | Jarak: 287 m | RSSI: -55,5017 dBm | Tput: 2.502,28 Mbps | Delay: 1,57477 ms | Jitter: 0,00184636 ms | Drop: 0
+[INFO] Waktu: 29s | Jarak: 289 m | RSSI: -55,5621 dBm | Tput: 2.497,98 Mbps | Delay: 1,55768 ms | Jitter: 0,00185638 ms | Drop: 0
+[INFO] Waktu: 29,2s | Jarak: 291 m | RSSI: -55,622 dBm | Tput: 2.502,93 Mbps | Delay: 1,56336 ms | Jitter: 0,00183769 ms | Drop: 0
+[INFO] Waktu: 29,4s | Jarak: 293 m | RSSI: -55,6815 dBm | Tput: 2.501,63 Mbps | Delay: 1,5767 ms | Jitter: 0,00184951 ms | Drop: 0
+[INFO] Waktu: 29,6s | Jarak: 295 m | RSSI: -55,7406 dBm | Tput: 2.498,69 Mbps | Delay: 1,56219 ms | Jitter: 0,00185016 ms | Drop: 0
+[INFO] Waktu: 29,8s | Jarak: 297 m | RSSI: -55,7992 dBm | Tput: 2.501,34 Mbps | Delay: 1,52419 ms | Jitter: 0,00184525 ms | Drop: 0
+[INFO] Waktu: 30s | Jarak: 299 m | RSSI: -55,8575 dBm | Tput: 2.498,4 Mbps | Delay: 1,56426 ms | Jitter: 0,00185088 ms | Drop: 0
+[INFO] Waktu: 30,2s | Jarak: 301 m | RSSI: -55,9154 dBm | Tput: 2.499,51 Mbps | Delay: 1,5063 ms | Jitter: 0,00184211 ms | Drop: 0
+[INFO] Waktu: 30,4s | Jarak: 303 m | RSSI: -55,973 dBm | Tput: 2.501,1 Mbps | Delay: 1,53761 ms | Jitter: 0,00189724 ms | Drop: 0
+[INFO] Waktu: 30,6s | Jarak: 305 m | RSSI: -56,0301 dBm | Tput: 2.500,04 Mbps | Delay: 1,54683 ms | Jitter: 0,00184763 ms | Drop: 0
+[INFO] Waktu: 30,8s | Jarak: 307 m | RSSI: -56,0869 dBm | Tput: 2.499,46 Mbps | Delay: 1,56875 ms | Jitter: 0,00184894 ms | Drop: 0
+[INFO] Waktu: 31s | Jarak: 309 m | RSSI: -56,1433 dBm | Tput: 2.499,04 Mbps | Delay: 1,56352 ms | Jitter: 0,00184967 ms | Drop: 0
+[INFO] Waktu: 31,2s | Jarak: 311 m | RSSI: -56,1993 dBm | Tput: 2.505,17 Mbps | Delay: 1,56211 ms | Jitter: 0,00187761 ms | Drop: 0
+[INFO] Waktu: 31,4s | Jarak: 313 m | RSSI: -56,255 dBm | Tput: 2.498,75 Mbps | Delay: 1,55741 ms | Jitter: 0,00190251 ms | Drop: 0
+[INFO] Waktu: 31,6s | Jarak: 315 m | RSSI: -56,3103 dBm | Tput: 2.499,51 Mbps | Delay: 1,54702 ms | Jitter: 0,00190475 ms | Drop: 0
+[INFO] Waktu: 31,8s | Jarak: 317 m | RSSI: -56,3653 dBm | Tput: 2.499,46 Mbps | Delay: 1,59259 ms | Jitter: 0,00195178 ms | Drop: 0
+[INFO] Waktu: 32s | Jarak: 319 m | RSSI: -56,4199 dBm | Tput: 2.500,34 Mbps | Delay: 1,58358 ms | Jitter: 0,00189728 ms | Drop: 0
+[INFO] Waktu: 32,2s | Jarak: 321 m | RSSI: -56,4742 dBm | Tput: 2.499,1 Mbps | Delay: 1,57131 ms | Jitter: 0,00191268 ms | Drop: 0
+[INFO] Waktu: 32,4s | Jarak: 323 m | RSSI: -56,5282 dBm | Tput: 2.503,46 Mbps | Delay: 1,57777 ms | Jitter: 0,00194883 ms | Drop: 0
+[INFO] Waktu: 32,6s | Jarak: 325 m | RSSI: -56,5818 dBm | Tput: 2.498,28 Mbps | Delay: 1,57186 ms | Jitter: 0,00185109 ms | Drop: 0
+[INFO] Waktu: 32,8s | Jarak: 327 m | RSSI: -56,6351 dBm | Tput: 2.501,69 Mbps | Delay: 1,53501 ms | Jitter: 0,00200119 ms | Drop: 0
+[INFO] Waktu: 33s | Jarak: 329 m | RSSI: -56,688 dBm | Tput: 2.499,4 Mbps | Delay: 1,5539 ms | Jitter: 0,00201451 ms | Drop: 0
+[INFO] Waktu: 33,2s | Jarak: 331 m | RSSI: -56,7407 dBm | Tput: 2.498,22 Mbps | Delay: 1,57038 ms | Jitter: 0,00205436 ms | Drop: 0
+[INFO] Waktu: 33,4s | Jarak: 333 m | RSSI: -56,793 dBm | Tput: 2.500,57 Mbps | Delay: 1,58508 ms | Jitter: 0,002286 ms | Drop: 0
+[INFO] Waktu: 33,6s | Jarak: 335 m | RSSI: -56,845 dBm | Tput: 2.504,11 Mbps | Delay: 1,64552 ms | Jitter: 0,00247198 ms | Drop: 0
+[INFO] Waktu: 33,8s | Jarak: 337 m | RSSI: -56,8967 dBm | Tput: 2.494,69 Mbps | Delay: 1,59485 ms | Jitter: 0,00209675 ms | Drop: 0
+[INFO] Waktu: 34s | Jarak: 339 m | RSSI: -56,9481 dBm | Tput: 2.502,58 Mbps | Delay: 1,58517 ms | Jitter: 0,00218348 ms | Drop: 0
+[INFO] Waktu: 34,2s | Jarak: 341 m | RSSI: -56,9992 dBm | Tput: 2.499,93 Mbps | Delay: 1,60035 ms | Jitter: 0,00225128 ms | Drop: 0
+[INFO] Waktu: 34,4s | Jarak: 343 m | RSSI: -57,05 dBm | Tput: 2.499,28 Mbps | Delay: 1,65145 ms | Jitter: 0,00254648 ms | Drop: 0
+[INFO] Waktu: 34,6s | Jarak: 345 m | RSSI: -57,1005 dBm | Tput: 2.502,75 Mbps | Delay: 1,65432 ms | Jitter: 0,00279153 ms | Drop: 0
+[INFO] Waktu: 34,8s | Jarak: 347 m | RSSI: -57,1507 dBm | Tput: 2.497,57 Mbps | Delay: 1,65343 ms | Jitter: 0,00253554 ms | Drop: 0
+[INFO] Waktu: 35s | Jarak: 349 m | RSSI: -57,2006 dBm | Tput: 2.500,99 Mbps | Delay: 1,69016 ms | Jitter: 0,00290769 ms | Drop: 0
+[INFO] Waktu: 35,2s | Jarak: 351 m | RSSI: -57,2503 dBm | Tput: 2.494,86 Mbps | Delay: 1,7063 ms | Jitter: 0,00339147 ms | Drop: 0
+[INFO] Waktu: 35,4s | Jarak: 353 m | RSSI: -57,2996 dBm | Tput: 2.506,99 Mbps | Delay: 1,75125 ms | Jitter: 0,00371785 ms | Drop: 0
+[INFO] Waktu: 35,6s | Jarak: 355 m | RSSI: -57,3487 dBm | Tput: 2.498,87 Mbps | Delay: 1,70693 ms | Jitter: 0,00332231 ms | Drop: 0
+[INFO] Waktu: 35,8s | Jarak: 357 m | RSSI: -57,3975 dBm | Tput: 2.495,86 Mbps | Delay: 1,79874 ms | Jitter: 0,00376535 ms | Drop: 0
+[INFO] Waktu: 36s | Jarak: 359 m | RSSI: -57,446 dBm | Tput: 2.502,69 Mbps | Delay: 1,85199 ms | Jitter: 0,00432011 ms | Drop: 0
+[INFO] Waktu: 36,2s | Jarak: 361 m | RSSI: -57,4943 dBm | Tput: 2.503,58 Mbps | Delay: 1,83883 ms | Jitter: 0,00406178 ms | Drop: 0
+[INFO] Waktu: 36,4s | Jarak: 363 m | RSSI: -57,5422 dBm | Tput: 2.498,63 Mbps | Delay: 1,96601 ms | Jitter: 0,00504618 ms | Drop: 0
+[INFO] Waktu: 36,6s | Jarak: 365 m | RSSI: -57,59 dBm | Tput: 2.486,15 Mbps | Delay: 2,84462 ms | Jitter: 0,00111688 ms | Drop: 0
+[INFO] Waktu: 36,8s | Jarak: 367 m | RSSI: -57,6374 dBm | Tput: 2.497,16 Mbps | Delay: 2,95725 ms | Jitter: 0,00114345 ms | Drop: 0
+[INFO] Waktu: 37s | Jarak: 369 m | RSSI: -57,6846 dBm | Tput: 2.499,81 Mbps | Delay: 3,1113 ms | Jitter: 0,00112063 ms | Drop: 0
+[INFO] Waktu: 37,2s | Jarak: 371 m | RSSI: -57,7316 dBm | Tput: 2.499,4 Mbps | Delay: 3,13874 ms | Jitter: 0,0012746 ms | Drop: 0
+[INFO] Waktu: 37,4s | Jarak: 373 m | RSSI: -57,7783 dBm | Tput: 2.502,16 Mbps | Delay: 3,11483 ms | Jitter: 0,00164526 ms | Drop: 0
+[INFO] Waktu: 37,6s | Jarak: 375 m | RSSI: -57,8247 dBm | Tput: 2.496,75 Mbps | Delay: 3,10995 ms | Jitter: 0,00135356 ms | Drop: 0
+[INFO] Waktu: 37,8s | Jarak: 377 m | RSSI: -57,8709 dBm | Tput: 2.504,76 Mbps | Delay: 3,15494 ms | Jitter: 0,00135908 ms | Drop: 0
+[INFO] Waktu: 38s | Jarak: 379 m | RSSI: -57,9169 dBm | Tput: 2.498,34 Mbps | Delay: 3,10441 ms | Jitter: 0,0016143 ms | Drop: 0
+[INFO] Waktu: 38,2s | Jarak: 381 m | RSSI: -57,9626 dBm | Tput: 2.497,63 Mbps | Delay: 3,18464 ms | Jitter: 0,00152604 ms | Drop: 0
+[INFO] Waktu: 38,4s | Jarak: 383 m | RSSI: -58,0081 dBm | Tput: 2.496,63 Mbps | Delay: 3,17496 ms | Jitter: 0,00126758 ms | Drop: 0
+[INFO] Waktu: 38,6s | Jarak: 385 m | RSSI: -58,0533 dBm | Tput: 2.499,99 Mbps | Delay: 3,41835 ms | Jitter: 0,00174685 ms | Drop: 0
+[INFO] Waktu: 38,8s | Jarak: 387 m | RSSI: -58,0983 dBm | Tput: 2.501,87 Mbps | Delay: 3,26425 ms | Jitter: 0,00179292 ms | Drop: 0
+[INFO] Waktu: 39s | Jarak: 389 m | RSSI: -58,1431 dBm | Tput: 2.496,16 Mbps | Delay: 3,51815 ms | Jitter: 0,002492 ms | Drop: 0
+[INFO] Waktu: 39,2s | Jarak: 391 m | RSSI: -58,1876 dBm | Tput: 2.494,04 Mbps | Delay: 3,80485 ms | Jitter: 0,00234313 ms | Drop: 0
+[INFO] Waktu: 39,4s | Jarak: 393 m | RSSI: -58,232 dBm | Tput: 2.487,27 Mbps | Delay: 4,38791 ms | Jitter: 0,00303233 ms | Drop: 0
+[INFO] Waktu: 39,6s | Jarak: 395 m | RSSI: -58,2761 dBm | Tput: 2.503,87 Mbps | Delay: 5,31373 ms | Jitter: 0,002825 ms | Drop: 0
+[INFO] Waktu: 39,8s | Jarak: 397 m | RSSI: -58,3199 dBm | Tput: 2.492,68 Mbps | Delay: 5,88524 ms | Jitter: 0,00346006 ms | Drop: 0
+[INFO] Waktu: 40s | Jarak: 399 m | RSSI: -58,3636 dBm | Tput: 2.485,44 Mbps | Delay: 6,69699 ms | Jitter: 0,00334117 ms | Drop: 0
+[INFO] Waktu: 40,2s | Jarak: 401 m | RSSI: -58,407 dBm | Tput: 2.492,74 Mbps | Delay: 7,57451 ms | Jitter: 0,00332598 ms | Drop: 0
+[INFO] Waktu: 40,4s | Jarak: 403 m | RSSI: -58,4502 dBm | Tput: 2.486,03 Mbps | Delay: 8,5222 ms | Jitter: 0,00333885 ms | Drop: 0
+[INFO] Waktu: 40,6s | Jarak: 405 m | RSSI: -58,4932 dBm | Tput: 2.470,66 Mbps | Delay: 9,13304 ms | Jitter: 0,00358082 ms | Drop: 0
+[INFO] Waktu: 40,8s | Jarak: 407 m | RSSI: -58,536 dBm | Tput: 2.512,41 Mbps | Delay: 9,91466 ms | Jitter: 0,00404603 ms | Drop: 0
+[INFO] Waktu: 41s | Jarak: 409 m | RSSI: -58,5786 dBm | Tput: 2.446,76 Mbps | Delay: 11,3519 ms | Jitter: 0,00424743 ms | Drop: 0
+[INFO] Waktu: 41,2s | Jarak: 411 m | RSSI: -58,6209 dBm | Tput: 2.475,73 Mbps | Delay: 13,2505 ms | Jitter: 0,00479686 ms | Drop: 0
+[INFO] Waktu: 41,4s | Jarak: 413 m | RSSI: -58,6631 dBm | Tput: 2.510,35 Mbps | Delay: 14,9423 ms | Jitter: 0,004777 ms | Drop: 0
+[INFO] Waktu: 41,6s | Jarak: 415 m | RSSI: -58,7051 dBm | Tput: 2.459,12 Mbps | Delay: 17,6231 ms | Jitter: 0,00538297 ms | Drop: 0
+[INFO] Waktu: 41,8s | Jarak: 417 m | RSSI: -58,7468 dBm | Tput: 2.473,49 Mbps | Delay: 20,1925 ms | Jitter: 0,00536206 ms | Drop: 0
+[INFO] Waktu: 42s | Jarak: 419 m | RSSI: -58,7884 dBm | Tput: 2.092,12 Mbps | Delay: 36,3138 ms | Jitter: 0,00665127 ms | Drop: 1.524
+[INFO] Waktu: 42,2s | Jarak: 421 m | RSSI: -58,8298 dBm | Tput: 2.155,83 Mbps | Delay: 51,8991 ms | Jitter: 0,00174082 ms | Drop: 6.259
+[INFO] Waktu: 42,4s | Jarak: 423 m | RSSI: -58,8709 dBm | Tput: 2.132,46 Mbps | Delay: 51,852 ms | Jitter: 0,00163456 ms | Drop: 6.231
+[INFO] Waktu: 42,6s | Jarak: 425 m | RSSI: -58,9119 dBm | Tput: 2.128,63 Mbps | Delay: 51,8699 ms | Jitter: 0,00163126 ms | Drop: 6.372
+[INFO] Waktu: 42,8s | Jarak: 427 m | RSSI: -58,9527 dBm | Tput: 2.137,4 Mbps | Delay: 51,721 ms | Jitter: 0,00160408 ms | Drop: 6.118
+[INFO] Waktu: 43s | Jarak: 429 m | RSSI: -58,9933 dBm | Tput: 2.135,34 Mbps | Delay: 51,7456 ms | Jitter: 0,00161385 ms | Drop: 6.171
+[INFO] Waktu: 43,2s | Jarak: 431 m | RSSI: -59,0337 dBm | Tput: 2.125,98 Mbps | Delay: 51,8636 ms | Jitter: 0,00163882 ms | Drop: 6.381
+[INFO] Waktu: 43,4s | Jarak: 433 m | RSSI: -59,0739 dBm | Tput: 2.130,98 Mbps | Delay: 51,9193 ms | Jitter: 0,0016364 ms | Drop: 6.272
+[INFO] Waktu: 43,6s | Jarak: 435 m | RSSI: -59,1139 dBm | Tput: 2.133,1 Mbps | Delay: 51,8071 ms | Jitter: 0,00161804 ms | Drop: 6.209
+[INFO] Waktu: 43,8s | Jarak: 437 m | RSSI: -59,1599 dBm | Tput: 2.133,05 Mbps | Delay: 51,723 ms | Jitter: 0,00162154 ms | Drop: 6.172
+[INFO] Waktu: 44s | Jarak: 439 m | RSSI: -59,1934 dBm | Tput: 2.141,23 Mbps | Delay: 51,714 ms | Jitter: 0,00158152 ms | Drop: 6.153
+[INFO] Waktu: 44,2s | Jarak: 441 m | RSSI: -59,2329 dBm | Tput: 2.134,16 Mbps | Delay: 51,8795 ms | Jitter: 0,00163595 ms | Drop: 6.308
+[INFO] Waktu: 44,4s | Jarak: 443 m | RSSI: -59,2722 dBm | Tput: 2.131,28 Mbps | Delay: 51,7097 ms | Jitter: 0,00161052 ms | Drop: 6.191
+[INFO] Waktu: 44,6s | Jarak: 445 m | RSSI: -59,3113 dBm | Tput: 2.133,52 Mbps | Delay: 51,8545 ms | Jitter: 0,00161762 ms | Drop: 6.237
+[INFO] Waktu: 44,8s | Jarak: 447 m | RSSI: -59,3503 dBm | Tput: 2.136,34 Mbps | Delay: 51,6688 ms | Jitter: 0,00160958 ms | Drop: 6.198
+[INFO] Waktu: 45s | Jarak: 449 m | RSSI: -59,389 dBm | Tput: 2.135,81 Mbps | Delay: 51,7661 ms | Jitter: 0,00160504 ms | Drop: 6.163
+[INFO] Waktu: 45,2s | Jarak: 451 m | RSSI: -59,4276 dBm | Tput: 2.134,05 Mbps | Delay: 51,7742 ms | Jitter: 0,00162366 ms | Drop: 6.232
+[INFO] Waktu: 45,4s | Jarak: 453 m | RSSI: -59,4661 dBm | Tput: 2.130,4 Mbps | Delay: 51,7719 ms | Jitter: 0,00161483 ms | Drop: 6.293
+[INFO] Waktu: 45,6s | Jarak: 455 m | RSSI: -59,5043 dBm | Tput: 2.135,99 Mbps | Delay: 51,7681 ms | Jitter: 0,00161254 ms | Drop: 6.143
+[INFO] Waktu: 45,8s | Jarak: 457 m | RSSI: -59,5424 dBm | Tput: 2.133,87 Mbps | Delay: 51,751 ms | Jitter: 0,00161578 ms | Drop: 6.273
+[INFO] Waktu: 46s | Jarak: 459 m | RSSI: -59,5804 dBm | Tput: 2.134,22 Mbps | Delay: 51,7167 ms | Jitter: 0,00160052 ms | Drop: 6.187
+[INFO] Waktu: 46,2s | Jarak: 461 m | RSSI: -59,6181 dBm | Tput: 2.129,98 Mbps | Delay: 51,8905 ms | Jitter: 0,00163527 ms | Drop: 6.270
+[INFO] Waktu: 46,4s | Jarak: 463 m | RSSI: -59,6557 dBm | Tput: 2.132,52 Mbps | Delay: 51,7583 ms | Jitter: 0,00162914 ms | Drop: 6.331
+[INFO] Waktu: 46,6s | Jarak: 465 m | RSSI: -59,6932 dBm | Tput: 2.127,16 Mbps | Delay: 51,9465 ms | Jitter: 0,00165347 ms | Drop: 6.280
+[INFO] Waktu: 46,8s | Jarak: 467 m | RSSI: -59,7304 dBm | Tput: 2.136,99 Mbps | Delay: 51,6726 ms | Jitter: 0,00159212 ms | Drop: 6.151
+[INFO] Waktu: 47s | Jarak: 469 m | RSSI: -59,7676 dBm | Tput: 2.132,57 Mbps | Delay: 51,7098 ms | Jitter: 0,00161745 ms | Drop: 6.291
+[INFO] Waktu: 47,2s | Jarak: 471 m | RSSI: -59,8045 dBm | Tput: 2.132,46 Mbps | Delay: 51,8122 ms | Jitter: 0,00162856 ms | Drop: 6.199
+[INFO] Waktu: 47,4s | Jarak: 473 m | RSSI: -59,8413 dBm | Tput: 2.135,52 Mbps | Delay: 51,7273 ms | Jitter: 0,0016181 ms | Drop: 6.178
+[INFO] Waktu: 47,6s | Jarak: 475 m | RSSI: -59,878 dBm | Tput: 2.128,75 Mbps | Delay: 51,7833 ms | Jitter: 0,00161944 ms | Drop: 6.353
+[INFO] Waktu: 47,8s | Jarak: 477 m | RSSI: -59,9145 dBm | Tput: 2.127,57 Mbps | Delay: 51,9452 ms | Jitter: 0,00165845 ms | Drop: 6.316
+[INFO] Waktu: 48s | Jarak: 479 m | RSSI: -59,957 dBm | Tput: 2.132,63 Mbps | Delay: 51,8026 ms | Jitter: 0,0016223 ms | Drop: 6.143
+[INFO] Waktu: 48,2s | Jarak: 481 m | RSSI: -59,987 dBm | Tput: 2.136,52 Mbps | Delay: 51,7084 ms | Jitter: 0,00160651 ms | Drop: 6.278
+[INFO] Waktu: 48,4s | Jarak: 483 m | RSSI: -60,0231 dBm | Tput: 2.135,93 Mbps | Delay: 51,7421 ms | Jitter: 0,0016122 ms | Drop: 6.179
+[INFO] Waktu: 48,6s | Jarak: 485 m | RSSI: -60,0589 dBm | Tput: 2.136,28 Mbps | Delay: 51,7172 ms | Jitter: 0,00161408 ms | Drop: 6.150
+[INFO] Waktu: 48,8s | Jarak: 487 m | RSSI: -60,0947 dBm | Tput: 2.129,34 Mbps | Delay: 51,7691 ms | Jitter: 0,00162669 ms | Drop: 6.336
+[INFO] Waktu: 49s | Jarak: 489 m | RSSI: -60,1303 dBm | Tput: 2.135,11 Mbps | Delay: 51,7626 ms | Jitter: 0,0016078 ms | Drop: 6.178
+[INFO] Waktu: 49,2s | Jarak: 491 m | RSSI: -60,1657 dBm | Tput: 2.136,81 Mbps | Delay: 51,6675 ms | Jitter: 0,00161179 ms | Drop: 6.235
+[INFO] Waktu: 49,4s | Jarak: 493 m | RSSI: -60,201 dBm | Tput: 2.133,1 Mbps | Delay: 51,7318 ms | Jitter: 0,0016126 ms | Drop: 6.191
+[INFO] Waktu: 49,6s | Jarak: 495 m | RSSI: -60,2362 dBm | Tput: 2.133,52 Mbps | Delay: 51,7054 ms | Jitter: 0,00160397 ms | Drop: 6.202
+[INFO] Waktu: 49,8s | Jarak: 497 m | RSSI: -60,2712 dBm | Tput: 2.133,52 Mbps | Delay: 51,6939 ms | Jitter: 0,00162443 ms | Drop: 6.282
+[INFO] Waktu: 50s | Jarak: 499 m | RSSI: -60,3061 dBm | Tput: 2.132,4 Mbps | Delay: 51,8005 ms | Jitter: 0,00162223 ms | Drop: 6.202
+[INFO] Waktu: 50,2s | Jarak: 501 m | RSSI: -60,3409 dBm | Tput: 2.137,52 Mbps | Delay: 51,6832 ms | Jitter: 0,00160183 ms | Drop: 6.157
+[INFO] Waktu: 50,4s | Jarak: 503 m | RSSI: -60,3755 dBm | Tput: 2.133,75 Mbps | Delay: 51,6767 ms | Jitter: 0,0016001 ms | Drop: 6.262
+[INFO] Waktu: 50,6s | Jarak: 505 m | RSSI: -60,4099 dBm | Tput: 2.130,16 Mbps | Delay: 51,7927 ms | Jitter: 0,00162877 ms | Drop: 6.248
+[INFO] Waktu: 50,8s | Jarak: 507 m | RSSI: -60,4443 dBm | Tput: 2.138,34 Mbps | Delay: 51,6161 ms | Jitter: 0,00159835 ms | Drop: 6.196
+[INFO] Waktu: 51s | Jarak: 509 m | RSSI: -60,4785 dBm | Tput: 2.130,98 Mbps | Delay: 51,7536 ms | Jitter: 0,00162882 ms | Drop: 6.226
+[INFO] Waktu: 51,2s | Jarak: 511 m | RSSI: -60,5125 dBm | Tput: 2.130,98 Mbps | Delay: 51,7863 ms | Jitter: 0,00162581 ms | Drop: 6.277
+[INFO] Waktu: 51,4s | Jarak: 513 m | RSSI: -60,5465 dBm | Tput: 2.130,1 Mbps | Delay: 51,8044 ms | Jitter: 0,00164279 ms | Drop: 6.275
+[INFO] Waktu: 51,6s | Jarak: 515 m | RSSI: -60,5803 dBm | Tput: 2.127,22 Mbps | Delay: 51,8344 ms | Jitter: 0,00164392 ms | Drop: 6.354
+[INFO] Waktu: 51,8s | Jarak: 517 m | RSSI: -60,6139 dBm | Tput: 2.134,99 Mbps | Delay: 51,7735 ms | Jitter: 0,00161831 ms | Drop: 6.208
+[INFO] Waktu: 52s | Jarak: 519 m | RSSI: -60,6475 dBm | Tput: 2.131,63 Mbps | Delay: 51,7494 ms | Jitter: 0,00163413 ms | Drop: 6.245
+[INFO] Waktu: 52,2s | Jarak: 521 m | RSSI: -60,6809 dBm | Tput: 2.131,93 Mbps | Delay: 51,7021 ms | Jitter: 0,00161687 ms | Drop: 6.266
+[INFO] Waktu: 52,4s | Jarak: 523 m | RSSI: -60,7141 dBm | Tput: 2.140,41 Mbps | Delay: 51,6879 ms | Jitter: 0,00159431 ms | Drop: 6.104
+[INFO] Waktu: 52,6s | Jarak: 525 m | RSSI: -60,7473 dBm | Tput: 2.131,93 Mbps | Delay: 51,7049 ms | Jitter: 0,00161972 ms | Drop: 6.312
+[INFO] Waktu: 52,8s | Jarak: 527 m | RSSI: -60,7803 dBm | Tput: 2.132,81 Mbps | Delay: 51,7156 ms | Jitter: 0,00161566 ms | Drop: 6.189
+[INFO] Waktu: 53s | Jarak: 529 m | RSSI: -60,8132 dBm | Tput: 2.136,52 Mbps | Delay: 51,6998 ms | Jitter: 0,00162165 ms | Drop: 6.165
+[INFO] Waktu: 53,2s | Jarak: 531 m | RSSI: -60,846 dBm | Tput: 2.133,81 Mbps | Delay: 51,6084 ms | Jitter: 0,00159877 ms | Drop: 6.232
+[INFO] Waktu: 53,4s | Jarak: 533 m | RSSI: -60,8787 dBm | Tput: 2.128,87 Mbps | Delay: 51,8516 ms | Jitter: 0,00164149 ms | Drop: 6.319
+[INFO] Waktu: 53,6s | Jarak: 535 m | RSSI: -60,9112 dBm | Tput: 2.134,05 Mbps | Delay: 51,7331 ms | Jitter: 0,00162594 ms | Drop: 6.177
+[INFO] Waktu: 53,8s | Jarak: 537 m | RSSI: -60,9436 dBm | Tput: 2.131,34 Mbps | Delay: 51,6978 ms | Jitter: 0,00162422 ms | Drop: 6.302
+[INFO] Waktu: 54s | Jarak: 539 m | RSSI: -60,9759 dBm | Tput: 2.134,58 Mbps | Delay: 51,7399 ms | Jitter: 0,00160534 ms | Drop: 6.202
+[INFO] Waktu: 54,2s | Jarak: 541 m | RSSI: -61,0081 dBm | Tput: 2.133,46 Mbps | Delay: 51,7254 ms | Jitter: 0,00163138 ms | Drop: 6.218
+[INFO] Waktu: 54,4s | Jarak: 543 m | RSSI: -61,0401 dBm | Tput: 2.126,45 Mbps | Delay: 51,7199 ms | Jitter: 0,00162085 ms | Drop: 6.362
+[INFO] Waktu: 54,6s | Jarak: 545 m | RSSI: -61,072 dBm | Tput: 2.132,57 Mbps | Delay: 51,8341 ms | Jitter: 0,00163443 ms | Drop: 6.238
+[INFO] Waktu: 54,8s | Jarak: 547 m | RSSI: -61,1039 dBm | Tput: 2.134,16 Mbps | Delay: 51,6649 ms | Jitter: 0,00161639 ms | Drop: 6.211
+[INFO] Waktu: 55s | Jarak: 549 m | RSSI: -61,1356 dBm | Tput: 2.128,28 Mbps | Delay: 51,7988 ms | Jitter: 0,00163359 ms | Drop: 6.366
+[INFO] Waktu: 55,2s | Jarak: 551 m | RSSI: -61,1671 dBm | Tput: 2.132,4 Mbps | Delay: 51,7056 ms | Jitter: 0,0016263 ms | Drop: 6.206
+[INFO] Waktu: 55,4s | Jarak: 553 m | RSSI: -61,1986 dBm | Tput: 2.132,87 Mbps | Delay: 51,7623 ms | Jitter: 0,00162528 ms | Drop: 6.225
+[INFO] Waktu: 55,6s | Jarak: 555 m | RSSI: -61,23 dBm | Tput: 2.131,46 Mbps | Delay: 51,6923 ms | Jitter: 0,0016239 ms | Drop: 6.330
+[INFO] Waktu: 55,8s | Jarak: 557 m | RSSI: -61,2612 dBm | Tput: 2.135,05 Mbps | Delay: 51,6398 ms | Jitter: 0,00161417 ms | Drop: 6.158
+[INFO] Waktu: 56s | Jarak: 559 m | RSSI: -61,2923 dBm | Tput: 2.136,52 Mbps | Delay: 51,6147 ms | Jitter: 0,00161109 ms | Drop: 6.131
+[INFO] Waktu: 56,2s | Jarak: 561 m | RSSI: -61,3234 dBm | Tput: 2.125,16 Mbps | Delay: 51,8057 ms | Jitter: 0,00163811 ms | Drop: 6.449
+[INFO] Waktu: 56,4s | Jarak: 563 m | RSSI: -61,3543 dBm | Tput: 2.130,16 Mbps | Delay: 51,7594 ms | Jitter: 0,00163576 ms | Drop: 6.232
+[INFO] Waktu: 56,6s | Jarak: 565 m | RSSI: -61,3912 dBm | Tput: 2.135,93 Mbps | Delay: 51,6669 ms | Jitter: 0,0016222 ms | Drop: 6.087
+[INFO] Waktu: 56,8s | Jarak: 567 m | RSSI: -61,4158 dBm | Tput: 2.140,41 Mbps | Delay: 51,5855 ms | Jitter: 0,00158323 ms | Drop: 6.233
+[INFO] Waktu: 57s | Jarak: 569 m | RSSI: -61,4464 dBm | Tput: 2.130,57 Mbps | Delay: 51,7554 ms | Jitter: 0,00162954 ms | Drop: 6.258
+[INFO] Waktu: 57,2s | Jarak: 571 m | RSSI: -61,4768 dBm | Tput: 2.130,4 Mbps | Delay: 51,7792 ms | Jitter: 0,00164214 ms | Drop: 6.272
+[INFO] Waktu: 57,4s | Jarak: 573 m | RSSI: -61,5072 dBm | Tput: 2.129,75 Mbps | Delay: 51,7151 ms | Jitter: 0,00163033 ms | Drop: 6.318
+[INFO] Waktu: 57,6s | Jarak: 575 m | RSSI: -61,5375 dBm | Tput: 2.137,52 Mbps | Delay: 51,5789 ms | Jitter: 0,00159139 ms | Drop: 6.135
+[INFO] Waktu: 57,8s | Jarak: 577 m | RSSI: -61,5676 dBm | Tput: 2.130,75 Mbps | Delay: 51,8104 ms | Jitter: 0,00164798 ms | Drop: 6.255
+[INFO] Waktu: 58s | Jarak: 579 m | RSSI: -61,5977 dBm | Tput: 2.131,69 Mbps | Delay: 51,6594 ms | Jitter: 0,00161644 ms | Drop: 6.314
+[INFO] Waktu: 58,2s | Jarak: 581 m | RSSI: -61,6276 dBm | Tput: 2.137,93 Mbps | Delay: 51,573 ms | Jitter: 0,00160233 ms | Drop: 6.113
+[INFO] Waktu: 58,4s | Jarak: 583 m | RSSI: -61,6575 dBm | Tput: 2.132,81 Mbps | Delay: 51,6664 ms | Jitter: 0,00162897 ms | Drop: 6.322
+[INFO] Waktu: 58,6s | Jarak: 585 m | RSSI: -61,6872 dBm | Tput: 2.132,52 Mbps | Delay: 51,685 ms | Jitter: 0,00161361 ms | Drop: 6.196
+[INFO] Waktu: 58,8s | Jarak: 587 m | RSSI: -61,7169 dBm | Tput: 2.135,46 Mbps | Delay: 51,6441 ms | Jitter: 0,00161471 ms | Drop: 6.166
+[INFO] Waktu: 59s | Jarak: 589 m | RSSI: -61,7464 dBm | Tput: 2.128,75 Mbps | Delay: 51,7512 ms | Jitter: 0,00162932 ms | Drop: 6.389
+[INFO] Waktu: 59,2s | Jarak: 591 m | RSSI: -61,7759 dBm | Tput: 2.135,05 Mbps | Delay: 51,6317 ms | Jitter: 0,00161513 ms | Drop: 6.137
+[INFO] Waktu: 59,4s | Jarak: 593 m | RSSI: -62,0455 dBm | Tput: 2.127,57 Mbps | Delay: 51,7325 ms | Jitter: 0,00163136 ms | Drop: 6.316
+[INFO] Waktu: 59,6s | Jarak: 595 m | RSSI: -62,5179 dBm | Tput: 2.134,11 Mbps | Delay: 51,6706 ms | Jitter: 0,00162429 ms | Drop: 6.293
+[INFO] Waktu: 59,8s | Jarak: 597 m | RSSI: -62,9886 dBm | Tput: 2.117,44 Mbps | Delay: 52,3411 ms | Jitter: 0,00340543 ms | Drop: 6.453
+[INFO] Waktu: 60s | Jarak: 599 m | RSSI: -63,4577 dBm | Tput: 2.105,43 Mbps | Delay: 53,3268 ms | Jitter: 0,00731235 ms | Drop: 6.691
+[INFO] Waktu: 60,2s | Jarak: 601 m | RSSI: -63,9253 dBm | Tput: 1.937,33 Mbps | Delay: 56,5069 ms | Jitter: 0,00325432 ms | Drop: 9.568
+[INFO] Waktu: 60,4s | Jarak: 603 m | RSSI: -64,3914 dBm | Tput: 1.886,46 Mbps | Delay: 58,1277 ms | Jitter: 0,00568147 ms | Drop: 9.904
+[INFO] Waktu: 60,6s | Jarak: 605 m | RSSI: -64,8559 dBm | Tput: 1.757,63 Mbps | Delay: 63,0736 ms | Jitter: 0,00461327 ms | Drop: 13.098
+[INFO] Waktu: 60,8s | Jarak: 607 m | RSSI: -65,325 dBm | Tput: 1.724,01 Mbps | Delay: 64,4968 ms | Jitter: 0,00513845 ms | Drop: 13.103
+[INFO] Waktu: 61s | Jarak: 609 m | RSSI: -65,7803 dBm | Tput: 1.699,1 Mbps | Delay: 65,2517 ms | Jitter: 0,00762085 ms | Drop: 13.260
+[INFO] Waktu: 61,2s | Jarak: 611 m | RSSI: -66,2402 dBm | Tput: 1.347,41 Mbps | Delay: 79,7752 ms | Jitter: 0,00764918 ms | Drop: 20.024
+[INFO] Waktu: 61,4s | Jarak: 613 m | RSSI: -66,6986 dBm | Tput: 1.320,97 Mbps | Delay: 84,5449 ms | Jitter: 0,00842671 ms | Drop: 19.989
+[INFO] Waktu: 61,6s | Jarak: 615 m | RSSI: -67,1555 dBm | Tput: 1.316,85 Mbps | Delay: 84,6744 ms | Jitter: 0,00844854 ms | Drop: 19.958
+[INFO] Waktu: 61,8s | Jarak: 617 m | RSSI: -67,611 dBm | Tput: 1.320,5 Mbps | Delay: 84,5171 ms | Jitter: 0,00841653 ms | Drop: 19.958
+[INFO] Waktu: 62s | Jarak: 619 m | RSSI: -68,065 dBm | Tput: 1.317,56 Mbps | Delay: 84,6003 ms | Jitter: 0,00833426 ms | Drop: 20.167
+[INFO] Waktu: 62,2s | Jarak: 621 m | RSSI: -68,5175 dBm | Tput: 1.318,38 Mbps | Delay: 84,4597 ms | Jitter: 0,00843163 ms | Drop: 20.140
+[INFO] Waktu: 62,4s | Jarak: 623 m | RSSI: -68,9685 dBm | Tput: 1.318,44 Mbps | Delay: 84,6236 ms | Jitter: 0,00843509 ms | Drop: 20.193
+[INFO] Waktu: 62,6s | Jarak: 625 m | RSSI: -69,4181 dBm | Tput: 1.319,91 Mbps | Delay: 84,6176 ms | Jitter: 0,00857575 ms | Drop: 19.975
+[INFO] Waktu: 62,8s | Jarak: 627 m | RSSI: -69,8663 dBm | Tput: 1.307,19 Mbps | Delay: 84,5954 ms | Jitter: 0,00870965 ms | Drop: 20.025
+[INFO] Waktu: 63s | Jarak: 629 m | RSSI: -70,313 dBm | Tput: 1.325,74 Mbps | Delay: 85,4467 ms | Jitter: 0,0108171 ms | Drop: 20.223
+[INFO] Waktu: 63,2s | Jarak: 631 m | RSSI: -70,7584 dBm | Tput: 982,001 Mbps | Delay: 105,606 ms | Jitter: 0,0126918 ms | Drop: 25.459
+[INFO] Waktu: 63,4s | Jarak: 633 m | RSSI: -71,2068 dBm | Tput: 935,603 Mbps | Delay: 120,293 ms | Jitter: 0,0162222 ms | Drop: 26.591
+[INFO] Waktu: 63,6s | Jarak: 635 m | RSSI: -71,6493 dBm | Tput: 22,1389 Mbps | Delay: 121,281 ms | Jitter: 0,0155023 ms | Drop: 42.282
+[INFO] Waktu: 63,8s | Jarak: 637 m | RSSI: -72,0905 dBm | Tput: 0 Mbps | Delay: 0 ms | Jitter: 0 ms | Drop: 42.462
+[INFO] Waktu: 64s | Jarak: 639 m | RSSI: -72,5302 dBm | Tput: 0 Mbps | Delay: 0 ms | Jitter: 0 ms | Drop: 42.463
+[INFO] Waktu: 64,2s | Jarak: 641 m | RSSI: -72,9686 dBm | Tput: 0 Mbps | Delay: 0 ms | Jitter: 0 ms | Drop: 42.463
+[INFO] Waktu Eksekusi Nyata (Real Runtime) Simulasi: 5,94538 menit (356,723 detik)
+
+
+==========================================
+ HASIL RANGE TEST WI-FI 7
+==========================================
+JANGKAUAN EFEKTIF (Throughput > 10 Mbps) : 635 Meter
+
+--- Zona Dekat (0 - 100m) ---
+  Rata-rata RSSI        : -41,3324 dBm
+  Rata-rata Throughput  : 2.371,1 Mbps
+  Rata-rata Delay       : 0,493279 ms
+  Rata-rata Jitter      : 0,0040821 ms
+  Rata-rata Packet Drop : 0 paket/detik
+
+--- Zona Menengah (100 - 300m) ---
+  Rata-rata RSSI        : -57,0074 dBm
+  Rata-rata Throughput  : 2.365,76 Mbps
+  Rata-rata Delay       : 17,7882 ms
+  Rata-rata Jitter      : 0,00276286 ms
+  Rata-rata Packet Drop : 2.314,91 paket/detik
+
+--- Zona Jauh (300 - 640m) ---
+  Rata-rata RSSI        : -60,3252 dBm
+  Rata-rata Throughput  : 2.149,82 Mbps
+  Rata-rata Delay       : 37,7868 ms
+  Rata-rata Jitter      : 0,00276855 ms
+  Rata-rata Packet Drop : 5.896,85 paket/detik
+
