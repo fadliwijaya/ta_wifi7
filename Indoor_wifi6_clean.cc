@@ -77,6 +77,24 @@ private:
   std::streambuf *sb2;
 };
 
+// --- Fungsi Kalkulasi QoS Tambahan ---
+double CalculateMOS(double delayMs, double jitterMs, double plr) {
+    double effectiveLatency = delayMs + 2.0 * jitterMs + 10.0;
+    double r;
+    if (effectiveLatency < 160.0) {
+        r = 93.2 - (effectiveLatency / 40.0);
+    } else {
+        r = 93.2 - (effectiveLatency - 120.0) / 10.0;
+    }
+    r = r - (2.5 * plr);
+    if (r < 0.0) r = 0.0;
+    
+    double mos = 1.0 + (0.035 * r) + (r * (r - 60.0) * (100.0 - r) * 0.000007);
+    if (mos < 1.0) mos = 1.0;
+    if (mos > 4.5) mos = 4.5;
+    return mos;
+}
+
 // Global variables untuk Channel Utilization
 uint64_t g_busySamplesAp0 = 0;
 uint64_t g_busySamplesAp1 = 0;
@@ -237,17 +255,17 @@ int main(int argc, char *argv[]) {
   Time simulationTime = Seconds(simulationTimeSec);
 
   std::vector<UserProfile> profiles = {
-      {"Social Media", 9001, 200, "25Mbps", "5Mbps", 0x00, "AC_BE"},
-      {"Video 4K Streaming", 9002, 1472, "100Mbps", "5Mbps", 0xa0, "AC_VI"},
-      {"Gaming", 9003, 1472, "50Mbps", "20Mbps", 0xc0, "AC_VO"},
-      {"File Download", 9004, 1472, "150Mbps", "10Mbps", 0x20, "AC_BK"},
-      {"Web Browsing", 9005, 1000, "25Mbps", "5Mbps", 0x00, "AC_BE"},
-      {"Live Streaming", 9006, 1472, "10Mbps", "50Mbps", 0xa0, "AC_VI"}};
+      {"Social Media", 9001, 200, "50Mbps", "5Mbps", 0x00, "AC_BE"},
+      {"Video 4K Streaming", 9002, 1472, "150Mbps", "5Mbps", 0xa0, "AC_VI"},
+      {"Gaming", 9003, 1472, "100Mbps", "20Mbps", 0xc0, "AC_VO"},
+      {"File Download", 9004, 1472, "500Mbps", "10Mbps", 0x20, "AC_BK"},
+      {"Web Browsing", 9005, 1000, "50Mbps", "5Mbps", 0x00, "AC_BE"},
+      {"Live Streaming", 9006, 1472, "10Mbps", "100Mbps", 0xa0, "AC_VI"}};
 
   NodeContainer wifiApNode;
   wifiApNode.Create(2); // 2 AP (Satu untuk tiap ruangan)
   NodeContainer wifiStaNode;
-  wifiStaNode.Create(24); // Total 24 STA (12 Kelas A, 10 Kelas B, 2 Koridor)
+  wifiStaNode.Create(20); // Total 20 STA (10 Kelas A, 10 Kelas B)
 
   Ptr<Building> building = CreateObject<Building>();
   building->SetBoundaries(
@@ -270,13 +288,11 @@ int main(int argc, char *argv[]) {
   apMobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
   apMobility.Install(wifiApNode);
 
-  NodeContainer staKelasA, staKelasB, staKoridor;
-  for (uint32_t i = 0; i < 12; ++i)
+  NodeContainer staKelasA, staKelasB;
+  for (uint32_t i = 0; i < 10; ++i)
     staKelasA.Add(wifiStaNode.Get(i));
-  for (uint32_t i = 12; i < 22; ++i)
+  for (uint32_t i = 10; i < 20; ++i)
     staKelasB.Add(wifiStaNode.Get(i));
-  for (uint32_t i = 22; i < 24; ++i)
-    staKoridor.Add(wifiStaNode.Get(i));
 
   // --- Mobilitas Kelas A (Ruang Kiri) ---
   MobilityHelper staMobilityKelasA;
@@ -306,19 +322,7 @@ int main(int argc, char *argv[]) {
   staMobilityKelasB.SetMobilityModel("ns3::ConstantPositionMobilityModel");
   staMobilityKelasB.Install(staKelasB);
 
-  // --- Mobilitas Koridor (Atas) ---
-  // Mengembalikan ke RandomWalk agar STA tetap di dalam coverage AP (menghindari 0 Mbps karena out-of-range)
-  MobilityHelper staMobilityKoridor;
-  staMobilityKoridor.SetPositionAllocator(
-      "ns3::RandomRectanglePositionAllocator", "X",
-      StringValue("ns3::UniformRandomVariable[Min=0.5|Max=15.5]"), "Y",
-      StringValue("ns3::UniformRandomVariable[Min=8.5|Max=10.5]"));
-  staMobilityKoridor.SetMobilityModel(
-      "ns3::RandomWalk2dMobilityModel", "Bounds",
-      RectangleValue(Rectangle(
-          0.5, 15.5, 8.5, 10.5)), // Koridor melintang di atas Kelas A dan B
-      "Speed", StringValue("ns3::UniformRandomVariable[Min=0.5|Max=1.5]"));
-  staMobilityKoridor.Install(staKoridor);
+  // Mobilitas Koridor dihapus
 
   BuildingsHelper::Install(wifiApNode);
   BuildingsHelper::Install(wifiStaNode);
@@ -364,9 +368,9 @@ int main(int argc, char *argv[]) {
                           DoubleValue(-82.0));
 
   WifiMacHelper macA;
-  Ssid ssidA = Ssid("kampus-wifi");
+  Ssid ssidA = Ssid("kampus-wifi-A");
   macA.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssidA), "QosSupported",
-               BooleanValue(true), "ActiveProbing", BooleanValue(true));
+               BooleanValue(true), "ActiveProbing", BooleanValue(false));
   NetDeviceContainer staDeviceA = wifi.Install(spectrumPhy, macA, staKelasA);
 
   macA.SetType("ns3::ApWifiMac", "Ssid", SsidValue(ssidA), "QosSupported",
@@ -374,23 +378,16 @@ int main(int argc, char *argv[]) {
   NetDeviceContainer apDeviceA = wifi.Install(spectrumPhy, macA, wifiApNode.Get(0));
 
   WifiMacHelper macB;
-  Ssid ssidB = Ssid("kampus-wifi");
+  Ssid ssidB = Ssid("kampus-wifi-B");
   macB.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssidB), "QosSupported",
-               BooleanValue(true), "ActiveProbing", BooleanValue(true));
+               BooleanValue(true), "ActiveProbing", BooleanValue(false));
   NetDeviceContainer staDeviceB = wifi.Install(spectrumPhy, macB, staKelasB);
 
   macB.SetType("ns3::ApWifiMac", "Ssid", SsidValue(ssidB), "QosSupported",
                BooleanValue(true));
   NetDeviceContainer apDeviceB = wifi.Install(spectrumPhy, macB, wifiApNode.Get(1));
 
-  // Koridor: STA 18 ikut AP0, STA 19 ikut AP1
-  macA.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssidA), "QosSupported",
-               BooleanValue(true), "ActiveProbing", BooleanValue(true));
-  NetDeviceContainer staDeviceKoridorA = wifi.Install(spectrumPhy, macA, staKoridor.Get(0));
-
-  macB.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssidB), "QosSupported",
-               BooleanValue(true), "ActiveProbing", BooleanValue(true));
-  NetDeviceContainer staDeviceKoridorB = wifi.Install(spectrumPhy, macB, staKoridor.Get(1));
+  // Node koridor dihapus
 
   // Gabungkan semua device untuk keperluan referensi (apDevice dan staDevice)
   NetDeviceContainer apDevice;
@@ -400,8 +397,7 @@ int main(int argc, char *argv[]) {
   NetDeviceContainer staDevice;
   staDevice.Add(staDeviceA);
   staDevice.Add(staDeviceB);
-  staDevice.Add(staDeviceKoridorA);
-  staDevice.Add(staDeviceKoridorB);
+  // staDeviceKoridor dihapus
 
 
   // ==========================================
@@ -434,14 +430,7 @@ int main(int argc, char *argv[]) {
       ns3::DynamicCast<ns3::WifiNetDevice>(staDeviceA.Get(i))->GetPhy()->SetMaxSupportedTxSpatialStreams(8);
       ns3::DynamicCast<ns3::WifiNetDevice>(staDeviceA.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
   }
-  for (uint32_t i = 0; i < staDeviceKoridorB.GetN(); ++i) {
-      ns3::DynamicCast<ns3::WifiNetDevice>(staDeviceKoridorB.Get(i))->GetPhy()->SetMaxSupportedTxSpatialStreams(8);
-      ns3::DynamicCast<ns3::WifiNetDevice>(staDeviceKoridorB.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
-  }
-  for (uint32_t i = 0; i < staDeviceKoridorA.GetN(); ++i) {
-      ns3::DynamicCast<ns3::WifiNetDevice>(staDeviceKoridorA.Get(i))->GetPhy()->SetMaxSupportedTxSpatialStreams(8);
-      ns3::DynamicCast<ns3::WifiNetDevice>(staDeviceKoridorA.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
-  }
+  // AUTO-PATCH koridor dihapus
   for (uint32_t i = 0; i < staDeviceB.GetN(); ++i) {
       ns3::DynamicCast<ns3::WifiNetDevice>(staDeviceB.Get(i))->GetPhy()->SetMaxSupportedTxSpatialStreams(8);
       ns3::DynamicCast<ns3::WifiNetDevice>(staDeviceB.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
@@ -460,10 +449,8 @@ int main(int argc, char *argv[]) {
 
   // Pisahkan STA Device Container untuk Assignment Subnet yang berbeda
   NetDeviceContainer staDevAp0, staDevAp1;
-  for (uint32_t i = 0; i < 12; ++i) staDevAp0.Add(staDevice.Get(i)); // 0-11
-  staDevAp0.Add(staDevice.Get(22)); // 22 (Koridor A)
-  for (uint32_t i = 12; i < 22; ++i) staDevAp1.Add(staDevice.Get(i)); // 12-21
-  staDevAp1.Add(staDevice.Get(23)); // 23 (Koridor B)
+  for (uint32_t i = 0; i < 10; ++i) staDevAp0.Add(staDevice.Get(i)); // 0-9
+  for (uint32_t i = 10; i < 20; ++i) staDevAp1.Add(staDevice.Get(i)); // 10-19
 
   // 2. Subnet Wi-Fi Ruang 1 (AP0)
   address.SetBase("192.168.1.0", "255.255.255.0");
@@ -477,12 +464,9 @@ int main(int argc, char *argv[]) {
 
   // Satukan kembali interface STA ke dalam satu container (staInterface) agar kompatibel dengan logika di bawah
   Ipv4InterfaceContainer staInterface;
-  for(uint32_t i=0; i<12; ++i) staInterface.Add(sta0Interface.Get(i)); // 0-11
-  for(uint32_t i=0; i<10; ++i) staInterface.Add(sta1Interface.Get(i)); // 12-21
-  staInterface.Add(sta0Interface.Get(12)); // 22
-  staInterface.Add(sta1Interface.Get(10)); // 23
-
-
+  for(uint32_t i=0; i<10; ++i) staInterface.Add(sta0Interface.Get(i)); // 0-9
+  for(uint32_t i=0; i<10; ++i) staInterface.Add(sta1Interface.Get(i)); // 10-19 
+  
   // Aktifkan Routing Statis (Bypass bug ns-3 GlobalRouting pada MLO)
   Ipv4StaticRoutingHelper ipv4RoutingHelper;
 
@@ -510,15 +494,15 @@ int main(int argc, char *argv[]) {
   g_ap0Bssid = ns3::Mac48Address::ConvertFrom(apDevice.Get(0)->GetAddress());
   g_ap1Bssid = ns3::Mac48Address::ConvertFrom(apDevice.Get(1)->GetAddress());
   
-  for (uint32_t i = 0; i < 24; ++i) {
+  for (uint32_t i = 0; i < 20; ++i) {
       g_staIps[wifiStaNode.Get(i)->GetId()] = staInterface.GetAddress(i);
   }
   
   // STA Routing: Default route ke AP masing-masing agar bisa kirim Uplink ke Server
-  for (uint32_t i = 0; i < 24; ++i) {
+  for (uint32_t i = 0; i < 20; ++i) {
     Ptr<Ipv4> ipv4Sta = wifiStaNode.Get(i)->GetObject<Ipv4>();
     Ptr<Ipv4StaticRouting> staticRoutingSta = ipv4RoutingHelper.GetStaticRouting(ipv4Sta);
-    if (i < 12 || i == 22) {
+    if (i < 10) {
       staticRoutingSta->SetDefaultRoute(ap0Interface.GetAddress(0), 1);
     } else {
       staticRoutingSta->SetDefaultRoute(ap1Interface.GetAddress(0), 1);
@@ -529,7 +513,7 @@ int main(int argc, char *argv[]) {
   ApplicationContainer sinkApps;
   ApplicationContainer clientApps;
 
-  for (uint32_t i = 0; i < 24; ++i) {
+  for (uint32_t i = 0; i < 20; ++i) {
     uint32_t profileIdx = i % 6;
     Address sinkLocalAddress(
         InetSocketAddress(Ipv4Address::GetAny(), profiles[profileIdx].port));
@@ -618,13 +602,13 @@ int main(int argc, char *argv[]) {
   std::cout
       << "Skenario           : Ruang 1 (Diam/Duduk) & Ruang 2 (Bergerak/Mobile)"
       << std::endl;
-  std::cout << "Jumlah User (STA)  : 24 User (12 Kelas A, 10 Kelas B, 2 Koridor)"
+  std::cout << "Jumlah User (STA)  : 20 User (10 Kelas A, 10 Kelas B)"
             << std::endl;
   std::cout << "================= SPESIFIKASI PARAMETER SIMULASI =================" << std::endl;
   std::cout << "Standar Wi-Fi      : IEEE 802.11ax (Wi-Fi 6)" << std::endl;
   std::cout << "Lebar Pita (BW)    : 160 MHz (Single-Link 5 GHz)" << std::endl;
   std::cout << "Max Modulasi       : MCS 11 (1024-QAM)" << std::endl;
-  std::cout << "Antena / MIMO      : 2x2 Spatial Streams" << std::endl;
+  std::cout << "Antena / MIMO      : 8x8 Spatial Streams" << std::endl;
   std::cout << "Tx Power           : 20 dBm" << std::endl;
   std::cout << "Routing / QoS      : IPv4 Static Routing / WMM (EDCA)" << std::endl;
   std::cout << "Propagation Model  : HybridBuildingsPropagationLossModel" << std::endl;
@@ -646,11 +630,13 @@ int main(int argc, char *argv[]) {
     double dlTotalDelayMs = 0.0, ulTotalDelayMs = 0.0;
     double dlTotalJitterMs = 0.0, ulTotalJitterMs = 0.0;
     uint64_t dlTotalDrop = 0, ulTotalDrop = 0;
+    uint64_t dlTotalTxPackets = 0, dlTotalRxPackets = 0;
+    uint64_t ulTotalTxPackets = 0, ulTotalRxPackets = 0;
     int dlFlowCount = 0, ulFlowCount = 0;
 
     std::vector<double> dlUserThroughputs, ulUserThroughputs;
 
-    for (uint32_t i = 0; i < 24; ++i) {
+    for (uint32_t i = 0; i < 20; ++i) {
       if (i % 6 != p) continue; // Hanya hitung STA yang menggunakan profil ini
 
       Ipv4Address staAddr = staInterface.GetAddress(i);
@@ -687,6 +673,8 @@ int main(int argc, char *argv[]) {
           dlTotalDelayMs += avgDelayMs;
           dlTotalJitterMs += avgJitterMs;
           dlTotalDrop += macDrop;
+          dlTotalTxPackets += flow->second.txPackets;
+          dlTotalRxPackets += flow->second.rxPackets;
         } else if (isUl) {
           profileFound = true;
           ulFlowCount++;
@@ -695,6 +683,8 @@ int main(int argc, char *argv[]) {
           ulTotalDelayMs += avgDelayMs;
           ulTotalJitterMs += avgJitterMs;
           ulTotalDrop += macDrop;
+          ulTotalTxPackets += flow->second.txPackets;
+          ulTotalRxPackets += flow->second.rxPackets;
         }
       }
     }
@@ -712,20 +702,34 @@ int main(int argc, char *argv[]) {
 
       std::cout << "  [DOWNLINK]" << std::endl;
       if (dlFlowCount > 0) {
+        double dlPlr = (dlTotalTxPackets > 0) ? ((double)dlTotalDrop / dlTotalTxPackets) * 100.0 : 0.0;
+        double dlRel = (dlTotalTxPackets > 0) ? ((double)dlTotalRxPackets / dlTotalTxPackets) * 100.0 : 100.0;
+        double dlMos = CalculateMOS(dlTotalDelayMs / dlFlowCount, dlTotalJitterMs / dlFlowCount, dlPlr);
+
         std::cout << "  Throughput Rata-2    : " << dlTotalThroughput / dlFlowCount << " Mbit/s per User" << std::endl;
         std::cout << "  Average Delay        : " << dlTotalDelayMs / dlFlowCount << " ms" << std::endl;
         std::cout << "  Average Jitter       : " << dlTotalJitterMs / dlFlowCount << " ms" << std::endl;
         std::cout << "  Jain's Fairness Idx  : " << calcJains(dlUserThroughputs) << " (Skala 0.0 - 1.0)" << std::endl;
         std::cout << "  MAC Queue Drop       : " << dlTotalDrop / dlFlowCount << " packets per User" << std::endl;
+        std::cout << "  Packet Loss Ratio    : " << dlPlr << " %" << std::endl;
+        std::cout << "  Reliability          : " << dlRel << " %" << std::endl;
+        std::cout << "  MOS (Estimasi)       : " << dlMos << std::endl;
       } else { std::cout << "  (Tidak ada data Downlink)" << std::endl; }
 
       std::cout << "  [UPLINK]" << std::endl;
       if (ulFlowCount > 0) {
+        double ulPlr = (ulTotalTxPackets > 0) ? ((double)ulTotalDrop / ulTotalTxPackets) * 100.0 : 0.0;
+        double ulRel = (ulTotalTxPackets > 0) ? ((double)ulTotalRxPackets / ulTotalTxPackets) * 100.0 : 100.0;
+        double ulMos = CalculateMOS(ulTotalDelayMs / ulFlowCount, ulTotalJitterMs / ulFlowCount, ulPlr);
+
         std::cout << "  Throughput Rata-2    : " << ulTotalThroughput / ulFlowCount << " Mbit/s per User" << std::endl;
         std::cout << "  Average Delay        : " << ulTotalDelayMs / ulFlowCount << " ms" << std::endl;
         std::cout << "  Average Jitter       : " << ulTotalJitterMs / ulFlowCount << " ms" << std::endl;
         std::cout << "  Jain's Fairness Idx  : " << calcJains(ulUserThroughputs) << " (Skala 0.0 - 1.0)" << std::endl;
         std::cout << "  MAC Queue Drop       : " << ulTotalDrop / ulFlowCount << " packets per User" << std::endl;
+        std::cout << "  Packet Loss Ratio    : " << ulPlr << " %" << std::endl;
+        std::cout << "  Reliability          : " << ulRel << " %" << std::endl;
+        std::cout << "  MOS (Estimasi)       : " << ulMos << std::endl;
       } else { std::cout << "  (Tidak ada data Uplink)" << std::endl; }
       
       std::cout << "  SINR Distribution    : ~" << avgSinrEstimated << " dB (Teoritis Pathloss)" << std::endl;
@@ -749,7 +753,7 @@ int main(int argc, char *argv[]) {
 
   std::ofstream csvFile(csvFilename);
   csvFile << "STA_ID,MAC_Address,Direction,Area,Profil,QoS_AC,Throughput_Mbps,Delay_ms,Jitter_ms,MacDrop,"
-             "HandoverCount\n";
+             "HandoverCount,PLR_Percent,Reliability_Percent,MOS\n";
 
   auto getMacAddress = [&](Ptr<Node> node) {
     for (uint32_t d = 0; d < node->GetNDevices(); ++d) {
@@ -760,10 +764,10 @@ int main(int argc, char *argv[]) {
     return Mac48Address("00:00:00:00:00:00");
   };
 
-  for (uint32_t i = 0; i < 24; ++i) {
+  for (uint32_t i = 0; i < 20; ++i) {
     Ipv4Address staAddr = staInterface.GetAddress(i);
     Mac48Address staMac = getMacAddress(wifiStaNode.Get(i));
-    std::string area = (i < 12) ? "Kelas A" : (i < 22) ? "Kelas B" : "Koridor";
+    std::string area = (i < 10) ? "Kelas A" : "Kelas B";
     double dlTh = 0, ulTh = 0;
     double dlDly = 0, ulDly = 0;
     double dlJit = 0, ulJit = 0;
@@ -803,8 +807,12 @@ int main(int argc, char *argv[]) {
         if (dlRxP > 0) { dlDly = (dlDlySum / dlRxP) * 1000.0; dlJit = (dlJitSum / dlRxP) * 1000.0; }
         if (dlTxP > dlRxP) dlDrop = dlTxP - dlRxP;
         
-        std::cout << "STA " << i << " [" << staMac << "] (" << area << ", " << profiles[i % 6].name << " / " << profiles[i % 6].acName << ") [DL]\t-> TH: " << dlTh << " Mbps \t| D: " << dlDly << " ms \t| J: " << dlJit << " ms \t| Drop: " << dlDrop << std::endl;
-        csvFile << i << "," << staMac << ",DL," << area << "," << profiles[i % 6].name << "," << profiles[i % 6].acName << "," << dlTh << "," << dlDly << "," << dlJit << "," << dlDrop << "," << handoverCount << "\n";
+        double dlPlr = (dlTxP > 0) ? ((double)dlDrop / dlTxP) * 100.0 : 0.0;
+        double dlRel = (dlTxP > 0) ? ((double)dlRxP / dlTxP) * 100.0 : 100.0;
+        double dlMos = CalculateMOS(dlDly, dlJit, dlPlr);
+        
+        std::cout << "STA " << i << " [" << staMac << "] (" << area << ", " << profiles[i % 6].name << " / " << profiles[i % 6].acName << ") [DL]\t-> TH: " << dlTh << " Mbps \t| D: " << dlDly << " ms \t| J: " << dlJit << " ms \t| Drop: " << dlDrop << " \t| PLR: " << dlPlr << "% \t| Rel: " << dlRel << "% \t| MOS: " << dlMos << std::endl;
+        csvFile << i << "," << staMac << ",DL," << area << "," << profiles[i % 6].name << "," << profiles[i % 6].acName << "," << dlTh << "," << dlDly << "," << dlJit << "," << dlDrop << "," << handoverCount << "," << dlPlr << "," << dlRel << "," << dlMos << "\n";
     }
     if (foundUl) {
         double dur = ulLRx - ulFTx;
@@ -812,32 +820,30 @@ int main(int argc, char *argv[]) {
         if (ulRxP > 0) { ulDly = (ulDlySum / ulRxP) * 1000.0; ulJit = (ulJitSum / ulRxP) * 1000.0; }
         if (ulTxP > ulRxP) ulDrop = ulTxP - ulRxP;
         
-        std::cout << "STA " << i << " [" << staMac << "] (" << area << ", " << profiles[i % 6].name << " / " << profiles[i % 6].acName << ") [UL]\t-> TH: " << ulTh << " Mbps \t| D: " << ulDly << " ms \t| J: " << ulJit << " ms \t| Drop: " << ulDrop << std::endl;
-        csvFile << i << "," << staMac << ",UL," << area << "," << profiles[i % 6].name << "," << profiles[i % 6].acName << "," << ulTh << "," << ulDly << "," << ulJit << "," << ulDrop << "," << handoverCount << "\n";
+        double ulPlr = (ulTxP > 0) ? ((double)ulDrop / ulTxP) * 100.0 : 0.0;
+        double ulRel = (ulTxP > 0) ? ((double)ulRxP / ulTxP) * 100.0 : 100.0;
+        double ulMos = CalculateMOS(ulDly, ulJit, ulPlr);
+
+        std::cout << "STA " << i << " [" << staMac << "] (" << area << ", " << profiles[i % 6].name << " / " << profiles[i % 6].acName << ") [UL]\t-> TH: " << ulTh << " Mbps \t| D: " << ulDly << " ms \t| J: " << ulJit << " ms \t| Drop: " << ulDrop << " \t| PLR: " << ulPlr << "% \t| Rel: " << ulRel << "% \t| MOS: " << ulMos << std::endl;
+        csvFile << i << "," << staMac << ",UL," << area << "," << profiles[i % 6].name << "," << profiles[i % 6].acName << "," << ulTh << "," << ulDly << "," << ulJit << "," << ulDrop << "," << handoverCount << "," << ulPlr << "," << ulRel << "," << ulMos << "\n";
     }
     double throughput = dlTh + ulTh;
     double delay = (dlDly + ulDly) / 2.0;
     double jitter = (dlJit + ulJit) / 2.0;
     uint64_t drop = dlDrop + ulDrop;
 
-        if (i < 12) {
+        if (i < 10) {
           ap0_th += throughput;
           ap0_delay += delay;
           ap0_jitter += jitter;
           ap0_drops += drop;
           ap0_flows++;
-        } else if (i < 22) {
+        } else {
           ap1_th += throughput;
           ap1_delay += delay;
           ap1_jitter += jitter;
           ap1_drops += drop;
           ap1_flows++;
-        } else {
-          koridor_th += throughput;
-          koridor_delay += delay;
-          koridor_jitter += jitter;
-          koridor_drops += drop;
-          koridor_flows++;
         }
 
     if (!foundDl && !foundUl) {
@@ -849,7 +855,7 @@ int main(int argc, char *argv[]) {
   std::cout << "\n[!] Data statistik berhasil di-export ke '" << csvFilename
             << "'" << std::endl;
 
-  std::cout << "\n[BREAKDOWN KELAS A (STA 0-11)]" << std::endl;
+  std::cout << "\n[BREAKDOWN KELAS A (STA 0-9)]" << std::endl;
   if (ap0_flows > 0) {
     std::cout << "  Agregat Throughput   : " << ap0_th << " Mbps" << std::endl;
     std::cout << "  Rata-rata Delay      : " << ap0_delay / ap0_flows << " ms"
@@ -860,7 +866,7 @@ int main(int argc, char *argv[]) {
               << std::endl;
   }
 
-  std::cout << "\n[BREAKDOWN KELAS B (STA 12-21)]" << std::endl;
+  std::cout << "\n[BREAKDOWN KELAS B (STA 10-19)]" << std::endl;
   if (ap1_flows > 0) {
     std::cout << "  Agregat Throughput   : " << ap1_th << " Mbps" << std::endl;
     std::cout << "  Rata-rata Delay      : " << ap1_delay / ap1_flows << " ms"
@@ -871,17 +877,7 @@ int main(int argc, char *argv[]) {
               << std::endl;
   }
 
-  std::cout << "\n[BREAKDOWN KORIDOR (STA 22-23 / Bergerak)]" << std::endl;
-  if (koridor_flows > 0) {
-    std::cout << "  Agregat Throughput   : " << koridor_th << " Mbps"
-              << std::endl;
-    std::cout << "  Rata-rata Delay      : " << koridor_delay / koridor_flows
-              << " ms" << std::endl;
-    std::cout << "  Rata-rata Jitter     : " << koridor_jitter / koridor_flows
-              << " ms" << std::endl;
-    std::cout << "  Total Paket Drop     : " << koridor_drops << " paket"
-              << std::endl;
-  }
+// Koridor print removed
 
   std::cout
       << "\n================= METRIK MOBILITAS & HANDOVER ================="

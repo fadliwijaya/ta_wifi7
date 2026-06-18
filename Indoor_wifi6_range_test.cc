@@ -26,8 +26,15 @@
 #include <chrono>
 #include <fstream>
 #include <iostream>
+#include <locale>
 
 using namespace ns3;
+
+struct IndoNumpunct : std::numpunct<char> {
+    char do_decimal_point() const override { return ','; }
+    char do_thousands_sep() const override { return '.'; }
+    std::string do_grouping() const override { return "\3"; }
+};
 
 class TeeStream : public std::streambuf {
 public:
@@ -56,13 +63,45 @@ private:
   std::streambuf *sb2;
 };
 
+// --- Fungsi Kalkulasi QoS Tambahan ---
+double CalculateMOS(double delayMs, double jitterMs, double plr) {
+    double effectiveLatency = delayMs + 2.0 * jitterMs + 10.0;
+    double r;
+    if (effectiveLatency < 160.0) {
+        r = 93.2 - (effectiveLatency / 40.0);
+    } else {
+        r = 93.2 - (effectiveLatency - 120.0) / 10.0;
+    }
+    r = r - (2.5 * plr);
+    if (r < 0.0) r = 0.0;
+    
+    double mos = 1.0 + (0.035 * r) + (r * (r - 60.0) * (100.0 - r) * 0.000007);
+    if (mos < 1.0) mos = 1.0;
+    if (mos > 4.5) mos = 4.5;
+    return mos;
+}
+
+struct StepMetrics {
+    double distance;
+    double rssi;
+    double throughput;
+    double delay;
+    double jitter;
+    uint64_t drop;
+    double plr;
+    double rel;
+    double mos;
+};
+std::vector<StepMetrics> g_stepMetrics;
+
 uint64_t g_rxBytes = 0;
 uint32_t g_macDrops = 0;
 std::ofstream g_csvFile;
-double g_distanceLimit = 650.0;
+double g_distanceLimit = 640.0;
 
 Ptr<FlowMonitor> g_flowMonitor;
 uint64_t g_prevRxPackets = 0;
+uint64_t g_prevTxPackets = 0;
 uint64_t g_prevLostPackets = 0;
 double g_prevDelaySum = 0.0;
 double g_prevJitterSum = 0.0;
@@ -89,6 +128,9 @@ void AdvancePosition(Ptr<Node> node, double stepSize, double stepTime) {
     double currentDelayMs = 0;
     double currentJitterMs = 0;
     uint64_t currentLost = 0;
+    double currentPlr = 0.0;
+    double currentRel = 100.0;
+    double currentMos = 0.0;
     
     if (g_flowMonitor) {
         // Harus panggil CheckForLostPackets agar FlowMonitor mengupdate jumlah paket yang hilang/basi
@@ -97,13 +139,21 @@ void AdvancePosition(Ptr<Node> node, double stepSize, double stepTime) {
         if (!stats.empty()) {
             auto stat = stats.begin()->second;
             uint64_t deltaRx = stat.rxPackets - g_prevRxPackets;
+            uint64_t deltaTx = stat.txPackets - g_prevTxPackets;
             currentLost = stat.lostPackets - g_prevLostPackets;
             
             if (deltaRx > 0) {
                 currentDelayMs = ((stat.delaySum.GetSeconds() - g_prevDelaySum) / deltaRx) * 1000.0;
                 currentJitterMs = ((stat.jitterSum.GetSeconds() - g_prevJitterSum) / deltaRx) * 1000.0;
             }
+            if (deltaTx > 0) {
+                currentPlr = ((double)currentLost / deltaTx) * 100.0;
+                currentRel = ((double)deltaRx / deltaTx) * 100.0;
+            }
+            currentMos = CalculateMOS(currentDelayMs, currentJitterMs, currentPlr);
+            
             g_prevRxPackets = stat.rxPackets;
+            g_prevTxPackets = stat.txPackets;
             g_prevLostPackets = stat.lostPackets;
             g_prevDelaySum = stat.delaySum.GetSeconds();
             g_prevJitterSum = stat.jitterSum.GetSeconds();
@@ -116,7 +166,10 @@ void AdvancePosition(Ptr<Node> node, double stepSize, double stepTime) {
               << " | Tput: " << throughputMbps << " Mbps"
               << " | Delay: " << currentDelayMs << " ms"
               << " | Jitter: " << currentJitterMs << " ms"
-              << " | Drop: " << currentLost << std::endl;
+              << " | Drop: " << currentLost
+              << " | PLR: " << currentPlr << "%"
+              << " | Rel: " << currentRel << "%"
+              << " | MOS: " << currentMos << std::endl;
               
     g_csvFile << Simulator::Now().GetSeconds() << "," 
               << pos.x << "," 
@@ -124,7 +177,22 @@ void AdvancePosition(Ptr<Node> node, double stepSize, double stepTime) {
               << throughputMbps << ","
               << currentDelayMs << ","
               << currentJitterMs << ","
-              << currentLost << "\n";
+              << currentLost << ","
+              << currentPlr << ","
+              << currentRel << ","
+              << currentMos << "\n";
+
+    StepMetrics metrics;
+    metrics.distance = pos.x;
+    metrics.rssi = g_currentRssi;
+    metrics.throughput = throughputMbps;
+    metrics.delay = currentDelayMs;
+    metrics.jitter = currentJitterMs;
+    metrics.drop = currentLost;
+    metrics.plr = currentPlr;
+    metrics.rel = currentRel;
+    metrics.mos = currentMos;
+    g_stepMetrics.push_back(metrics);
 
     if (pos.x < g_distanceLimit) {
         pos.x += stepSize;
@@ -134,6 +202,7 @@ void AdvancePosition(Ptr<Node> node, double stepSize, double stepTime) {
 }
 
 int main(int argc, char *argv[]) {
+  std::cout.imbue(std::locale(std::cout.getloc(), new IndoNumpunct));
   std::string outDir = "scratch/ta_wifi7/output_simulasi";
   if (std::system(("mkdir -p " + outDir).c_str()) != 0) { std::cerr << "Warning: Failed to create " << outDir << std::endl; }
 
@@ -149,7 +218,7 @@ int main(int argc, char *argv[]) {
 
   std::string csvFilename = outDir + "/hasil_range_wifi6_" + globalTimestamp + ".csv";
   g_csvFile.open(csvFilename);
-  g_csvFile << "Time_s,Distance_m,RSSI_dBm,Throughput_Mbps,Delay_ms,Jitter_ms,PacketDrop\n";
+  g_csvFile << "Time_s,Distance_m,RSSI_dBm,Throughput_Mbps,Delay_ms,Jitter_ms,PacketDrop,PLR_Percent,Reliability_Percent,MOS\n";
 
   char human_time_str[100];
   std::strftime(human_time_str, sizeof(human_time_str), "%Y-%m-%d %H:%M:%S", std::localtime(&t_now));
@@ -173,6 +242,7 @@ int main(int argc, char *argv[]) {
   std::cout << "- Rate Adaptation   : IdealWifiManager (Otomatis menyesuaikan hingga 1024-QAM)\n";
   std::cout << "- Propagation Model : HybridBuildingsPropagationLossModel (Redaman Tembok/Indoor)\n";
   std::cout << "- Jarak Uji         : 0 hingga " << g_distanceLimit << " meter\n";
+  std::cout << "- Target Throughput : 2.5 Gbps (Injeksi UDP)\n";
   std::cout << "=======================================================\n\n";
 
   Config::SetDefault("ns3::WifiMacQueue::MaxSize", StringValue("5000p"));
@@ -184,9 +254,9 @@ int main(int argc, char *argv[]) {
   Config::SetDefault("ns3::WifiMac::VI_MaxAmpduSize", UintegerValue(1048575));
   Config::SetDefault("ns3::WifiMac::VO_MaxAmpduSize", UintegerValue(1048575));
 
-  double simulationTimeSec = 67.0;
+  double simulationTimeSec = 66.0;
   
-  Config::SetDefault("ns3::StaWifiMac::MaxMissedBeacons", UintegerValue(10)); // Hindari putus asosiasi prematur
+  Config::SetDefault("ns3::StaWifiMac::MaxMissedBeacons", UintegerValue(1000)); // Angka masif agar tidak pernah putus asosiasi (menghilangkan flapping)
 
   NodeContainer serverNode; serverNode.Create(1);
   NodeContainer wifiApNode; wifiApNode.Create(1);
@@ -288,9 +358,10 @@ int main(int argc, char *argv[]) {
   sinkApps.Start(Seconds(0.0));
   sinkApps.Stop(Seconds(simulationTimeSec));
 
-  // Injeksi masif 5Gbps untuk menguji puncak kapasitas
+  // Injeksi 2.5Gbps agar berada di bawah batas maksimum MAC Layer Wi-Fi 6 (~2.8 Gbps)
+  // Tujuannya agar Drop di jarak dekat = 0 (menghindari congestion drop).
   OnOffHelper onoff("ns3::UdpSocketFactory", InetSocketAddress(sta0Interface.GetAddress(0), port));
-  onoff.SetAttribute("DataRate", StringValue("5Gbps"));
+  onoff.SetAttribute("DataRate", StringValue("2.5Gbps"));
   onoff.SetAttribute("PacketSize", UintegerValue(1472));
   onoff.SetAttribute("OnTime", StringValue("ns3::ConstantRandomVariable[Constant=1]"));
   onoff.SetAttribute("OffTime", StringValue("ns3::ConstantRandomVariable[Constant=0]"));
@@ -324,6 +395,47 @@ int main(int argc, char *argv[]) {
 
   g_csvFile.close();
   Simulator::Destroy();
+
+  // Kalkulasi Otomatis Rekapitulasi QoS
+  double effectiveRange = 0.0;
+  for (auto it = g_stepMetrics.rbegin(); it != g_stepMetrics.rend(); ++it) {
+      if (it->throughput > 10.0) {
+          effectiveRange = it->distance;
+          break;
+      }
+  }
+
+  auto printStats = [](const std::string& name, double minD, double maxD) {
+      double sumRssi = 0, sumTput = 0, sumDelay = 0, sumJitter = 0, sumDrop = 0;
+      int count = 0;
+      for (const auto& m : g_stepMetrics) {
+          if (m.distance > minD && m.distance <= maxD) {
+              sumRssi += m.rssi;
+              sumTput += m.throughput;
+              sumDelay += m.delay;
+              sumJitter += m.jitter;
+              sumDrop += m.drop;
+              count++;
+          }
+      }
+      if (count > 0) {
+          std::cout << "--- Zona " << name << " ---\n";
+          std::cout << "  Rata-rata RSSI        : " << sumRssi/count << " dBm\n";
+          std::cout << "  Rata-rata Throughput  : " << sumTput/count << " Mbps\n";
+          std::cout << "  Rata-rata Delay       : " << sumDelay/count << " ms\n";
+          std::cout << "  Rata-rata Jitter      : " << sumJitter/count << " ms\n";
+          std::cout << "  Rata-rata Packet Drop : " << sumDrop/count << " paket/detik\n\n";
+      }
+  };
+
+  std::cout << "\n==========================================\n";
+  std::cout << " HASIL RANGE TEST WI-FI 6\n";
+  std::cout << "==========================================\n";
+  std::cout << "JANGKAUAN EFEKTIF (Throughput > 10 Mbps) : " << effectiveRange << " Meter\n\n";
+  
+  printStats("Dekat (0 - 100m)", -1.0, 100.0);
+  printStats("Menengah (100 - 300m)", 100.0, 300.0);
+  printStats("Jauh (300 - 640m)", 300.0, 640.0);
   
   std::cout.rdbuf(oldCoutBuf);
   logFile.close();

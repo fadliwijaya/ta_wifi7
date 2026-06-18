@@ -1,33 +1,41 @@
 // KODE WIFI 7 MLO - Uji Jarak (Range / Pathloss Degradation)
 #include "ns3/boolean.h"
+#include "ns3/buildings-helper.h"
 #include "ns3/command-line.h"
 #include "ns3/config.h"
+#include "ns3/csma-helper.h"
 #include "ns3/double.h"
+#include "ns3/flow-monitor-helper.h"
+#include "ns3/flow-monitor.h"
+#include "ns3/hybrid-buildings-propagation-loss-model.h"
 #include "ns3/internet-stack-helper.h"
 #include "ns3/ipv4-address-helper.h"
+#include "ns3/ipv4-static-routing-helper.h"
 #include "ns3/mobility-helper.h"
 #include "ns3/multi-model-spectrum-channel.h"
 #include "ns3/on-off-helper.h"
 #include "ns3/packet-sink-helper.h"
 #include "ns3/packet-sink.h"
+#include "ns3/qos-txop.h"
 #include "ns3/spectrum-wifi-helper.h"
 #include "ns3/ssid.h"
 #include "ns3/string.h"
 #include "ns3/uinteger.h"
 #include "ns3/wifi-mac.h"
 #include "ns3/wifi-net-device.h"
-#include "ns3/csma-helper.h"
-#include "ns3/ipv4-static-routing-helper.h"
-#include "ns3/hybrid-buildings-propagation-loss-model.h"
-#include "ns3/buildings-helper.h"
-#include "ns3/flow-monitor-helper.h"
-#include "ns3/flow-monitor.h"
 
 #include <chrono>
 #include <fstream>
 #include <iostream>
+#include <locale>
 
 using namespace ns3;
+
+struct IndoNumpunct : std::numpunct<char> {
+  char do_decimal_point() const override { return ','; }
+  char do_thousands_sep() const override { return '.'; }
+  std::string do_grouping() const override { return "\3"; }
+};
 
 class TeeStream : public std::streambuf {
 public:
@@ -56,113 +64,216 @@ private:
   std::streambuf *sb2;
 };
 
+// --- Fungsi Kalkulasi QoS Tambahan ---
+double CalculateMOS(double delayMs, double jitterMs, double plr) {
+    double effectiveLatency = delayMs + 2.0 * jitterMs + 10.0;
+    double r;
+    if (effectiveLatency < 160.0) {
+        r = 93.2 - (effectiveLatency / 40.0);
+    } else {
+        r = 93.2 - (effectiveLatency - 120.0) / 10.0;
+    }
+    r = r - (2.5 * plr);
+    if (r < 0.0) r = 0.0;
+    
+    double mos = 1.0 + (0.035 * r) + (r * (r - 60.0) * (100.0 - r) * 0.000007);
+    if (mos < 1.0) mos = 1.0;
+    if (mos > 4.5) mos = 4.5;
+    return mos;
+}
+
+struct StepMetrics {
+  double distance;
+  double rssi;
+  double throughput;
+  double delay;
+  double jitter;
+  uint64_t drop;
+  double plr;
+  double rel;
+  double mos;
+};
+std::vector<StepMetrics> g_stepMetrics;
+
 uint64_t g_rxBytes = 0;
 uint32_t g_macDrops = 0;
 std::ofstream g_csvFile;
-double g_distanceLimit = 600.0;
+double g_distanceLimit = 640.0;
 
 Ptr<FlowMonitor> g_flowMonitor;
 uint64_t g_prevRxPackets = 0;
+uint64_t g_prevTxPackets = 0;
 uint64_t g_prevLostPackets = 0;
 double g_prevDelaySum = 0.0;
 double g_prevJitterSum = 0.0;
 double g_currentRssi = -100.0;
 
-void MonitorSniffRx(Ptr<const Packet> packet, uint16_t channelFreqMhz, WifiTxVector txVector, MpduInfo aMpdu, SignalNoiseDbm signalNoise, uint16_t staId) {
-    g_currentRssi = signalNoise.signal;
+void MonitorSniffRx(Ptr<const Packet> packet, uint16_t channelFreqMhz,
+                    WifiTxVector txVector, MpduInfo aMpdu,
+                    SignalNoiseDbm signalNoise, uint16_t staId) {
+  g_currentRssi = signalNoise.signal;
 }
 
-void RxCallback(std::string path, Ptr<const Packet> packet, const Address& from) {
-    g_rxBytes += packet->GetSize();
+void RxCallback(std::string path, Ptr<const Packet> packet,
+                const Address &from) {
+  g_rxBytes += packet->GetSize();
 }
 
 void MacDropCallback(std::string path, Ptr<const Packet> packet) {
-    g_macDrops++;
+  g_macDrops++;
 }
 
-void AdvancePosition(Ptr<Node> node, double stepSize, double stepTime) {
-    Vector pos = node->GetObject<MobilityModel>()->GetPosition();
-    
-    double throughputMbps = (g_rxBytes * 8.0) / (stepTime * 1e6);
-    g_rxBytes = 0; // reset
+void AdvancePosition(Ptr<Node> node, double stepSize, double stepTime,
+                     Ptr<WifiMac> apMac) {
+  Vector pos = node->GetObject<MobilityModel>()->GetPosition();
 
-    double currentDelayMs = 0;
-    double currentJitterMs = 0;
-    uint64_t currentLost = 0;
-    
-    if (g_flowMonitor) {
-        // Harus panggil CheckForLostPackets agar FlowMonitor mengupdate jumlah paket yang hilang/basi
-        g_flowMonitor->CheckForLostPackets(); 
-        std::map<FlowId, FlowMonitor::FlowStats> stats = g_flowMonitor->GetFlowStats();
-        if (!stats.empty()) {
-            auto stat = stats.begin()->second;
-            uint64_t deltaRx = stat.rxPackets - g_prevRxPackets;
-            currentLost = stat.lostPackets - g_prevLostPackets;
-            
-            if (deltaRx > 0) {
-                currentDelayMs = ((stat.delaySum.GetSeconds() - g_prevDelaySum) / deltaRx) * 1000.0;
-                currentJitterMs = ((stat.jitterSum.GetSeconds() - g_prevJitterSum) / deltaRx) * 1000.0;
-            }
-            g_prevRxPackets = stat.rxPackets;
-            g_prevLostPackets = stat.lostPackets;
-            g_prevDelaySum = stat.delaySum.GetSeconds();
-            g_prevJitterSum = stat.jitterSum.GetSeconds();
-        }
+  double throughputMbps = (g_rxBytes * 8.0) / (stepTime * 1e6);
+  g_rxBytes = 0; // reset
+
+  double currentDelayMs = 0;
+  double currentJitterMs = 0;
+  uint64_t currentLost = 0;
+  double currentPlr = 0.0;
+  double currentRel = 100.0;
+  double currentMos = 0.0;
+
+  if (g_flowMonitor) {
+    // Harus panggil CheckForLostPackets agar FlowMonitor mengupdate jumlah
+    // paket yang hilang/basi
+    g_flowMonitor->CheckForLostPackets();
+    std::map<FlowId, FlowMonitor::FlowStats> stats =
+        g_flowMonitor->GetFlowStats();
+    if (!stats.empty()) {
+      auto stat = stats.begin()->second;
+      uint64_t deltaRx = stat.rxPackets - g_prevRxPackets;
+      uint64_t deltaTx = stat.txPackets - g_prevTxPackets;
+      currentLost = stat.lostPackets - g_prevLostPackets;
+
+      if (deltaRx > 0) {
+        currentDelayMs =
+            ((stat.delaySum.GetSeconds() - g_prevDelaySum) / deltaRx) * 1000.0;
+        currentJitterMs =
+            ((stat.jitterSum.GetSeconds() - g_prevJitterSum) / deltaRx) *
+            1000.0;
+      }
+      if (deltaTx > 0) {
+        currentPlr = ((double)currentLost / deltaTx) * 100.0;
+        currentRel = ((double)deltaRx / deltaTx) * 100.0;
+      }
+      currentMos = CalculateMOS(currentDelayMs, currentJitterMs, currentPlr);
+
+      g_prevRxPackets = stat.rxPackets;
+      g_prevTxPackets = stat.txPackets;
+      g_prevLostPackets = stat.lostPackets;
+      g_prevDelaySum = stat.delaySum.GetSeconds();
+      g_prevJitterSum = stat.jitterSum.GetSeconds();
+    }
+  }
+
+  std::cout << "[INFO] Waktu: " << Simulator::Now().GetSeconds()
+            << "s | Jarak: " << pos.x << " m"
+            << " | RSSI: " << g_currentRssi << " dBm"
+            << " | Tput: " << throughputMbps << " Mbps"
+            << " | Delay: " << currentDelayMs << " ms"
+            << " | Jitter: " << currentJitterMs << " ms"
+            << " | Drop: " << currentLost
+            << " | PLR: " << currentPlr << "%"
+            << " | Rel: " << currentRel << "%"
+            << " | MOS: " << currentMos << std::endl;
+
+  g_csvFile << Simulator::Now().GetSeconds() << "," << pos.x << ","
+            << g_currentRssi << "," << throughputMbps << "," << currentDelayMs
+            << "," << currentJitterMs << "," << currentLost << ","
+            << currentPlr << "," << currentRel << "," << currentMos << "\n";
+
+  StepMetrics metrics;
+  metrics.distance = pos.x;
+  metrics.rssi = g_currentRssi;
+  metrics.throughput = throughputMbps;
+  metrics.delay = currentDelayMs;
+  metrics.jitter = currentJitterMs;
+  metrics.drop = currentLost;
+  metrics.plr = currentPlr;
+  metrics.rel = currentRel;
+  metrics.mos = currentMos;
+  g_stepMetrics.push_back(metrics);
+
+  if (pos.x < g_distanceLimit) {
+    pos.x += stepSize;
+    node->GetObject<MobilityModel>()->SetPosition(pos);
+
+    // Smart MLO Fallback Logic (Disabling 6GHz link when distance >= 125m or RSSI < -57.0)
+    if ((pos.x >= 125.0 || g_currentRssi < -57.0) && apMac) {
+      Ptr<QosTxop> qosTxop = apMac->GetQosTxop(AC_BK);
+      if (qosTxop && !qosTxop->IsLinkDisabled(1)) {
+        std::cout << "[SMART MLO] Jarak = " << pos.x << " m / RSSI = " << g_currentRssi 
+                  << " dBm. Kualitas 6GHz (Link 1) memburuk! Mematikan distribusi paket ke Link 1..."
+                  << std::endl;
+        qosTxop->SetLinkDisable(1, true); // Disable Link 1 (6 GHz)
+      }
     }
 
-    std::cout << "[INFO] Waktu: " << Simulator::Now().GetSeconds() 
-              << "s | Jarak: " << pos.x << " m"
-              << " | RSSI: " << g_currentRssi << " dBm"
-              << " | Tput: " << throughputMbps << " Mbps"
-              << " | Delay: " << currentDelayMs << " ms"
-              << " | Jitter: " << currentJitterMs << " ms"
-              << " | Drop: " << currentLost << std::endl;
-              
-    g_csvFile << Simulator::Now().GetSeconds() << "," 
-              << pos.x << "," 
-              << g_currentRssi << ","
-              << throughputMbps << ","
-              << currentDelayMs << ","
-              << currentJitterMs << ","
-              << currentLost << "\n";
-
-    if (pos.x < g_distanceLimit) {
-        pos.x += stepSize;
-        node->GetObject<MobilityModel>()->SetPosition(pos);
-        Simulator::Schedule(Seconds(stepTime), &AdvancePosition, node, stepSize, stepTime);
-    }
+    Simulator::Schedule(Seconds(stepTime), &AdvancePosition, node, stepSize,
+                        stepTime, apMac);
+  }
 }
 
 int main(int argc, char *argv[]) {
+  std::cout.imbue(std::locale(std::cout.getloc(), new IndoNumpunct));
   std::string outDir = "scratch/ta_wifi7/output_simulasi";
-  if (std::system(("mkdir -p " + outDir).c_str()) != 0) { std::cerr << "Warning: Failed to create " << outDir << std::endl; }
+  if (std::system(("mkdir -p " + outDir).c_str()) != 0) {
+    std::cerr << "Warning: Failed to create " << outDir << std::endl;
+  }
 
   std::time_t t_now = std::time(nullptr);
   char time_str_now[100];
-  std::strftime(time_str_now, sizeof(time_str_now), "%Y%m%d_%H%M%S", std::localtime(&t_now));
+  std::strftime(time_str_now, sizeof(time_str_now), "%Y%m%d_%H%M%S",
+                std::localtime(&t_now));
   std::string globalTimestamp(time_str_now);
 
-  std::string logFilename = outDir + "/terminal_output_wifi7_range_" + globalTimestamp + ".log";
+  std::string logFilename =
+      outDir + "/terminal_output_wifi7_range_" + globalTimestamp + ".log";
   std::ofstream logFile(logFilename);
   TeeStream tee(std::cout.rdbuf(), logFile.rdbuf());
   std::streambuf *oldCoutBuf = std::cout.rdbuf(&tee);
 
-  std::string csvFilename = outDir + "/hasil_range_wifi7_" + globalTimestamp + ".csv";
+  std::string csvFilename =
+      outDir + "/hasil_range_wifi7_" + globalTimestamp + ".csv";
   g_csvFile.open(csvFilename);
-  g_csvFile << "Time_s,Distance_m,RSSI_dBm,Throughput_Mbps,Delay_ms,Jitter_ms,PacketDrop\n";
+  g_csvFile << "Time_s,Distance_m,RSSI_dBm,Throughput_Mbps,Delay_ms,Jitter_ms,PacketDrop,PLR_Percent,Reliability_Percent,MOS\n";
 
   char human_time_str[100];
-  std::strftime(human_time_str, sizeof(human_time_str), "%Y-%m-%d %H:%M:%S", std::localtime(&t_now));
+  std::strftime(human_time_str, sizeof(human_time_str), "%Y-%m-%d %H:%M:%S",
+                std::localtime(&t_now));
   std::cout << "\n=======================================================\n";
-  std::cout << "[INFO] TANGGAL & WAKTU EKSEKUSI SIMULASI : " << human_time_str << "\n";
+  std::cout << "[INFO] TANGGAL & WAKTU EKSEKUSI SIMULASI : " << human_time_str
+            << "\n";
   std::cout << "=======================================================\n";
 
   std::cout << "\n=======================================================\n";
   std::cout << "[INFO] Skenario Range / Pathloss Degradation (Wi-Fi 7)\n";
   std::cout << "=======================================================\n";
-  std::cout << "Simulasi ini dirancang untuk menguji ketahanan dan jangkauan sinyal Wi-Fi 7 terhadap degradasi jarak (range/pathloss degradation test). Tujuannya adalah untuk mengamati bagaimana performa jaringan — mulai dari kekuatan sinyal, kecepatan unduh, keterlambatan, hingga tingkat kehilangan paket — berubah secara bertahap ketika sebuah perangkat klien bergerak semakin menjauh dari titik akses.\n\n";
-  std::cout << "Secara konseptual, simulasi ini dapat dibayangkan sebagai sebuah eksperimen di mana sebuah Access Point (AP) Wi-Fi 7 dipasang pada posisi tetap, sementara satu buah laptop atau perangkat klien dibawa berjalan menjauh secara perlahan. Pengukuran dilakukan secara terus-menerus di sepanjang lintasan untuk merekam proses pelemahan sinyal dan penurunan kualitas komunikasi seiring bertambahnya jarak antara klien dan AP.\n\n";
-  std::cout << "Jarak pengujian dimulai dari 1 meter hingga mencapai batas maksimum 600 meter. Dengan pendekatan ini, simulasi dapat memberikan gambaran menyeluruh tentang batas jangkauan efektif Wi-Fi 7 serta profil degradasi performanya dalam kondisi yang mendekati lingkungan nyata, lengkap dengan pengaruh redaman akibat obstacles.\n";
+  std::cout
+      << "Simulasi ini dirancang untuk menguji ketahanan dan jangkauan sinyal "
+         "Wi-Fi 7 terhadap degradasi jarak (range/pathloss degradation test). "
+         "Tujuannya adalah untuk mengamati bagaimana performa jaringan — mulai "
+         "dari kekuatan sinyal, kecepatan unduh, keterlambatan, hingga tingkat "
+         "kehilangan paket — berubah secara bertahap ketika sebuah perangkat "
+         "klien bergerak semakin menjauh dari titik akses.\n\n";
+  std::cout
+      << "Secara konseptual, simulasi ini dapat dibayangkan sebagai sebuah "
+         "eksperimen di mana sebuah Access Point (AP) Wi-Fi 7 dipasang pada "
+         "posisi tetap, sementara satu buah laptop atau perangkat klien dibawa "
+         "berjalan menjauh secara perlahan. Pengukuran dilakukan secara "
+         "terus-menerus di sepanjang lintasan untuk merekam proses pelemahan "
+         "sinyal dan penurunan kualitas komunikasi seiring bertambahnya jarak "
+         "antara klien dan AP.\n\n";
+  std::cout
+      << "Jarak pengujian dimulai dari 1 meter hingga mencapai batas maksimum "
+         "600 meter. Dengan pendekatan ini, simulasi dapat memberikan gambaran "
+         "menyeluruh tentang batas jangkauan efektif Wi-Fi 7 serta profil "
+         "degradasi performanya dalam kondisi yang mendekati lingkungan nyata, "
+         "lengkap dengan pengaruh redaman akibat obstacles.\n";
   std::cout << "=======================================================\n";
   std::cout << "[SPESIFIKASI SIMULASI]\n";
   std::cout << "- Standar Wi-Fi     : Wi-Fi 7 (802.11be)\n";
@@ -171,9 +282,13 @@ int main(int argc, char *argv[]) {
   std::cout << "    * Link 0        : Frekuensi 5 GHz (Lebar Pita 160 MHz)\n";
   std::cout << "    * Link 1        : Frekuensi 6 GHz (Lebar Pita 320 MHz)\n";
   std::cout << "- Tx Power          : 20.0 dBm\n";
-  std::cout << "- Rate Adaptation   : IdealWifiManager (Otomatis menyesuaikan hingga 4096-QAM)\n";
-  std::cout << "- Propagation Model : HybridBuildingsPropagationLossModel (Redaman Tembok/Indoor)\n";
-  std::cout << "- Jarak Uji         : 0 hingga " << g_distanceLimit << " meter\n";
+  std::cout << "- Rate Adaptation   : IdealWifiManager (Otomatis menyesuaikan "
+               "hingga 4096-QAM)\n";
+  std::cout << "- Propagation Model : HybridBuildingsPropagationLossModel "
+               "(Redaman Tembok/Indoor)\n";
+  std::cout << "- Jarak Uji         : 0 hingga " << g_distanceLimit
+            << " meter\n";
+  std::cout << "- Target Throughput : 2.5 Gbps (Injeksi UDP)\n";
   std::cout << "=======================================================\n\n";
 
   Config::SetDefault("ns3::WifiMacQueue::MaxSize", StringValue("5000p"));
@@ -185,13 +300,19 @@ int main(int argc, char *argv[]) {
   Config::SetDefault("ns3::WifiMac::VI_MaxAmpduSize", UintegerValue(1048575));
   Config::SetDefault("ns3::WifiMac::VO_MaxAmpduSize", UintegerValue(1048575));
 
-  double simulationTimeSec = 62.0;
-  
-  Config::SetDefault("ns3::StaWifiMac::MaxMissedBeacons", UintegerValue(10)); // Hindari putus asosiasi prematur
+  double simulationTimeSec = 66.0;
 
-  NodeContainer serverNode; serverNode.Create(1);
-  NodeContainer wifiApNode; wifiApNode.Create(1);
-  NodeContainer wifiStaNode; wifiStaNode.Create(1);
+  Config::SetDefault(
+      "ns3::StaWifiMac::MaxMissedBeacons",
+      UintegerValue(1000)); // Angka masif agar tidak pernah putus asosiasi
+                            // (menghilangkan flapping)
+
+  NodeContainer serverNode;
+  serverNode.Create(1);
+  NodeContainer wifiApNode;
+  wifiApNode.Create(1);
+  NodeContainer wifiStaNode;
+  wifiStaNode.Create(1);
 
   MobilityHelper apMobility;
   Ptr<ListPositionAllocator> apPosAlloc = CreateObject<ListPositionAllocator>();
@@ -201,7 +322,8 @@ int main(int argc, char *argv[]) {
   apMobility.Install(wifiApNode);
 
   MobilityHelper staMobility;
-  Ptr<ListPositionAllocator> staPosAlloc = CreateObject<ListPositionAllocator>();
+  Ptr<ListPositionAllocator> staPosAlloc =
+      CreateObject<ListPositionAllocator>();
   staPosAlloc->Add(Vector(1.0, 0.0, 1.0));
   staMobility.SetPositionAllocator(staPosAlloc);
   staMobility.SetMobilityModel("ns3::ConstantPositionMobilityModel");
@@ -218,19 +340,25 @@ int main(int argc, char *argv[]) {
   spectrumPhy.Set("TxGain", DoubleValue(6.0));
   spectrumPhy.Set("RxGain", DoubleValue(6.0));
 
-  Ptr<MultiModelSpectrumChannel> channel5Ghz = CreateObject<MultiModelSpectrumChannel>();
-  Ptr<HybridBuildingsPropagationLossModel> loss5Ghz = CreateObject<HybridBuildingsPropagationLossModel>();
+  Ptr<MultiModelSpectrumChannel> channel5Ghz =
+      CreateObject<MultiModelSpectrumChannel>();
+  Ptr<HybridBuildingsPropagationLossModel> loss5Ghz =
+      CreateObject<HybridBuildingsPropagationLossModel>();
   loss5Ghz->SetAttribute("Frequency", DoubleValue(5500e6));
   channel5Ghz->AddPropagationLossModel(loss5Ghz);
-  channel5Ghz->SetPropagationDelayModel(CreateObject<ConstantSpeedPropagationDelayModel>());
+  channel5Ghz->SetPropagationDelayModel(
+      CreateObject<ConstantSpeedPropagationDelayModel>());
   spectrumPhy.Set(0, "ChannelSettings", StringValue("{0, 160, BAND_5GHZ, 0}"));
   spectrumPhy.AddChannel(channel5Ghz, WIFI_SPECTRUM_5_GHZ);
 
-  Ptr<MultiModelSpectrumChannel> channel6Ghz = CreateObject<MultiModelSpectrumChannel>();
-  Ptr<HybridBuildingsPropagationLossModel> loss6Ghz = CreateObject<HybridBuildingsPropagationLossModel>();
+  Ptr<MultiModelSpectrumChannel> channel6Ghz =
+      CreateObject<MultiModelSpectrumChannel>();
+  Ptr<HybridBuildingsPropagationLossModel> loss6Ghz =
+      CreateObject<HybridBuildingsPropagationLossModel>();
   loss6Ghz->SetAttribute("Frequency", DoubleValue(6025e6));
   channel6Ghz->AddPropagationLossModel(loss6Ghz);
-  channel6Ghz->SetPropagationDelayModel(CreateObject<ConstantSpeedPropagationDelayModel>());
+  channel6Ghz->SetPropagationDelayModel(
+      CreateObject<ConstantSpeedPropagationDelayModel>());
   spectrumPhy.Set(1, "ChannelSettings", StringValue("{0, 320, BAND_6GHZ, 0}"));
   spectrumPhy.AddChannel(channel6Ghz, WIFI_SPECTRUM_6_GHZ);
 
@@ -241,7 +369,7 @@ int main(int argc, char *argv[]) {
   WifiMacHelper macA;
 
   Ssid ssidA = Ssid("kampus-wifi");
-  
+
   macA.SetType("ns3::StaWifiMac", "Ssid", SsidValue(ssidA));
   NetDeviceContainer staDeviceA = wifi.Install(spectrumPhy, macA, wifiStaNode);
 
@@ -249,12 +377,20 @@ int main(int argc, char *argv[]) {
   NetDeviceContainer apDeviceA = wifi.Install(spectrumPhy, macA, wifiApNode);
 
   for (uint32_t i = 0; i < apDeviceA.GetN(); ++i) {
-      DynamicCast<WifiNetDevice>(apDeviceA.Get(i))->GetPhy()->SetMaxSupportedTxSpatialStreams(8);
-      DynamicCast<WifiNetDevice>(apDeviceA.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
+    DynamicCast<WifiNetDevice>(apDeviceA.Get(i))
+        ->GetPhy()
+        ->SetMaxSupportedTxSpatialStreams(8);
+    DynamicCast<WifiNetDevice>(apDeviceA.Get(i))
+        ->GetPhy()
+        ->SetMaxSupportedRxSpatialStreams(8);
   }
   for (uint32_t i = 0; i < staDeviceA.GetN(); ++i) {
-      DynamicCast<WifiNetDevice>(staDeviceA.Get(i))->GetPhy()->SetMaxSupportedTxSpatialStreams(8);
-      DynamicCast<WifiNetDevice>(staDeviceA.Get(i))->GetPhy()->SetMaxSupportedRxSpatialStreams(8);
+    DynamicCast<WifiNetDevice>(staDeviceA.Get(i))
+        ->GetPhy()
+        ->SetMaxSupportedTxSpatialStreams(8);
+    DynamicCast<WifiNetDevice>(staDeviceA.Get(i))
+        ->GetPhy()
+        ->SetMaxSupportedRxSpatialStreams(8);
   }
 
   CsmaHelper csma;
@@ -279,43 +415,58 @@ int main(int argc, char *argv[]) {
   Ipv4InterfaceContainer sta0Interface = address.Assign(staDeviceA);
 
   Ipv4StaticRoutingHelper ipv4RoutingHelper;
-  Ptr<Ipv4StaticRouting> staticRoutingServer = ipv4RoutingHelper.GetStaticRouting(serverNode.Get(0)->GetObject<Ipv4>());
-  staticRoutingServer->AddNetworkRouteTo(Ipv4Address("192.168.1.0"), Ipv4Mask("255.255.255.0"), backboneInterfaces.GetAddress(1), 1);
+  Ptr<Ipv4StaticRouting> staticRoutingServer =
+      ipv4RoutingHelper.GetStaticRouting(serverNode.Get(0)->GetObject<Ipv4>());
+  staticRoutingServer->AddNetworkRouteTo(Ipv4Address("192.168.1.0"),
+                                         Ipv4Mask("255.255.255.0"),
+                                         backboneInterfaces.GetAddress(1), 1);
 
-  Ptr<Ipv4StaticRouting> staticRoutingAp0 = ipv4RoutingHelper.GetStaticRouting(wifiApNode.Get(0)->GetObject<Ipv4>());
+  Ptr<Ipv4StaticRouting> staticRoutingAp0 =
+      ipv4RoutingHelper.GetStaticRouting(wifiApNode.Get(0)->GetObject<Ipv4>());
   staticRoutingAp0->SetDefaultRoute(backboneInterfaces.GetAddress(0), 1);
 
-  Ptr<Ipv4StaticRouting> staticRoutingSta = ipv4RoutingHelper.GetStaticRouting(wifiStaNode.Get(0)->GetObject<Ipv4>());
+  Ptr<Ipv4StaticRouting> staticRoutingSta =
+      ipv4RoutingHelper.GetStaticRouting(wifiStaNode.Get(0)->GetObject<Ipv4>());
   staticRoutingSta->SetDefaultRoute(ap0Interface.GetAddress(0), 1);
 
   // UDP Traffic
   uint16_t port = 9000;
-  PacketSinkHelper sink("ns3::UdpSocketFactory", InetSocketAddress(Ipv4Address::GetAny(), port));
+  PacketSinkHelper sink("ns3::UdpSocketFactory",
+                        InetSocketAddress(Ipv4Address::GetAny(), port));
   ApplicationContainer sinkApps = sink.Install(wifiStaNode.Get(0));
   sinkApps.Start(Seconds(0.0));
   sinkApps.Stop(Seconds(simulationTimeSec));
 
-  // Injeksi masif 5Gbps untuk menguji puncak kapasitas
-  OnOffHelper onoff("ns3::UdpSocketFactory", InetSocketAddress(sta0Interface.GetAddress(0), port));
-  onoff.SetAttribute("DataRate", StringValue("5Gbps"));
+  // Injeksi 2.5Gbps
+  OnOffHelper onoff("ns3::UdpSocketFactory",
+                    InetSocketAddress(sta0Interface.GetAddress(0), port));
+  onoff.SetAttribute("DataRate", StringValue("2.5Gbps"));
   onoff.SetAttribute("PacketSize", UintegerValue(1472));
-  onoff.SetAttribute("OnTime", StringValue("ns3::ConstantRandomVariable[Constant=1]"));
-  onoff.SetAttribute("OffTime", StringValue("ns3::ConstantRandomVariable[Constant=0]"));
+  onoff.SetAttribute("OnTime",
+                     StringValue("ns3::ConstantRandomVariable[Constant=1]"));
+  onoff.SetAttribute("OffTime",
+                     StringValue("ns3::ConstantRandomVariable[Constant=0]"));
   onoff.SetAttribute("Tos", UintegerValue(0x20)); // QoS AC_BK (File Download)
-  
+
   ApplicationContainer clientApps = onoff.Install(serverNode.Get(0));
   clientApps.Start(Seconds(0.5));
   clientApps.Stop(Seconds(simulationTimeSec));
 
   // Connect PacketSink RX to counter
-  Config::Connect("/NodeList/2/ApplicationList/0/$ns3::PacketSink/Rx", MakeCallback(&RxCallback));
+  Config::Connect("/NodeList/2/ApplicationList/0/$ns3::PacketSink/Rx",
+                  MakeCallback(&RxCallback));
   // Connect MonitorSnifferRx for RSSI (Node 2 is STA)
-  Config::ConnectWithoutContext("/NodeList/2/DeviceList/*/$ns3::WifiNetDevice/Phy/$ns3::WifiPhy/MonitorSnifferRx", MakeCallback(&MonitorSniffRx));
+  Config::ConnectWithoutContext("/NodeList/2/DeviceList/*/$ns3::WifiNetDevice/"
+                                "Phy/$ns3::WifiPhy/MonitorSnifferRx",
+                                MakeCallback(&MonitorSniffRx));
 
   FlowMonitorHelper flowmon;
   g_flowMonitor = flowmon.InstallAll();
 
-  Simulator::Schedule(Seconds(0.2), &AdvancePosition, wifiStaNode.Get(0), 2.0, 0.2);
+  Ptr<WifiMac> apMacPtr =
+      DynamicCast<WifiNetDevice>(apDeviceA.Get(0))->GetMac();
+  Simulator::Schedule(Seconds(0.2), &AdvancePosition, wifiStaNode.Get(0), 2.0,
+                      0.2, apMacPtr);
 
   auto startRealTime = std::chrono::high_resolution_clock::now();
 
@@ -327,11 +478,55 @@ int main(int argc, char *argv[]) {
   double totalSeconds = diffRealTime.count();
   double totalMinutes = totalSeconds / 60.0;
   std::cout << "[INFO] Waktu Eksekusi Nyata (Real Runtime) Simulasi: "
-            << totalMinutes << " menit (" << totalSeconds << " detik)\n" << std::endl;
+            << totalMinutes << " menit (" << totalSeconds << " detik)\n"
+            << std::endl;
 
   g_csvFile.close();
   Simulator::Destroy();
-  
+
+  // Kalkulasi Otomatis Rekapitulasi QoS
+  double effectiveRange = 0.0;
+  for (auto it = g_stepMetrics.rbegin(); it != g_stepMetrics.rend(); ++it) {
+    if (it->throughput > 10.0) {
+      effectiveRange = it->distance;
+      break;
+    }
+  }
+
+  auto printStats = [](const std::string &name, double minD, double maxD) {
+    double sumRssi = 0, sumTput = 0, sumDelay = 0, sumJitter = 0, sumDrop = 0;
+    int count = 0;
+    for (const auto &m : g_stepMetrics) {
+      if (m.distance > minD && m.distance <= maxD) {
+        sumRssi += m.rssi;
+        sumTput += m.throughput;
+        sumDelay += m.delay;
+        sumJitter += m.jitter;
+        sumDrop += m.drop;
+        count++;
+      }
+    }
+    if (count > 0) {
+      std::cout << "--- Zona " << name << " ---\n";
+      std::cout << "  Rata-rata RSSI        : " << sumRssi / count << " dBm\n";
+      std::cout << "  Rata-rata Throughput  : " << sumTput / count << " Mbps\n";
+      std::cout << "  Rata-rata Delay       : " << sumDelay / count << " ms\n";
+      std::cout << "  Rata-rata Jitter      : " << sumJitter / count << " ms\n";
+      std::cout << "  Rata-rata Packet Drop : " << sumDrop / count
+                << " paket/detik\n\n";
+    }
+  };
+
+  std::cout << "\n==========================================\n";
+  std::cout << " HASIL RANGE TEST WI-FI 7\n";
+  std::cout << "==========================================\n";
+  std::cout << "JANGKAUAN EFEKTIF (Throughput > 10 Mbps) : " << effectiveRange
+            << " Meter\n\n";
+
+  printStats("Dekat (0 - 100m)", -1.0, 100.0);
+  printStats("Menengah (100 - 300m)", 100.0, 300.0);
+  printStats("Jauh (300 - 640m)", 300.0, 640.0);
+
   std::cout.rdbuf(oldCoutBuf);
   logFile.close();
 
